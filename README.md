@@ -8,7 +8,7 @@
 ## Governing Equations
 
 **TODO: Vincent**:
-- Hermite moment equation (18-20 in the paper)
+- Hermite moment equation (7-12 in the paper)
 - Spectral version
 - Discretized version
   - just discretize the spatial dimension to compute the time derivative. It seems straightforward to take the time derivative and numerically integrate that with some scheme (Runge-Kutta or something else)
