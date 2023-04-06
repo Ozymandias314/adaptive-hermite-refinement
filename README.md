@@ -2,7 +2,7 @@
 
 ## Open Questions (assignee)
 1. Do higher level moments have more spatial dimensions? (Alex)
-2. Do we save intermediate moment values or only care about the final result? (Alex) Ans: If intermediate means at different timesteps, then yes, probably as a data file every n timesteps, controlled by user.
+2. Do we save intermediate moment values or only care about the final result? (Alex) Ans: If intermediate means at different timesteps, then yes, probably as a data file every n timesteps, controlled by user. (should not just be stored as giant array, that would be ridiculous)
 
 
 ## Governing Equations
