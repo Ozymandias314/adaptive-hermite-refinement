@@ -1,14 +1,14 @@
 # adaptive-hermite-refinement
 
 ## Open Questions (assignee)
-1. Do higher level moments have more spatial dimensions? (Alex)
-2. Do we save intermediate moment values or only care about the final result? (Alex)
+1. Do higher level moments have more spatial dimensions? (Alex) No, but in general yes. One of the convinent things this set of eqs does is decouple perpendicular and parallel velocity in the equations. So the hermite expansion is really in parallel velocity. In principle there could also be a hermite expansion in different velocity directions, but we dont need to worry about this thanks to the reduced equations used here. TL;DR is that all moments will be funcitons of x,y,(z),time only. 
+2. Do we save intermediate moment values or only care about the final result? (Alex) Ans: If intermediate means at different timesteps, then yes, probably as a data file every n timesteps, controlled by user. (should not just be stored as giant array, that would be ridiculous)
 
 
 ## Governing Equations
 
 **TODO: Vincent**:
-- Hermite moment equation (18-20 in the paper)
+- Hermite moment equation (7-12 in the paper)
 - Spectral version
 - Discretized version
   - just discretize the spatial dimension to compute the time derivative. It seems straightforward to take the time derivative and numerically integrate that with some scheme (Runge-Kutta or something else)
