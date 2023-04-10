@@ -1,0 +1,7 @@
+This version of viriato up to date as of 5/16/2022. 
+
+Contains the CFL improvements made by Muni + Zhuo in early 2022. (Original name Viriato_KAW_fixed_dti_2022)
+Also contains perturbed energy output files, added by AAV 5/20/22
+
+2023 Version. Removed call of k_energy_pert (was messy anyways). Should have just added new line to the k_energy routine. 
+Added island coalescence equilibrium. AAV 2/28/23
