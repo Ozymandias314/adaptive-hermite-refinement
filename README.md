@@ -4,6 +4,8 @@
 1. Do higher level moments have more spatial dimensions? (Alex) No, but in general yes. One of the convinent things this set of eqs does is decouple perpendicular and parallel velocity in the equations. So the hermite expansion is really in parallel velocity. In principle there could also be a hermite expansion in different velocity directions, but we dont need to worry about this thanks to the reduced equations used here. TL;DR is that all moments will be funcitons of x,y,(z),time only. 
 2. Do we save intermediate moment values or only care about the final result? (Alex) Ans: If intermediate means at different timesteps, then yes, probably as a data file every n timesteps, controlled by user. (should not just be stored as giant array, that would be ridiculous)
 
+## Useful Links
+Google Sheet: https://docs.google.com/spreadsheets/d/11NXlTH3tLCnKrHIvjqpDjWG_UwNBUd8l5Uyi1HydtSo/edit?usp=sharing
 
 ## Governing Equations
 
