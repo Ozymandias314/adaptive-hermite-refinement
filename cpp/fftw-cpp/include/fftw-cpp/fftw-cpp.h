@@ -3,17 +3,33 @@
 #include <fftw3.h>
 #include <complex>
 
+
+
 // =================
 // Check mdspan support
 // =================
-#if __cpp_lib_mdspan >= 202207L
+
+#ifdef FFTW_CPP_MDSPAN_NAMESPACE
+namespace fftw {
+    /// Namespace that contains mdspan/mdarray and helpers (extents, default_accessor, etc.).
+    /// Given by user.
+    namespace MDSPAN = FFTW_CPP_MDSPAN_NAMESPACE;
+};
+#elif __cpp_lib_mdspan >= 202207L
 #include <mdspan>
-#define MDSPAN std::mdspan
+
+namespace fftw {
+    /// Namespace that contains mdspan/mdarray and helpers (extents, default_accessor, etc.)
+    namespace MDSPAN = ::std;
+};
 #elif __has_include(<experimental/mdspan>)
 
 #include <experimental/mdspan>
 
-#define MDSPAN std::experimental::mdspan
+namespace fftw {
+    /// Namespace that contains mdspan/mdarray and helpers (extents, default_accessor, etc.)
+    namespace MDSPAN = ::std::experimental;
+};
 #endif
 
 namespace fftw {
@@ -214,7 +230,7 @@ namespace fftw {
     }
 
     /// used for a static_assert inside an else block of if constexpr
-    template<class...> constexpr bool always_false = false;
+    template<class...> inline constexpr bool always_false = false;
 
     template<class Real, class Complex>
     template<std::size_t Dimension>
