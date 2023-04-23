@@ -3,6 +3,9 @@ project(adaptive_hermite_refinement)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# ==========================
+# Library dependencies
+# ==========================
 include(FetchContent)
 FetchContent_Declare(
         argparse
@@ -16,6 +19,12 @@ FetchContent_Declare(
         GIT_TAG        9ceface91483775a6c74d06ebf717bbb2768452f
 )
 FetchContent_MakeAvailable(mdspan)
+
+# ==========================
+# Project code
+# ==========================
+add_subdirectory(fftw-cpp)
+target_link_libraries(fftw-cpp INTERFACE mdspan)
 
 add_executable(adaptive_hermite_refinement
         test-triangle.cpp)
