@@ -23,9 +23,9 @@ namespace fftw {
     using plan = basic_plan<D, double>;
     using buffer = basic_buffer<double>;
 
-    template<typename Extents,
+    template<size_t D,
             typename Layout = MDSPAN::layout_right>
-    using mdbuffer = basic_mdbuffer<double, Extents, std::complex<double>, Layout>;
+    using mdbuffer = basic_mdbuffer<double, dextents<size_t, D>, std::complex<double>, Layout>;
     /// @}
 
 } // fftw

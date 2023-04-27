@@ -1,10 +1,8 @@
 #include "fftw-cpp/fftw-cpp.h"
 
-#include <numeric>
 #include <iostream>
-#include <experimental/mdarray>
 
-void print(const fftw::mdbuffer<fftw::dextents<size_t, 2u>> &arr) {
+void print(const fftw::mdbuffer<2u> &arr) {
     for (int j = 0; j < arr.extent(0); ++j) {
         for (int k = 0; k < arr.extent(1); ++k) {
             std::cout << arr(j, k) << " ";
@@ -16,7 +14,7 @@ void print(const fftw::mdbuffer<fftw::dextents<size_t, 2u>> &arr) {
 
 int main() {
     std::size_t N = 4, M = 6;
-    fftw::mdbuffer<fftw::dextents<size_t, 2u>> in{N, M}, out{N, M}, out2{N, M};
+    fftw::mdbuffer<2u> in{N, M}, out{N, M}, out2{N, M};
 
     static_assert(fftw::appropriate_buffer<2u, double, std::complex<double>, decltype(in)>);
 
