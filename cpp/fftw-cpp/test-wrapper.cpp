@@ -24,8 +24,8 @@ int main() {
         };
     }
 
-    p.execute();
-    pInv.execute();
+    p();
+    pInv();
 
     print(in);
     print(out);

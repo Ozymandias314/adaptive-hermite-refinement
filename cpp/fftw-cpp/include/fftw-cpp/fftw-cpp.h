@@ -65,7 +65,10 @@ namespace fftw {
     namespace detail {
         // TODO specialize for float, long double, __float128
         template<std::floating_point Real>
-        struct fftw_types {
+        struct fftw_types;
+
+        template<>
+        struct fftw_types<double> {
             using complex = fftw_complex;
             using plan = fftw_plan;
         };
@@ -101,30 +104,24 @@ namespace fftw {
 
         /// \defgroup Container methods (for range-for and other stdlib compatibility)
         /// @{
-        Complex *data();
-
-        const Complex *data() const;
-
-        Complex *begin() { return data(); }
-
-        Complex *end() { return data() + length; }
-
-        const Complex *begin() const { return data(); }
-
+        Complex *data(); ///<
+        const Complex *data() const; ///<
+        Complex *begin() { return data(); } ///<
+        Complex *end() { return data() + length; }  ///<
+        const Complex *begin() const { return data(); } ///<
         const Complex *end() const { return data() + length; }
 
-        [[nodiscard]] size_t size() const { return length; }
-
-        Complex &operator[](size_t index) { return data()[index]; }
-
-        const Complex &operator[](size_t index) const { return data()[index]; }
+        [[nodiscard]] size_t size() const { return length; } ///<
+        Complex &operator[](size_t index) { return data()[index]; } ///<
+        const Complex &operator[](size_t index) const { return data()[index]; } ///<
         /// @}
+
+        detail::fftw_complex_t<Real> *unwrap() { return storage; } ///<
+        const detail::fftw_complex_t<Real> *unwrap() const { return storage; }
 
     private:
         detail::fftw_complex_t<Real> *storage{nullptr};
         size_t length{0};
-
-        friend class basic_plan<Real, Complex>;
     };
 
     template<class Real, class Complex>
@@ -146,14 +143,18 @@ namespace fftw {
         void swap(basic_plan &other) noexcept;
 
         /// Executes the plan with the buffers provided initially.
-        void execute();
+        void operator()();
+
+        void operator()(buffer_t &in, buffer_t &out);
+
+        /// Returns the underlying FFTW plan.
+        detail::fftw_plan_t<Real> unwrap() { return plan; }
 
         /// \defgroup{planning utilities}
         template<std::size_t Dimension = 1u>
         static basic_plan dft(buffer_t &in, buffer_t &out, Direction direction, Flags flags);
 
     private:
-
         detail::fftw_plan_t<Real> plan{nullptr};
     };
 
@@ -225,8 +226,13 @@ namespace fftw {
     }
 
     template<class Real, class Complex>
-    void basic_plan<Real, Complex>::execute() {
+    void basic_plan<Real, Complex>::operator()() {
         fftw_execute(plan);
+    }
+
+    template<class Real, class Complex>
+    void basic_plan<Real, Complex>::operator()(buffer_t &in, buffer_t &out) {
+        fftw_execute_dft(plan, in.unwrap(), out.unwrap());
     }
 
     /// used for a static_assert inside an else block of if constexpr
@@ -240,7 +246,7 @@ namespace fftw {
         if (in.size() != out.size()) throw std::invalid_argument("mismatched buffer sizes");
         if (direction != FORWARD and direction != BACKWARD) throw std::invalid_argument("invalid direction");
         if constexpr (Dimension == 1u) {
-            plan1.plan = fftw_plan_dft_1d(in.size(), in.storage, out.storage, direction, flags);
+            plan1.plan = fftw_plan_dft_1d(in.size(), in.unwrap(), out.unwrap(), direction, flags);
         } else {
             // needs to depend on some template param to not get instantiated.
             static_assert(always_false<Real> && "unimplemented dimension");
