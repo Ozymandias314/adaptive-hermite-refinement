@@ -5,14 +5,27 @@
 #include "include_mdspan.h"
 #include "util.h"
 
-#include "basic_buffer_impl.h"
 #include "basic_buffer.h"
 #include "basic_plan.h"
 
 namespace fftw {
+
+    using MDSPAN::extents;
+    using MDSPAN::dextents;
+    using MDSPAN::dynamic_extent;
+    using MDSPAN::layout_right;
+    using MDSPAN::layout_left;
+    using MDSPAN::layout_stride;
+
     /// \defgroup Convenience types
     /// @{
-    using plan = basic_plan<double>;
+    template <size_t D = 1u>
+    using plan = basic_plan<D, double>;
     using buffer = basic_buffer<double>;
+
+    template<typename Extents,
+            typename Layout = MDSPAN::layout_right>
+    using mdbuffer = basic_mdbuffer<double, Extents, std::complex<double>, Layout>;
     /// @}
+
 } // fftw

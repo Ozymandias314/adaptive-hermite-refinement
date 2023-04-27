@@ -2,10 +2,21 @@
 namespace fftw {
 
     template<class Real, class Complex = std::complex<Real>>
-    class basic_buffer : protected basic_buffer_impl<Real, Complex> {
-    protected:
-        using super = basic_buffer_impl<Real, Complex>;
+    class basic_buffer;
+
+    template<typename Real, typename Extents,
+            typename Complex = std::complex<Real>,
+            typename Layout = MDSPAN::layout_right>
+    using basic_mdbuffer = MDSPAN::mdarray<Complex, Extents, Layout, fftw::basic_buffer<Real, Complex>>;
+
+    template<class Real, class Complex>
+    class basic_buffer {
     public:
+        using element_type = Complex;
+        using pointer = Complex *;
+        using reference = Complex &;
+        using const_pointer = const Complex *;
+        using const_reference = const Complex &;
 
         /// This constructor allocates the buffer but doesn't initialize it
         explicit basic_buffer(size_t length);
@@ -22,34 +33,39 @@ namespace fftw {
 
         /// \defgroup Container methods (for range-for and other stdlib compatibility)
         /// @{
-        using super::data;
 
-        Complex *begin() { return super::data(); } ///<
-        const Complex *begin() const { return super::data(); } ///<
-        Complex *end() { return super::data() + length; }  ///<
-        const Complex *end() const { return super::data() + length; }
+        Complex *data(); ///<
+        const Complex *data() const; ///<
+        Complex *begin() { return data(); } ///<
+        const Complex *begin() const { return data(); } ///<
+        Complex *end() { return data() + length; }  ///<
+        const Complex *end() const { return data() + length; }
 
         [[nodiscard]] size_t size() const { return length; } ///<
-        Complex &operator[](size_t index) { return super::data()[index]; } ///<
-        const Complex &operator[](size_t index) const { return super::data()[index]; } ///<
+        Complex &operator[](size_t index) { return data()[index]; } ///<
+        const Complex &operator[](size_t index) const { return data()[index]; } ///<
         /// @}
 
-        using super::unwrap;
+        [[nodiscard]] detail::fftw_complex_t<Real> *unwrap() { return storage; }
+
+        [[nodiscard]] const detail::fftw_complex_t<Real> *unwrap() const { return storage; }
+
+        ~basic_buffer();
 
     private:
         size_t length{0};
-        using super::storage;
+        detail::fftw_complex_t<Real> *storage{nullptr};
     };
 
     template<class Real, class Complex>
     basic_buffer<Real, Complex>::basic_buffer(std::size_t length) :length(length) {
-        super::storage = reinterpret_cast<detail::fftw_complex_t<Real> *>(fftw_malloc(length * sizeof(Complex)));
+        storage = reinterpret_cast<detail::fftw_complex_t<Real> *>(fftw_malloc(length * sizeof(Complex)));
     }
 
     template<class Real, class Complex>
     void basic_buffer<Real, Complex>::swap(basic_buffer &other) noexcept {
         std::swap(length, other.length);
-        std::swap(super::storage, other.storage);
+        std::swap(storage, other.storage);
     }
 
     template<class Real, class Complex>
@@ -71,4 +87,20 @@ namespace fftw {
     }
 
 
+}
+
+template<class Real, class Complex>
+fftw::basic_buffer<Real, Complex>::~basic_buffer() {
+    if (storage) fftw_free(storage);
+    storage = nullptr;
+}
+
+template<class Real, class Complex>
+Complex *fftw::basic_buffer<Real, Complex>::data() {
+    return reinterpret_cast<Complex *>(storage);
+}
+
+template<class Real, class Complex>
+const Complex *fftw::basic_buffer<Real, Complex>::data() const {
+    return reinterpret_cast<Complex *>(storage);
 }

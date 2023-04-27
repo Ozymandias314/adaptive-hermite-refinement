@@ -12,6 +12,7 @@ namespace fftw {
 };
 #elif __cpp_lib_mdspan >= 202207L
 #include <mdspan>
+#include <mdarray>
 
 namespace fftw {
     /// Namespace that contains mdspan/mdarray and helpers (extents, default_accessor, etc.)
@@ -20,6 +21,7 @@ namespace fftw {
 #elif __has_include(<experimental/mdspan>)
 
 #include <experimental/mdspan>
+#include <experimental/mdarray>
 
 namespace fftw {
     /// Namespace that contains mdspan/mdarray and helpers (extents, default_accessor, etc.)
