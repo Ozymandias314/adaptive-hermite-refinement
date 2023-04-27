@@ -1,0 +1,65 @@
+!***************************
+!Basic input file for Viriato.jl
+!Written by AAV 4/27/23
+!***************************
+&box_parameters
+ lx = 1. ! Box length in units of 2*pi
+ ly = 1.
+ lz = 2. 
+ nlx = 512 ! No. of grid points
+ nly = 512
+ nlz = 512
+ g_inc = .false.
+ ngtot = 10 ! Total number of g 
+ npe = 16 ! Number of procs in perp 
+ npez = 16 ! Number of procs in z 
+ three_D = .true. 
+/
+&time_parameters
+ tmax = 10000000
+ init_aa0_fac = 0.1
+ cfl_frac = .2
+ epsilon = 1.e-10
+ pmax = 1
+/
+&flr
+ rhoi = 1.0e-7
+ rhos = 1.0e-7
+ de = 1.0e-7
+/
+&mhd
+ small_rhoi = 1.e-6
+/
+&diffusion
+ nu_ei =  0.0001
+ res =  0.0 ! Resistivity
+ niu =  0.0 ! Viscosity
+ hyper_coef = 1.0
+ hyper_coef_g = 0.0
+ hyperm_coef = 0.0
+ hyper_fixed = .false.
+ hyper_order = 3
+ hyper_order_g = 3
+ hyper_morder = 3
+ hyper_eta = 1.0e-5
+ hyper_nu = 1.0e-5
+ hyper_nu_g = 1.0e-5
+ hyper_colls_fixed=.false.
+ hyper_colls = 0.01
+/
+&equil
+ a0 = 0.82436 ! chosen such that Bmax = 1
+ phi0 = 0.0
+ leq = 0.0
+ perturb_amp = 1.0e-5
+ equilib_type = "gaus"
+ perturb_type = "allk"
+/
+&data_sav
+ save_energyfiles = 1600
+ save_checkpoints = 3200
+ save_datafiles = 1600
+ restart = 0
+ rs_time =  0.0 
+ !oldrun = "1em4_02" ! Name of the oldrun for restarts
+/
