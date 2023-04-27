@@ -89,3 +89,45 @@ const feps::Float64 = 0.0
 
 #Skipped a bunch of stuff related to saving data
 
+#definitions I guess
+
+nkx::Int64
+nky::Int64
+nkz::Int64
+x_loc::Int64
+y_loc::Int64
+z_loc::Int64
+k_max::Int64
+kperpmax::Int64
+nkx_par::Int64
+nly_par::Int64
+nlypar_old::Int64
+nlz_par::Int64
+dx::Float64
+dy::Float64
+dz::Float64
+etaz::Float64 = 0.0
+etaz_g::Float64 = 0.0
+scale::Float64
+
+# Definitions
+nkx = div(nlx, 2) + 1
+nky = nly
+nkz = 2 * div(nlz - 1, 3) + 1
+x_loc = div(nlx, 2) + 1
+y_loc = div(nly, 2) + 1
+z_loc = div(nlz, 2) + 1
+k_max = nkx - div(nkx, 2)  # maximum k after filtering
+kperpmax = sqrt(nkx^2 + div(nky, 2)^2)
+nkx_par = div(nkx - 1, npe) + 1
+nly_par = div(nly - 1, npe) + 1
+nlz_par = div(nlz - 1, npez) + 1
+dx = lx / nkx
+dy = ly / nky
+dz = lz / nlz
+etaz = etaz * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
+etaz_g = etaz_g * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
+scale = 1.0 / (nlx * nly)  # scale factor for FFTs
+
+j1 = div(kperp0 * ly, lx) + 1
+j2 = nky - j1 + 2
