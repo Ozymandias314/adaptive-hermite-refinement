@@ -1,6 +1,6 @@
 #include <complex.h>
 #include <fftw3.h>
-#include <numeric>
+#include <numbers>
 #include <iostream>
 
 void print(const fftw_complex *arr, int N) {

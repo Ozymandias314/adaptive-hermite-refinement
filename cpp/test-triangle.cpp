@@ -4,26 +4,26 @@
 #include <experimental/mdspan>
 #include <span>
 #include <cmath>
+#include <numbers>
 #include <chrono>
 #include <complex>
 #include <iostream>
 #include <algorithm>
 #include <tuple>
-#include <ranges>
 #include <cassert>
 
-using Real = float;
+using Real = double;
 using Dim = uint32_t;
 using Complex = std::complex<Real>;
 
 using Moments = std::vector<std::vector<std::vector<Complex>>>;
+using namespace std::complex_literals;
 
-
-constexpr Real initialDT = 1e-4f;
-constexpr Real INJECT = 3.2e-2f;
+constexpr Real INITIAL_DT = 1e-4;
+constexpr Complex INJECT = 3.2i;
+constexpr Complex INIT_MOMENT{1e-8, 1e-8};
 
 Real getDT(const Moments &tmpMoments) {
-    Real dt;
     Real maxMoment = 0;
     for (auto &row: tmpMoments) {
         for (auto &point: row) {
@@ -31,26 +31,26 @@ Real getDT(const Moments &tmpMoments) {
         }
     }
 
-    dt = 1 / maxMoment;
-    return dt;
+    Real dt = 1 / std::sqrt(maxMoment);
+    return std::min(dt, 1e-2);
 }
 
-std::complex<Real> getIk(Dim k) { return k * std::numbers::inv_pi_v<Real> * 1if / 2.0f; }
+std::complex<Real> getIk(Dim k) { return Real(k) * std::numbers::inv_pi_v<Real> * 1i / 2.0; }
 
 Complex integrateMoment(std::span<Complex, 3> gm, Real dt, Complex ikx, Complex iky, Dim m, Dim M) {
-    Real lower = std::sqrt((m + 1.f) / 2.f), upper = std::sqrt(m / 2.f), current = std::pow(Real(m) / M, 6.f);
+    Real lower = std::sqrt((Real(m) + 1.f) / 2.f), upper = std::sqrt(Real(m) / 2.f), current = std::pow(
+            Real(m) / Real(M), 6.f);
     return -((ikx + iky) * (gm[0] * lower + gm[2] * upper) + gm[1] * current) * dt + gm[1];
 }
 
 auto calculateMomentsNaive(Dim nr, Dim M, Dim Kx, Dim Ky) -> std::tuple<Moments, std::vector<Real>> {
-    using namespace std::complex_literals;
 
     std::vector<Real> dts;
     dts.reserve(nr);
 
-    Real dt = initialDT;
+    Real dt = INITIAL_DT;
     // Ky by Kx by M+1
-    Moments moments{Ky, {Kx, std::vector(M + 1, Complex(0))}};
+    Moments moments{Ky, {Kx, std::vector(M + 1, INIT_MOMENT)}};
     auto tmpMoments = moments;
 
     for (Dim t = 0; t < nr; ++t) {
@@ -87,7 +87,7 @@ auto calculateMomentsTriangle(Dim nr, Dim M, Dim Kx, Dim Ky) -> std::tuple<Momen
     std::vector<Real> dts;
     dts.reserve(nr);
 
-    Real dt = initialDT;
+    Real dt = INITIAL_DT;
     // Ky by Kx by M+1
     Moments moments{Ky, {Kx, std::vector(M + 1, Complex(0))}};
     auto tmpMoments = moments;
@@ -112,6 +112,7 @@ auto calculateMomentsTriangle(Dim nr, Dim M, Dim Kx, Dim Ky) -> std::tuple<Momen
                 // copy over rest of moments, need to keep boundary values
                 // TODO not necessary everywhere, just copy over 1 (others inside moments should stay untouched
                 //  - although there is tmpMoments?)?
+                // TODO save 2x the values because boundary, utilize tmpMoments properly
                 Dim nTotalMoments = std::max(nr, M);
                 assert(nTotalMoments > nComputedMoments);
                 std::copy_n(moments[ky][kx].begin() + nComputedMoments, nTotalMoments - nComputedMoments,
@@ -142,13 +143,13 @@ auto calculateMomentsTriangle(Dim nr, Dim M, Dim Kx, Dim Ky) -> std::tuple<Momen
 
                 // copy the ones needed in the future
                 Dim nTotalTriangleMoments = std::max(nr, M);
-                assert(nTotalTriangleMoments > nComputedMoments);
-                std::copy_n(moments[ky][kx].begin() + nComputedMoments, nTotalMoments - nComputedMoments,
-                            tmpMoments[ky][kx].begin());
-                for (Dim m = 1; m < M; ++m) {
-                    tmpMoments[ky][kx][m] = integrateMoment(std::span(momentsForPoint).subspan(m - 1).first<3>(), dt,
-                                                            ikx, iky, m, M);
-                }
+//                assert(nTotalTriangleMoments > nComputedMoments);
+//                std::copy_n(moments[ky][kx].begin() + nComputedMoments, nTotalMoments - nComputedMoments,
+//                            tmpMoments[ky][kx].begin());
+//                for (Dim m = 1; m < M; ++m) {
+//                    tmpMoments[ky][kx][m] = integrateMoment(std::span(momentsForPoint).subspan(m - 1).first<3>(), dt,
+//                                                            ikx, iky, m, M);
+//                }
             }
         }
         std::swap(moments, tmpMoments);

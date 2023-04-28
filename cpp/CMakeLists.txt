@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.21)
 project(adaptive_hermite_refinement)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -26,7 +26,19 @@ FetchContent_MakeAvailable(mdspan)
 add_subdirectory(fftw-cpp)
 target_link_libraries(fftw-cpp INTERFACE mdspan)
 
-add_executable(adaptive_hermite_refinement
-        test-triangle.cpp)
+add_compile_options("-mavx512f" "-march=native" "-fopencilk" "-ffast-math")
+add_link_options("-fopencilk")
 
+option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
+if(CILK_STUB)
+    add_compile_definitions(CILK_STUB)
+endif()
+
+add_executable(adaptive_hermite_refinement test-triangle.cpp)
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)
+
+add_executable(bench-fft bench-fft.cpp)
+target_link_libraries(bench-fft argparse fftw-cpp)
+
+add_executable(bench-fft-multi bench-fft-multi.cpp)
+target_link_libraries(bench-fft-multi argparse fftw-cpp)
