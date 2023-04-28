@@ -18,9 +18,9 @@ using Complex = std::complex<Real>;
 using Moments = std::vector<std::vector<std::vector<Complex>>>;
 using namespace std::complex_literals;
 
-constexpr Real INITIAL_DT = 1e-4f;
-constexpr Complex INJECT = 3.2if;
-constexpr Complex INIT_MOMENT{1e-8f, 1e-8f};
+constexpr Real INITIAL_DT = 1e-4;
+constexpr Complex INJECT = 3.2i;
+constexpr Complex INIT_MOMENT{1e-8, 1e-8};
 
 Real getDT(const Moments &tmpMoments) {
     Real maxMoment = 0;
@@ -31,10 +31,10 @@ Real getDT(const Moments &tmpMoments) {
     }
 
     Real dt = 1 / std::sqrt(maxMoment);
-    return std::min(dt, 1e-2f);
+    return std::min(dt, 1e-2);
 }
 
-std::complex<Real> getIk(Dim k) { return Real(k) * std::numbers::inv_pi_v<Real> * 1if / 2.0f; }
+std::complex<Real> getIk(Dim k) { return Real(k) * std::numbers::inv_pi_v<Real> * 1i / 2.0; }
 
 Complex integrateMoment(std::span<Complex, 3> gm, Real dt, Complex ikx, Complex iky, Dim m, Dim M) {
     Real lower = std::sqrt((Real(m) + 1.f) / 2.f), upper = std::sqrt(Real(m) / 2.f), current = std::pow(
