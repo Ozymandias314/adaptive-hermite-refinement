@@ -20,11 +20,6 @@ int main(int argc, const char *argv[]) {
             .scan<'i', unsigned long>()
             .default_value(100ul);
 
-    arguments.add_argument("C")
-            .help("Number of transforms computed with one call")
-            .scan<'i', int>()
-            .default_value(1);
-
     try {
         arguments.parse_args(argc, argv);
     }
@@ -35,9 +30,8 @@ int main(int argc, const char *argv[]) {
     }
 
 
-    auto X = arguments.get<int>("X"),
-            C = arguments.get<int>("C");
-    auto M = arguments.get<unsigned long>("M");
+    const auto X = arguments.get<int>("X");
+    const auto M = arguments.get<unsigned long>("M");
 
     std::cout << "Running " << M << " transforms of size " << X << "x" << X << std::endl;
 
@@ -48,6 +42,15 @@ int main(int argc, const char *argv[]) {
     for (int m = 0; m < M; ++m) {
         in.emplace_back(X, X);
         out.emplace_back(X, X);
+        for (int x1 = 0; x1 < in[m].extent(0); ++x1) {
+            for (int x2 = 0; x2 < in[m].extent(1); ++x2) {
+                in[m](x1, x2) = {
+                        std::cos(2.0 * std::numbers::pi * (x1 * x2) / (X * X)),
+                        std::sin(2.0 * std::numbers::pi * (x1 * x2) / (X * X))
+                };
+            }
+        }
+
         plans[m] = fftw::plan<2u>::dft(in[m], out[m], fftw::BACKWARD, fftw::MEASURE);
     }
 
