@@ -6,6 +6,7 @@
 #include <argparse/argparse.hpp>
 #include <cilk/cilkscale.h>
 #include <iostream>
+#include <numbers>
 
 int main(int argc, const char *argv[]) {
     argparse::ArgumentParser arguments("ahr");
