@@ -1,6 +1,6 @@
 #include "fftw-cpp/fftw-cpp.h"
 
-#include <numeric>
+#include <numbers>
 #include <iostream>
 
 void print(const fftw::buffer &arr) {
