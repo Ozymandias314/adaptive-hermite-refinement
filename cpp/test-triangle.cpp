@@ -9,7 +9,6 @@
 #include <iostream>
 #include <algorithm>
 #include <tuple>
-#include <ranges>
 #include <cassert>
 
 using Real = double;
