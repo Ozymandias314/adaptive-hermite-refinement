@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <complex>
 #include <numeric>
+#include <concepts>
 
 namespace fftw {
 
