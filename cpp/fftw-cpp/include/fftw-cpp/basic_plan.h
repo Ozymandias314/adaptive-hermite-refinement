@@ -80,20 +80,13 @@ namespace fftw {
 
     template<size_t D, class Real, class Complex>
     basic_plan<D, Real, Complex> &basic_plan<D, Real, Complex>::operator=(basic_plan &&other) noexcept {
-        basic_plan(other).swap(*this);
+        basic_plan(std::move(other)).swap(*this);
         return *this;
     }
 
     template<size_t D, class Real, class Complex>
     void basic_plan<D, Real, Complex>::operator()() {
         fftw_execute(plan);
-    }
-
-    template<size_t D, class Real, class Complex>
-    template<typename BufferIn, typename BufferOut>
-    requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
-    void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) {
-        fftw_execute_dft(plan, in.unwrap(), out.unwrap());
     }
 
     /// used for a static_assert inside an else block of if constexpr
@@ -128,6 +121,13 @@ namespace fftw {
             // TODO for layout left this is different
             return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap(in), unwrap(out), direction, flags);
         }
+    }
+
+    template<size_t D, class Real, class Complex>
+    template<typename BufferIn, typename BufferOut>
+    requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+    void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) {
+        fftw_execute_dft(plan, detail::unwrap(in), detail::unwrap(out));
     }
 
     template<size_t D, class Real, class Complex>

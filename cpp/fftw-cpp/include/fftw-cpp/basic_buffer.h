@@ -77,12 +77,12 @@ namespace fftw {
 
     template<class Real, class Complex>
     basic_buffer<Real, Complex>::basic_buffer(basic_buffer &&other) noexcept {
-        other.swap(this);
+        other.swap(*this);
     }
 
     template<class Real, class Complex>
     basic_buffer<Real, Complex> &basic_buffer<Real, Complex>::operator=(basic_buffer &&other) noexcept {
-        basic_buffer(other).swap(*this);
+        basic_buffer(std::move(other)).swap(*this);
         return *this;
     }
 

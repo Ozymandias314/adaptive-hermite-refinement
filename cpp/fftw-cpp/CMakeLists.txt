@@ -13,3 +13,6 @@ target_link_libraries(test-fftw-wrapper fftw-cpp)
 
 add_executable(test-fftw-wrapper-2d test-wrapper-2d.cpp)
 target_link_libraries(test-fftw-wrapper-2d fftw-cpp)
+
+add_executable(test-plan test-plan.cpp)
+target_link_libraries(test-plan fftw-cpp)
