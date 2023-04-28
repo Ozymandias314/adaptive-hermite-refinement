@@ -1,7 +1,7 @@
 using LinearAlgebra 
 using .Brackets, .constants,.Diag,.Aux # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
 
-
+# For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
 
@@ -113,10 +113,10 @@ for t = 0:tmax
                 # \mathcal{A}
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
                 # \mathcal{g2}
-                fg2_old = func_g2(dxg[:,:,gmin],dyg[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
+                fgm_old[:,:,gmin] = func_g2(dxg[:,:,gmin],dyg[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
                 dxg[:,:,gmin+1],dyg[:,:,gmin+1],phik)
                 # \mathcal{gm}
-                for ng in gmin+1:ngtot-1
+                for ng = gmin+1:ngtot-1
                     fgm_old[:,:,ng] = funcgm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
                     dxphi,dyphi,dxapar,dyapar,akpar) 
                 end
@@ -125,7 +125,7 @@ for t = 0:tmax
                 dxphi,dyphi,dxapar,dyapar)
 
             else 
-                funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+                fApar_old = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
         end 
     end
@@ -135,3 +135,200 @@ for t = 0:tmax
 
     # Start Predictor ("star") step
     
+    guess = akpar
+    
+    for i = 1:nkx
+        for j = 1:nky
+            nek_star[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j]
+
+            akpar_star[i,j] = exp_eta(i,j,η2,dti)*akpar[i,j] + dti/2.0*(1.0+exp_eta(i,j,η2,dti))*fApar_old[i,j] + 
+                (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]
+
+            uekpar_star[i,j] = -kperp(i,j)^2*akpar_star[i,j]
+        end
+    end
+    
+    if ginc
+        # Get first and last g
+        for i = 1:nkx
+            for j = 1:nky
+                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
+                
+                gk_star[i,j,ngtot] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
+                    dti/2.0*(1.0+exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
+            end 
+        end
+        # get the rest of the gs
+        for ng = gmin+1:ngtot-1
+            for i = 1:nkx
+                for j = 1:nky
+                    gk_star[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
+                        dti/2.0*(1.0+exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fgm_old[i,j,ng]
+                end
+            end
+        end
+
+    end
+
+    # Start Predictor step here (pmax = 1 always for this code so only one corrector step)
+    for ng = gmin:ngtot
+        dxg_star[:,:,ng],dyg_star[:,:,ng] = convol(gk_star[:,:,ng])
+    end 
+    
+    phik_star = phi_pot(nek_star)
+    dxphi_star,dyphi_star = convol(phik_star) 
+    dxne_star, dyne_star = convol(nek_star)
+    dxapar_star,dyapar_star = convol(akpar_star)
+    dxuepar_star,dyuepar_star = convol(uekpar_star)
+    
+    if g_inc
+        fapar_star = func_Akpar(dxapar_star,dyapar_star,dxphi_star,dyphi_star,
+            dxne_star,dyne_star,dxuepar_star,dyuepar_star,dxg_star[:,:,gmin],dyg_star[:,:,gmin])
+    else
+        fapar_star = func_Akpar(dxapar_star,dyapar_star,dxphi_star,dyphi_star,
+            dxne_star,dyne_star,dxuepar_star,dyuepar_star,dummy_real,dummy_real)
+    end
+
+    # begin predictor "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
+    # if not converged after one step
+    for p_iter = 0:1
+        p_count +=1
+        rel_err = 0.0
+        rel_error = 0.0
+        old_error = 0.0
+        if p_iter == 0 # use star values as p=0
+            fapar_pred = fapar_star
+            value_nex = dxne_star
+            value_ney = dyne_star
+            value_phix = dxphi_star
+            value_phiy = dyphi_star
+            value_gx = dxg_star
+            value_gy = dyg_star
+        else
+            old_error = relative_error
+            if g_inc
+                fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
+            else
+                fapar_pred = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+            end
+
+            # update values, RHS are calculated at bottom of this loop, ie from step p=0
+            value_nex = dxne
+            value_ney = dyne
+            value_phix = dxphi
+            value_phiy = dyphi
+            value_gx = dxg
+            vlaue_gy = dyg
+        end
+
+        relative_error = 0.0
+        for i = 1:nkx
+            for j = 1:nky
+                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i.j]+
+                    dti/2.0*exp_eta(i,j,η2,dti)*fApar_old[i,j]+ 
+                    dti/2.0*fapar_pred[i,j]+
+                    (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]+
+                    semi_implicit_operator[i,j]/4.0*guess[i,j])
+                
+                uekpar_new = -kperp(i,j)^2*akpar_new[i,j]
+
+                rel_err = rel_err + (abs(akpar_new[i,j]-akpar[i,j]))^2
+            end
+        end
+
+        dxapar,dyapar = convol(akpar_new)
+        dxuepar,dyuepar = convol(uekpar_new)
+        
+        # to get next ne, use the last timetep values of everything except the new apar
+        fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
+        for i = 1:nkx
+            for j = 1:nky
+                nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j] + dti/2.0*fne_pred[i,j]
+
+                # Error for this p iteration NEED TO FIGURE OUT WHAT REL ERR SHOULD BE HERE. IN VIRIATO, IT IS PASSED THRU SUM-REDUCE FIRST
+                rel_error[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(rel_err/(nkx*nky))
+            end
+        end
+        
+        phik_new = phi_pot(nek_new)
+
+        # update phi, ne derivatives
+        dxphi, dyphi = convol(phik_new)
+        dxne,dyne = convol(ne)
+
+        
+        # now get next mathcal gs 
+        if g_inc
+            
+            #get g2 p+1
+            fgm_pred[:,:,gmin] = func_g2(value_gx[:,:,gmin],value_gy[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
+            value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],phik_new)
+            for i = 1:nkx
+                for j = 1:nky
+                    gk_new[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] +
+                        dti/2.0*exp_nu(i,j,ν2,dti)*fgm_old[i,j,gmin] + 
+                        +dti/2.0*fgm_pred[i,j,gmin]
+                end
+            end
+
+            dxg[:,:,gmin],dyg[:,:,gmin] = convol(gknew[:,:,gmin])
+            # get gm p+1
+            for ng = gmin+1:ngtot-1
+                
+                dxgm = dxg[:,:,ng-1] # need this bc gm p+1 relies on gm-1 p+1
+                dygm = dyg[:,:,ng-1]
+                fgm_pred[:,:,ng] = funcgm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
+                dxphi,dyphi,dxapar,dyapar,akpar_new)
+
+                for i = 1:nkx
+                    for j = 1:nky 
+                        gk_new[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
+                            dti/2.0*exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fgm_old[i,j,ng]+
+                            dti/2.0*fgm_pred[i,j,ng]
+                    end
+                end
+
+                dxg[:,:,ng],dyg[:,:,ng] = convol(gk_new[:,:,ng])
+            end
+            
+            # get glast p+1
+            f_lastg = func_lastg(hyper_νei,η2,dxg[:,:,ngtot-1],dyg[:,:,ngtot-1],value_gx[:,:,ngtot],value_gy[:,:,ngtot],
+                dxphi,dyphi,dxapar,dyapar)
+            for i = 1:nkx
+                for j = 1:nky
+                    gk_new[i,j,ngtot] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
+                        dti/2.0*exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fglast_old[i,j]+
+                            dti/2.0*f_lastg[i,j]
+                end
+            end
+
+            dxg[:,:,ngtot],dyg[:,:,ngtot] = convol(gk_new[:,:,ngtot])
+            
+        end    
+            
+        # Now have all necessary values at p=1
+        # Might want to move where this gets calced
+        relative_error = maxval(abs(rel_err))
+
+        if p_iter >= 1 && relative_error/old_error >= 1.0
+            dti = low*dti
+            z=z+1
+            divergent = true
+            # exit ploop --> how to do in julia?
+        end
+
+        if relative_error <= epsilon
+            #exit ploop
+        end
+
+        if relative_error > epsilon && p_iter==pmax
+            dti=low*dti
+            z=z+1
+            repeat= true
+            #exit ploop
+        end
+
+        guess = akpar_new
+    end # end of p loop
+
+    # Start from ln 1424 of REGK
