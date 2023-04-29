@@ -16,3 +16,6 @@ target_link_libraries(test-fftw-wrapper-2d fftw-cpp)
 
 add_executable(test-plan test-plan.cpp)
 target_link_libraries(test-plan fftw-cpp)
+
+add_executable(test-mdspan test-mdspan.cpp)
+target_link_libraries(test-mdspan fftw-cpp)
