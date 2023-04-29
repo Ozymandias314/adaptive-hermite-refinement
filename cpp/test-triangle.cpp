@@ -1,5 +1,6 @@
-#include "cilk.h"
+#include "typedefs.h"
 
+#include "cilk.h"
 #include <argparse/argparse.hpp>
 #include <experimental/mdspan>
 #include <span>
@@ -12,12 +13,8 @@
 #include <tuple>
 #include <cassert>
 
-using Real = double;
-using Dim = uint32_t;
-using Complex = std::complex<Real>;
-
+using namespace ahr;
 using Moments = std::vector<std::vector<std::vector<Complex>>>;
-using namespace std::complex_literals;
 
 constexpr Real INITIAL_DT = 1e-4;
 constexpr Complex INJECT = 3.2i;
