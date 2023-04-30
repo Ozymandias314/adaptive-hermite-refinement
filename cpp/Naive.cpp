@@ -20,16 +20,11 @@ namespace {
 }
 
 namespace ahr {
-    namespace stdex = std::experimental;
-
     Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y),
-                                                           momentsPH(M, X, Y), moments(M, X, Y),
+                                                           momentsPH(M, X, Y), moments(M, X, Y), momentsPH_X(M, X, Y),
+                                                           momentsPH_Y(M, X, Y), moments_X(M, X, Y), moments_Y(M, X, Y),
                                                            phiPH(X, Y),
                                                            temp{forward_to_array<fftw::mdbuffer<2u>, 3u>(X, Y)} {}
-
-    auto Naive::sliceXY(fftw::mdbuffer<3u> &moments, int m) {
-        return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
-    }
 
     void Naive::init(mdspan<Real, dextents<Dim, 3u>> initialMoments, Dim N_, Real initialDT_) {
         initialDT = initialDT_;
@@ -61,10 +56,24 @@ namespace ahr {
         for (int t = 0; t < N; ++t) {
             // predictor step
 
-            for (int m = 0; m < M; ++m) {
+            for (int m = 2; m < M; ++m) {
+                // BEGIN(bracket)
+                for_each_xy([&](Dim kx, Dim ky) {
+                    momentsPH_X(m, kx, ky) = -double(kx) * 1i * momentsPH(m, kx, ky);
+                    momentsPH_Y(m, kx, ky) = -double(ky) * 1i * momentsPH(m, kx, ky);
+                });
 
-// TODO
-//                plan(sliceXY(m), sliceXY(m));
+                planInv(sliceXY(momentsPH_X, m), sliceXY(moments_X, m));
+                planInv(sliceXY(momentsPH_Y, m), sliceXY(moments_Y, m));
+
+                for_each_xy([&](Dim x, Dim y) {
+                    moments_X(m, x, y) =
+                            moments_X(m, x, y) * moments_Y(A_PAR, x, y) - moments_Y(m, x, y) * moments_X(A_PAR, x, y);
+                });
+
+                plan(sliceXY(moments_X, m), sliceXY(momentsPH_X, m));
+                // END(bracket)
+                // TODO extract into function
             }
 
             // corrector step

@@ -5,6 +5,8 @@
 #include <fftw-cpp/fftw-cpp.h>
 
 namespace ahr {
+    namespace stdex = std::experimental;
+
     class Naive : public ahr::HermiteRunner {
     public:
         /**
@@ -37,8 +39,9 @@ namespace ahr {
         /// - m=1: A|| (or Apar, parallel velocity)
         ///
         /// Additionally, moments is used only at the start and end.
-        /// TODO reuse moments buffer for something else.
-        fftw::mdbuffer<3u> moments, momentsPH;
+        /// During the simulation, we use moments
+        /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
+        fftw::mdbuffer<3u> moments, momentsPH, momentsPH_X, momentsPH_Y, moments_X, moments_Y;
 
         /// \phi: the electrostatic potential.
         fftw::mdbuffer<2u> phiPH;
@@ -47,6 +50,8 @@ namespace ahr {
         std::array<fftw::mdbuffer<2u>, 3> temp;
 
         /// @}
+
+        static constexpr Dim A_PAR = 1;
 
         void for_each_xy(std::invocable<Dim, Dim> auto fun) {
             for (Dim x = 0; x < X; ++x) {
@@ -73,7 +78,10 @@ namespace ahr {
         }
 
         /// sliceXY returns a 2D mdspan of values in the XY space for a specified m.
-        static auto sliceXY(fftw::mdbuffer<3u> &moments, int m);
+        static auto sliceXY(fftw::mdbuffer<3u> &moments, int m) {
+            return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
+        }
+
     };
 
 }
