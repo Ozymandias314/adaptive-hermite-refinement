@@ -15,13 +15,13 @@ int main(int argc, const char *argv[]) {
 
     argparse::ArgumentParser arguments("ahr");
 
-    arguments.add_argument("K")
-            .help("Size of Ky, Kx for domain")
+    arguments.add_argument("X")
+            .help("Size of X, Y for domain")
             .scan<'i', Dim>()
             .default_value(Dim{256});
 
     arguments.add_argument("M")
-            .help("Number of moments")
+            .help("Total number of moments")
             .scan<'i', Dim>()
             .default_value(Dim{100});
 
@@ -40,12 +40,12 @@ int main(int argc, const char *argv[]) {
         return 1;
     }
 
-    auto K = arguments.get<Dim>("K"),
+    auto X = arguments.get<Dim>("X"),
             M = arguments.get<Dim>("M"),
             nr = arguments.get<Dim>("nr");
 
 
-    Naive naive{std::cout};
+    Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
     // TODO
