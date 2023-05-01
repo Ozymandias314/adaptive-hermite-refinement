@@ -24,6 +24,7 @@ namespace ahr {
 
         mdarray<Real, dextents<Dim, 3u>> getFinalValues() override;
 
+        using ViewXY = stdex::mdspan<Complex, stdex::dextents<Dim, 2u>>;
     private:
         Dim M, X, Y, N{};
         fftw::plan<2u> plan{}, planInv{};
@@ -71,7 +72,8 @@ namespace ahr {
             }
         }
 
-        void mxy_copy(std::invocable<Dim, Dim,Dim > auto const &src, std::invocable<Dim, Dim,Dim > auto &dest) {
+        void mxy_copy(std::invocable<Dim, Dim, Dim> auto const &        src,        std::invocable<Dim, Dim, Dim> auto &dest
+        ) {
             for_each_mxy([&](Dim m, Dim x, Dim y) {
                 dest(m, x, y) = src(m, x, y);
             });
@@ -82,6 +84,26 @@ namespace ahr {
             return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
         }
 
+
+        /// Computes bracket [viewPH, otherPH] assuming other has already been transformed into otherX and otherY.
+        /// Uses other views for temporary storage, and stores results in viewPH_X.
+        /// Currently really greedy.
+        void bracketHalf(const ViewXY &viewPH, ViewXY viewPH_X, ViewXY viewPH_Y, ViewXY view_X, ViewXY view_Y,
+                         const ViewXY &otherX, const ViewXY &otherY) {
+            for_each_xy([&](Dim kx, Dim ky) {
+                viewPH_X(kx, ky) = -double(kx) * 1i * viewPH(kx, ky);
+                viewPH_Y(kx, ky) = -double(ky) * 1i * viewPH(kx, ky);
+            });
+
+            planInv(viewPH_X, view_X);
+            planInv(viewPH_Y, view_Y);
+
+            for_each_xy([&](Dim x, Dim y) {
+                view_X(x, y) = view_X(x, y) * otherY(x, y) - view_Y(x, y) * otherX(x, y);
+            });
+
+            plan(view_X, viewPH_X);
+        }
     };
 
 }
