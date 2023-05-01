@@ -1,4 +1,5 @@
 include("constants.jl")
+include("grids.jl") #assuming this will exist
 
 # Need to resolve kperp array from grids
 
@@ -9,3 +10,6 @@ end
 function exp_ng(dti)
     exp(-(res*kperp[j,i]^2+res2*kperp[j,i]^(2*hyper_order))*dti/(1.0+kperp[j,i]^2*de^2))
 end
+
+function exp_eta(res2,dti)
+    exp(-(res*kperp[j,i]^2+res2*kperp[j,i]^(2*hyper_order))*dti/(1.0+kperp[j,i]^2*de^2))
