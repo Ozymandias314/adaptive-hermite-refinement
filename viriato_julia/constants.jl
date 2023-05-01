@@ -110,6 +110,75 @@ etaz::Float64 = 0.0
 etaz_g::Float64 = 0.0
 scale::Float64
 
+#read data from input file
+
+using JSON
+
+# Load the JSON file
+const_data = JSON.parsefile("input.json")
+
+# Extract values from the "box_parameters" object
+lx = const_data["box_parameters"]["lx"]
+ly = const_data["box_parameters"]["ly"]
+lz = const_data["box_parameters"]["lz"]
+nlx = const_data["box_parameters"]["nlx"]
+nly = const_data["box_parameters"]["nly"]
+nlz = const_data["box_parameters"]["nlz"]
+g_inc = const_data["box_parameters"]["g_inc"]
+ngtot = const_data["box_parameters"]["ngtot"]
+npe = const_data["box_parameters"]["npe"]
+npez = const_data["box_parameters"]["npez"]
+three_D = const_data["box_parameters"]["three_D"]
+
+# Extract values from the "time_parameters" object
+tmax = const_data["time_parameters"]["tmax"]
+init_aa0_fac = const_data["time_parameters"]["init_aa0_fac"]
+cfl_frac = const_data["time_parameters"]["cfl_frac"]
+epsilon = const_data["time_parameters"]["epsilon"]
+pmax = const_data["time_parameters"]["pmax"]
+
+# Extract values from the "flr" object
+rhoi = const_data["flr"]["rhoi"]
+rhos = const_data["flr"]["rhos"]
+de = const_data["flr"]["de"]
+
+# Extract values from the "mhd" object
+small_rhoi = const_data["mhd"]["small_rhoi"]
+
+# Extract values from the "diffusion" object
+nu_ei = const_data["diffusion"]["nu_ei"]
+res = const_data["diffusion"]["res"]
+niu = const_data["diffusion"]["niu"]
+hyper_coef = const_data["diffusion"]["hyper_coef"]
+hyper_coef_g = const_data["diffusion"]["hyper_coef_g"]
+hyperm_coef = const_data["diffusion"]["hyperm_coef"]
+hyper_fixed = const_data["diffusion"]["hyper_fixed"]
+hyper_order = const_data["diffusion"]["hyper_order"]
+hyper_order_g = const_data["diffusion"]["hyper_order_g"]
+hyper_morder = const_data["diffusion"]["hyper_morder"]
+hyper_eta = const_data["diffusion"]["hyper_eta"]
+hyper_nu = const_data["diffusion"]["hyper_nu"]
+hyper_nu_g = const_data["diffusion"]["hyper_nu_g"]
+hyper_colls_fixed = const_data["diffusion"]["hyper_colls_fixed"]
+hyper_colls = const_data["diffusion"]["hyper_colls"]
+
+# Extract values from the "equil" object
+a0 = const_data["equil"]["a0"]
+phi0 = const_data["equil"]["phi0"]
+leq = const_data["equil"]["leq"]
+perturb_amp = const_data["equil"]["perturb_amp"]
+equilib_type = const_data["equil"]["equilib_type"]
+perturb_type = const_data["equil"]["perturb_type"]
+
+# Extract values from the "data_sav" object
+save_energyfiles = const_data["data_sav"]["save_energyfiles"]
+save_checkpoints = const_data["data_sav"]["save_checkpoints"]
+save_datafiles = const_data["data_sav"]["save_datafiles"]
+restart = const_data["data_sav"]["restart"]
+rs_time = const_data["data_sav"]["rs_time"]
+
+
+
 # Definitions
 nkx = div(nlx, 2) + 1
 nky = nly
