@@ -56,24 +56,12 @@ namespace ahr {
         for (int t = 0; t < N; ++t) {
             // predictor step
 
+
             for (int m = 2; m < M; ++m) {
-                // BEGIN(bracket)
-                for_each_xy([&](Dim kx, Dim ky) {
-                    momentsPH_X(m, kx, ky) = -double(kx) * 1i * momentsPH(m, kx, ky);
-                    momentsPH_Y(m, kx, ky) = -double(ky) * 1i * momentsPH(m, kx, ky);
-                });
+                bracketHalf(
+                        sliceXY(momentsPH, m), sliceXY(momentsPH_X, m), sliceXY(momentsPH_Y, m), sliceXY(moments_X, m),
+                        sliceXY(moments_Y, m), /*other*/ sliceXY(moments_X, A_PAR), sliceXY(moments_Y, A_PAR));
 
-                planInv(sliceXY(momentsPH_X, m), sliceXY(moments_X, m));
-                planInv(sliceXY(momentsPH_Y, m), sliceXY(moments_Y, m));
-
-                for_each_xy([&](Dim x, Dim y) {
-                    moments_X(m, x, y) =
-                            moments_X(m, x, y) * moments_Y(A_PAR, x, y) - moments_Y(m, x, y) * moments_X(A_PAR, x, y);
-                });
-
-                plan(sliceXY(moments_X, m), sliceXY(momentsPH_X, m));
-                // END(bracket)
-                // TODO extract into function
             }
 
             // corrector step
