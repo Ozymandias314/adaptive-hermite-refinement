@@ -331,4 +331,41 @@ for t = 0:tmax
         guess = akpar_new
     end # end of p loop
 
-    # Start from ln 1424 of REGK
+    # If divergent, go back to beginning
+    # if repeat, go back to beginning
+
+    # Update Variables to "new" values (i.e. p+1)
+
+    nek = nek_new
+    akpar = akpar_new
+    phik = phik_new
+    uekpar = uekpar_new
+
+    savetime = savetime + dti # update the simulation timestep
+
+    # Now re-evaluate the flows to evaluate CFL condition
+    
+    vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi)
+    vxmax = maximum(max(abs(vex),abs(vrhosx)))
+    vymax = maximum(max(abs(vey),abs(vrhosxy)))
+
+    bx,by = bfield(dxapar,dyapar)
+    bxmax = maximum(abs(bx))
+    bymax = maxumum(abs(by))
+    bperp = sqrt.(bx.^2+by.^2)
+    bperp_max = maximum(bperp)
+
+    omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
+
+    uxavg = (uxavg+ vex)/(p+1.0)
+    uyavg = (uyave + vey)/(p+1.0)
+
+    # Calculate CFL fraction/timestep MAKE SURE THIS IS FINE! LN 1544
+    if g_inc
+        CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
+        (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
+    else 
+        CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
+    end
+
+    dti = CFL_frac*CFL_flow # TIMESTEP!

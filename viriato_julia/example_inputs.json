@@ -1,0 +1,64 @@
+
+{
+    "metadata": "!Basic input file for Viriato.jl! Written by AAV 4/27/23",
+    "box_parameters": {
+        "lx": 1.0,
+        "ly": 1.0,
+        "lz": 2.0,
+        "nlx": 512,
+        "nly": 512,
+        "nlz": 512,
+        "g_inc": false,
+        "ngtot": 10,
+        "npe": 16,
+        "npez": 16,
+        "three_D": true
+    },
+        "time_parameters": {
+        "tmax": 10000000,
+        "init_aa0_fac": 0.1,
+        "cfl_frac": 0.2,
+        "epsilon": 1e-10,
+        "pmax": 1
+    },
+        "flr": {
+        "rhoi": 1.0e-7,
+        "rhos": 1.0e-7,
+        "de": 1.0e-7
+    },
+        "mhd": {
+        "small_rhoi": 1e-6
+    },
+        "diffusion": {
+        "nu_ei": 0.0001,
+        "res": 0.0,
+        "niu": 0.0,
+        "hyper_coef": 1.0,
+        "hyper_coef_g": 0.0,
+        "hyperm_coef": 0.0,
+        "hyper_fixed": false,
+        "hyper_order": 3,
+        "hyper_order_g": 3,
+        "hyper_morder": 3,
+        "hyper_eta": 1e-5,
+        "hyper_nu": 1e-5,
+        "hyper_nu_g": 1e-5,
+        "hyper_colls_fixed": false,
+        "hyper_colls": 0.01
+    },
+        "equil": {
+        "a0": 0.82436,
+        "phi0": 0.0,
+        "leq": 0.0,
+        "perturb_amp": 1.0e-5,
+        "equilib_type": "gaus",
+        "perturb_type": "allk"
+    },
+        "data_sav": {
+        "save_energyfiles": 1600,
+        "save_checkpoints": 3200,
+        "save_datafiles": 1600,
+        "restart": 0,
+        "rs_time": 0.0
+    }
+}

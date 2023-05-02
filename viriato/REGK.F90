@@ -1315,7 +1315,7 @@ program REGK
            do ng = gmin+1, ngtot-1
               !totalgk=totalgknew
               
-              Dxgm(:, :, :) = Dxg(:, :, :, ng-1)
+              Dxgm(:, :, :) = Dxg(:, :, :, ng-1) ! need the p+1 gm-1 values, which are updated within this loop
               Dygm(:, :, :) = Dyg(:, :, :, ng-1)
 
               !            if (ng<ngtot) then
