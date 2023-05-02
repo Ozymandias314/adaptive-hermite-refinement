@@ -52,3 +52,10 @@ function flows(dxfi,dyfi,dxne,dyne)
     end
     return vex, vey, vrhosx, vrhosy
 end
+
+function b_field(dxapar,dyapar)
+    bx = Array{Float64}(undef, nlx, nly_par, nlz_par)
+    by = similar(bx)
+    bx = dyapar
+    by = -dxapar
+    return bx, by

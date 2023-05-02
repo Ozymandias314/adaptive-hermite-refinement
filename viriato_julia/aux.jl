@@ -95,5 +95,58 @@ function PHI_POT(nek::Array{ComplexF64,3}, phiK::Array{ComplexF64,3})
     end
 end
 
-
-
+function SEMI_IMP_OP(dti::Real, bperp_max::Real, aa0::Real)
+    SI_oper = Array{ComplexF64}(undef, nky, nkx_par, nlz_par)
+    if (rhoi <= small_rhoi)then
+        if (iproc % npe == 0)
+            SI_oper[1,1,:]=0.0
+            for j in 2:nky 
+                SI_oper[j,1,:] = aa0^2*(1+kperp[j,1]^2*(3/4*rhoi^2+rhos^2))*
+                                kperp[j,1]^2*bperp_max^2*
+                                dti^2/(1.0+kperp[j,1]^2*de^2) 
+            end
+ 
+            for i in 2:nkx_par
+                for j in 1:nky
+                    SI_oper[j,i,:] = aa0^2*(1+kperp[j,i]^2*(3/4*rhoi^2+rhos^2))*
+                                    kperp[j,i]^2*bperp_max^2*
+                                    dti^2/(1.0+kperp[j,i]^2*de^2) 
+                end
+            end
+        else
+           for i in 1:nkx_par
+                for j in 1:nky
+                SI_oper[j,i,:] = aa0^2*(1+kperp[j,i]^2*(3/4*rhoi^2+rhos^2))*
+                                kperp[j,i]^2*bperp_max^2*
+                                dti^2/(1.0+kperp[j,i]^2*de^2) 
+                end
+            end
+        end
+    else
+        if (iproc % npe == 0)
+            SI_oper[1,1,:]=0.0
+            for j in 2:nky
+                SI_oper[j,1,:] = aa0^2*(3*rhos^2-rhoi^2/(gama0(0.5*kperp[j,1]^2*rhoi^2)-1))*
+                                kperp(j,1)^4*bperp_max^2*
+                                dti^2/(1.0+kperp(j,1)^2*de^2) 
+            end
+ 
+            for i in 2:nkx_par
+                for j in 1:nky
+                    SI_oper[j,i,:] = aa0^2*(3*rhos^2-rhoi^2/(gama0(0.5*kperp[j,i]^2*rhoi^2)-1))*
+                                    kperp(j,i)^4*bperp_max^2*
+                                    dti^2/(1.0+kperp(j, i)^2*de^2) 
+                end
+            end
+        else
+            for i in 1:nkx_par
+                for j in 1:nky
+                    SI_oper[j,i,:] = aa0^2*(3*rhos^2-rhoi^2/(gama0(0.5*kperp[j,i]^2*rhoi^2)-1))*
+                                    kperp(j,i)^4*bperp_max^2*
+                                    dti^2/(1.0+kperp(j, i)^2*de^2) 
+                end
+            end
+        end
+    end
+    return SI_oper
+end
