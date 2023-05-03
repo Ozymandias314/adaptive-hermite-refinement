@@ -72,23 +72,26 @@ end
 relative_error = 0.0
 aa0 = init_aa0_fac 
 
-p = 0
-z = 0 # not necessary if 2d? Not sure if this is z as in z direction
+#p = 0
+#z = 0 # not necessary if 2d? Not sure if this is z as in z direction
 repeat = false # Flags for certain behaviors in loop. Trying again with smaller timestep, for example
 noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
 for t = 0:tmax 
-    p = t-z # ? 
+    #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
 
     if repeat 
         repeat = false
+        t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else
         if divergent
             divergent = false
+            t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
         else
 
             p_count = 0 # Number of loops through corrector step 
+            
             if first 
 
                 dxphi,dyphi = convol(phik)
@@ -191,6 +194,7 @@ for t = 0:tmax
 
     # begin predictor "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
     # if not converged after one step
+    p_iter = 0
     for p_iter = 0:1
         p_count +=1
         sum_apar_rel_error = 0.0
@@ -316,27 +320,35 @@ for t = 0:tmax
         # Test for convergence
         if p_iter >= 1 && relative_error/old_error >= 1.0
             dti = low*dti
-            z=z+1
+            #z=z+1 # maybe not actually necessary.
             divergent = true
             # exit ploop --> how to do in julia?
+            break
         end
 
         if relative_error <= epsilon
-            #exit ploop
+            break # exit p loop
         end
 
         if relative_error > epsilon && p_iter==pmax
             dti=low*dti
-            z=z+1
+            #z=z+1
             repeat= true
-            #exit ploop
+            break # exit p loop
         end
 
         guess = akpar_new
     end # end of p loop
 
-    # If divergent, go back to beginning
-    # if repeat, go back to beginning
+    if divergent
+        continue # go to next time loop iteration with divergent = true
+    end
+    
+    if repeat
+        redo_timestep = true
+        noinc = true
+        continue # go to next time loop iteraton with repeat and noinc true
+    end 
 
     # Update Variables to "new" values (i.e. p+1)
 
@@ -361,16 +373,12 @@ for t = 0:tmax
 
     omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
-    uxavg = (uxavg+ vex)/(p+1.0)
-    uyavg = (uyave + vey)/(p+1.0)
+    # Seems to be just a diagnostic.
+    # uxavg = (uxavg+ vex)/(p+1.0)
+    # uyavg = (uyave + vey)/(p+1.0)
 
-    # Calculate CFL fraction/timestep MAKE SURE THIS IS FINE! LN 1544
-    if g_inc
-        CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
-        (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
-    else 
-        CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
-    end
+    # Calculate CFL fraction/timestep. Not sure why so simple here...
+    CFL_flow=min(dx/vxmax,dy/vymax)
 
     dti_temp = CFL_frac*CFL_flow # TIMESTEP!
 
