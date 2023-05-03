@@ -55,39 +55,37 @@ namespace ahr {
 
             // Phi
             // TODO maybe compute PHI? Or maybe that happened in the previous timestep
-            prepareDXY_PH(phi.PH, phi.PH_DX, phi.PH_DY);
-            fftInv(phi.PH_DX, phi.DX);
-            fftInv(phi.PH_DY, phi.DY);
 
             // Nabla
             for_each_xy([&](Dim kx, Dim ky) {
                 auto dkx = double(kx), dky = double(ky), kPerp = dkx * dkx + dky * dky;
                 // TODO minus or not? (kperp should already have a minus)
-                nablaPerpAPar.PH_DX(kx, ky) = -dkx * 1i * kPerp * nablaPerpAPar.PH(kx, ky);
-                nablaPerpAPar.PH_DY(kx, ky) = -dky * 1i * kPerp * nablaPerpAPar.PH(kx, ky);
+                nablaPerpAPar.PH(kx, ky) = kPerp * moments.PH(A_PAR, kx, ky);
             });
-            fftInv(nablaPerpAPar.PH_DX, nablaPerpAPar.DX);
-            fftInv(nablaPerpAPar.PH_DY, nablaPerpAPar.DY);
 
-            for (int m = 2; m < M; ++m) {
-                ViewXY viewPH_X = sliceXY(moments.PH_DX, m), viewPH_Y = sliceXY(moments.PH_DY, m);
-                ViewXY viewX = sliceXY(moments.DX, m), viewY = sliceXY(moments.DY, m);
+            // Compute N
+            fullBracket(phi, sliceXY(moments, N_E));
+            fullBracket(sliceXY(moments, A_PAR), nablaPerpAPar);
+            // TODO use N
 
-                prepareDXY_PH(sliceXY(moments.PH, m), viewPH_X, viewPH.DY);
-                fftInv(viewPH_X, viewX);
-                fftInv(viewPH_Y, viewY);
+            // Compute A
+            fullBracket(phi, sliceXY(moments, A_PAR));
+            for_each_xy([&](Dim kx, Dim ky) {
+                double const de = 1.2; //TODO
+                nablaPerpAPar.PH(kx, ky) = de*de*nablaPerpAPar.PH(kx, ky);
+            });
 
-                ViewXY otherX = sliceXY(moments.DX, A_PAR),
-                        otherY = sliceXY(moments.DY, A_PAR);
-                bracket(viewX, viewY, otherX, otherY, temp[0]);
+            // already using phi for temp storage
+            fullBracket(phi, nablaPerpAPar, nablaPerpAPar.DX, nablaPerpAPar.PH_DX);
+            // TODO use A
 
-                fft(temp[0], temp[1]);
+            // TODO compute G2
+
+            for (int m = 3; m < M; ++m) {
+
             }
 
             // corrector step
-            for (int m = 0; m < M; ++m) {
-
-            }
         }
     }
 
