@@ -7,7 +7,6 @@ using .Brackets, .constants,.Diag,.Aux # Ought to define these as "modules" usin
 
 # phik,nek,akpar,uekpar,gk,dummy_real,bracket_akpar_uekpar
 
-g_inc = true # would be in constants file!
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
@@ -117,10 +116,10 @@ for t = 0:tmax
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
                 # \mathcal{g2}
                 fgm_old[:,:,gmin] = func_g2(dxg[:,:,gmin],dyg[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
-                dxg[:,:,gmin+1],dyg[:,:,gmin+1],phik)
+                dxg[:,:,gmin+1],dyg[:,:,gmin+1],bracket_akpar_uekpar)
                 # \mathcal{gm}
                 for ng = gmin+1:ngtot-1
-                    fgm_old[:,:,ng] = funcgm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
+                    fgm_old[:,:,ng] = func_gm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
                     dxphi,dyphi,dxapar,dyapar,akpar) 
                 end
                 # \mathcal{glast}
@@ -128,7 +127,7 @@ for t = 0:tmax
                 dxphi,dyphi,dxapar,dyapar)
 
             else 
-                fApar_old = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+                fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
         end 
     end
@@ -213,7 +212,7 @@ for t = 0:tmax
             if g_inc
                 fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
             else
-                fapar_pred = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+                fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
 
             # update values, RHS are calculated at bottom of this loop, ie from step p=0
@@ -286,7 +285,7 @@ for t = 0:tmax
                 
                 dxgm = dxg[:,:,ng-1] # need this bc gm p+1 relies on gm-1 p+1
                 dygm = dyg[:,:,ng-1]
-                fgm_pred[:,:,ng] = funcgm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
+                fgm_pred[:,:,ng] = func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
                 dxphi,dyphi,dxapar,dyapar,akpar_new)
 
                 for i = 1:nkx
