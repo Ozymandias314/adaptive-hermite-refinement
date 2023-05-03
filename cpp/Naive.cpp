@@ -60,7 +60,8 @@ namespace ahr {
             for (int m = 2; m < M; ++m) {
                 bracketHalf(
                         sliceXY(momentsPH, m), sliceXY(momentsPH_X, m), sliceXY(momentsPH_Y, m), sliceXY(moments_X, m),
-                        sliceXY(moments_Y, m), /*other*/ sliceXY(moments_X, A_PAR), sliceXY(moments_Y, A_PAR));
+                        sliceXY(moments_Y, m), /*other*/ sliceXY(moments_X, A_PAR), sliceXY(moments_Y, A_PAR),
+                        temp[0], temp[1]);
 
             }
 
