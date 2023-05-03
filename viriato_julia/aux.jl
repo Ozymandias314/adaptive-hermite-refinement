@@ -90,3 +90,24 @@ function SEMI_IMP_OP(dti::Real, bperp_max::Real, aa0::Real)
     end
     return SI_oper
 end
+
+function dtnext(relative_error::Real,x::Real,noinc:Bool,dti::Real)
+    if noinc
+        inc_fac = 1.0
+        noinc = false # need to make noinc global
+    else
+        inc_fac = 1.08
+    end
+
+    if relative_error < 0.8*epsilon
+        if x < inc_fac*dti
+            dti = x
+        else
+            dti = inc_fac*dti
+        end
+    else
+        dti = min(x,dti)
+    end
+
+    return dti
+end

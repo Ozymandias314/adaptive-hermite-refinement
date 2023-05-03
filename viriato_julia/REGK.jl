@@ -1,13 +1,48 @@
 using LinearAlgebra 
-using .Brackets, .constants,.Diag,.Aux # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
+using .Brackets, .constants,.Diag,.Aux,.functions # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
 
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
 
-# phik,nek,akpar,uekpar,gk,dummy_real,bracket_akpar_uekpar
+# Only allocating the arrays that would be undefined. Many are returned from a function before use, for 
+# example, dxapar, etc. However, dxg must be indexed the first time it is used, so must define here. Not sure if this is the best way
 
-g_inc = true # would be in constants file!
+# LIST OF NEEDED CONSTANTS:
+
+# nkx,nky,ngtot,gmin,ginc,dx,dy,CFL_frac,hyper_ν_g, hyper_ν, hyper_η,rhos_de,hyper_order,hyper_order_g
+# hyper_coef,hyper_coef_g,kperpmax,hyperm_coef,hyper_morder, init_aa0_fac,tmax, low
+
+phik = Array{ComplexF64}(undef,nkx,nky)
+nek = Array{ComplexF64}(undef,nkx,nky)
+akpar = Array{ComplexF64}(undef,nkx,nky)
+uekpar = Array{ComplexF64}(undef,nkx,nky)
+dummy_real = Array{Real}(undef,nkx,nky)
+
+gk = Array{ComplexF64}(undef,nkx,nky,ngtot)
+dxg = Array{Real}(undef,nkx,nky,ngtot)
+dyg = Array{Real}(undef,nkx,nky,ngtot)
+fgm_old = Array{ComplexF64}(undef,nkx,nky,ngtot)
+
+nek_star = Array{ComplexF64}(undef,nkx,nky)
+phik_star = Array{ComplexF64}(undef,nkx,nky)
+akpar_star = Array{ComplexF64}(undef,nkx,nky)
+uekpar_star = Array{ComplexF64}(undef,nkx,nky)
+gk_star = Array{ComplexF64}(undef,nkx,nky,ngtot)
+dxg_star = Array{Real}(undef,nkx,nky,ngtot)
+dyg_star = Array{Real}(undef,nkx,nky,ngtot)
+
+akpar_new = Array{ComplexF64}(undef,nkx,nky)
+uekpar_new = Array{ComplexF64}(undef,nkx,nky)
+nek_new = Array{ComplexF64}(undef,nkx,nky)
+gk_new = Array{ComplexF64}(undef,nkx,nky,ngtot)
+fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
+
+rel_error_array = Array{ComplexF64}(undef,nkx,nky)
+
+
+
+
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
@@ -32,7 +67,7 @@ bymax = maxumum(abs(by))
 bperp = sqrt.(bx.^2+by.^2)
 bperp_max = maximum(bperp)
 
-omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
+omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
 # Calculate CFL fraction/timestep
 if g_inc
@@ -62,7 +97,7 @@ end
 if hyper_colls_fixed
     hyper_νei=hyper_colls
 else    
-    hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
+    hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
 end
 
 
@@ -72,23 +107,26 @@ end
 relative_error = 0.0
 aa0 = init_aa0_fac 
 
-p = 0
-z = 0 # not necessary if 2d? Not sure if this is z as in z direction
+#p = 0
+#z = 0 # not necessary if 2d? Not sure if this is z as in z direction
 repeat = false # Flags for certain behaviors in loop. Trying again with smaller timestep, for example
 noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
 for t = 0:tmax 
-    p = t-z # ? 
+    #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
 
     if repeat 
         repeat = false
+        t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else
         if divergent
             divergent = false
+            t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
         else
 
             p_count = 0 # Number of loops through corrector step 
+            
             if first 
 
                 dxphi,dyphi = convol(phik)
@@ -114,10 +152,10 @@ for t = 0:tmax
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
                 # \mathcal{g2}
                 fgm_old[:,:,gmin] = func_g2(dxg[:,:,gmin],dyg[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
-                dxg[:,:,gmin+1],dyg[:,:,gmin+1],phik)
+                dxg[:,:,gmin+1],dyg[:,:,gmin+1],bracket_akpar_uekpar)
                 # \mathcal{gm}
                 for ng = gmin+1:ngtot-1
-                    fgm_old[:,:,ng] = funcgm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
+                    fgm_old[:,:,ng] = func_gm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
                     dxphi,dyphi,dxapar,dyapar,akpar) 
                 end
                 # \mathcal{glast}
@@ -125,13 +163,13 @@ for t = 0:tmax
                 dxphi,dyphi,dxapar,dyapar)
 
             else 
-                fApar_old = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+                fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
         end 
     end
 
     # Get SI operator necessary for corrector step loop
-    semi_implicit_operator = calc_semi_implicit_operator(dti,bperp_max,aa0)
+    semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
 
     # Start Predictor ("star") step
     
@@ -191,10 +229,11 @@ for t = 0:tmax
 
     # begin predictor "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
     # if not converged after one step
+    p_iter = 0
     for p_iter = 0:1
         p_count +=1
-        rel_err = 0.0
-        rel_error = 0.0
+        sum_apar_rel_error = 0.0
+        rel_error_array = 0.0 # array of zeros?
         old_error = 0.0
         if p_iter == 0 # use star values as p=0
             fapar_pred = fapar_star
@@ -205,11 +244,11 @@ for t = 0:tmax
             value_gx = dxg_star
             value_gy = dyg_star
         else
-            old_error = relative_error
+            old_error = relative_error # Old error stores relative error from last update. Use to check if divergent
             if g_inc
                 fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
             else
-                fapar_pred = funcAkpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
+                fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
 
             # update values, RHS are calculated at bottom of this loop, ie from step p=0
@@ -221,18 +260,19 @@ for t = 0:tmax
             vlaue_gy = dyg
         end
 
-        relative_error = 0.0
+        relative_error = 0.0 # reset value of relative error
         for i = 1:nkx
             for j = 1:nky
-                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i.j]+
+                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i,j]+
                     dti/2.0*exp_eta(i,j,η2,dti)*fApar_old[i,j]+ 
                     dti/2.0*fapar_pred[i,j]+
                     (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]+
                     semi_implicit_operator[i,j]/4.0*guess[i,j])
                 
-                uekpar_new = -kperp(i,j)^2*akpar_new[i,j]
-
-                rel_err = rel_err + (abs(akpar_new[i,j]-akpar[i,j]))^2
+                uekpar_new[i,j] = -kperp(i,j)^2*akpar_new[i,j]
+                
+                # Take difference between akpar t=n and akpar_new, ie at t=n+1. Note akpar is only updated after p_loop. So this is akpar, n+1,p+1 - akpar,n
+                sum_apar_rel_error = sum_apar_rel_error + (abs(akpar_new[i,j]-akpar[i,j]))^2 # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
             end
         end
 
@@ -245,11 +285,15 @@ for t = 0:tmax
             for j = 1:nky
                 nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j] + dti/2.0*fne_pred[i,j]
 
-                # Error for this p iteration NEED TO FIGURE OUT WHAT REL ERR SHOULD BE HERE. IN VIRIATO, IT IS PASSED THRU SUM-REDUCE FIRST
-                rel_error[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(rel_err/(nkx*nky))
+                # Error for this p iteration at each location. Note that guess hold the value of akpar_new from previous p_loop iteration so this is akpar,n+1,p+1 - akpar,n+1,p 
+                rel_error_array[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(sum_apar_rel_error/(nkx*nky))
             end
         end
         
+        # Get relative error for this p loop. Should definitely also put loop break statements here--no need to recalc g if we are only doing one p step!
+        # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
+        relative_error = maxval(abs(rel_error_array))
+
         phik_new = phi_pot(nek_new)
 
         # update phi, ne derivatives
@@ -277,7 +321,7 @@ for t = 0:tmax
                 
                 dxgm = dxg[:,:,ng-1] # need this bc gm p+1 relies on gm-1 p+1
                 dygm = dyg[:,:,ng-1]
-                fgm_pred[:,:,ng] = funcgm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
+                fgm_pred[:,:,ng] = func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
                 dxphi,dyphi,dxapar,dyapar,akpar_new)
 
                 for i = 1:nkx
@@ -307,32 +351,39 @@ for t = 0:tmax
         end    
             
         # Now have all necessary values at p=1
-        # Might want to move where this gets calced
-        relative_error = maxval(abs(rel_err))
 
+        # Test for convergence
         if p_iter >= 1 && relative_error/old_error >= 1.0
             dti = low*dti
-            z=z+1
+            #z=z+1 # maybe not actually necessary.
             divergent = true
             # exit ploop --> how to do in julia?
+            break
         end
 
         if relative_error <= epsilon
-            #exit ploop
+            break # exit p loop
         end
 
         if relative_error > epsilon && p_iter==pmax
             dti=low*dti
-            z=z+1
+            #z=z+1
             repeat= true
-            #exit ploop
+            break # exit p loop
         end
 
         guess = akpar_new
     end # end of p loop
 
-    # If divergent, go back to beginning
-    # if repeat, go back to beginning
+    if divergent
+        continue # go to next time loop iteration with divergent = true
+    end
+    
+    if repeat
+        redo_timestep = true
+        noinc = true
+        continue # go to next time loop iteraton with repeat and noinc true
+    end 
 
     # Update Variables to "new" values (i.e. p+1)
 
@@ -357,15 +408,38 @@ for t = 0:tmax
 
     omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
-    uxavg = (uxavg+ vex)/(p+1.0)
-    uyavg = (uyave + vey)/(p+1.0)
+    # Seems to be just a diagnostic.
+    # uxavg = (uxavg+ vex)/(p+1.0)
+    # uyavg = (uyave + vey)/(p+1.0)
 
-    # Calculate CFL fraction/timestep MAKE SURE THIS IS FINE! LN 1544
-    if g_inc
-        CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
-        (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
-    else 
-        CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
+    # Calculate CFL fraction/timestep. Not sure why so simple here...
+    CFL_flow=min(dx/vxmax,dy/vymax)
+
+    dti_temp = CFL_frac*CFL_flow # TIMESTEP!
+
+    # Here can call diagnostics if necessary, do I/O stuff
+    
+    # Calculate new timestep!
+    dti = dtnext(relative_error,dti_temp,noinc) # NEED TO IMPLEMENT THIS IN AUX
+
+    # Calc new hyper coeffs
+    if hyper_fixed
+        ν_g = hyper_ν_g
+        ν2 = hyper_ν
+        η2 = hyper_η
+    else
+        ν_g = hyper_coef_g/dti/kperpmax^(2*hyper_order_g)
+        ν2 = hyper_coef/dti/kperpmax^(2*hyper_order)
+        if kperpmax^2*de^2 > 1
+            η2 = hyper_coef/dti/kperpmax^(2*hyper_order-2)*de^2
+        else
+            η2=hyper_coef/dti/kperpmax^(2*hyper_order)
+        end
     end
 
-    dti = CFL_frac*CFL_flow # TIMESTEP!
+    if hyper_colls_fixed
+        hyper_νei=hyper_colls
+    else    
+        hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
+    end
+end # END OF TIMELOOP

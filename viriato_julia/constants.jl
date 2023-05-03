@@ -1,7 +1,7 @@
 # ********** CONSTANT DECLARATION *************
 # BOX PARAMETERS:
-const three_d = true
-const PI = 3.1415926535
+const three_d = false
+const PI = 3.1415926535 # Just use Julia Pi?
 const Lx = 1.0  # X box size in units of 2*pi
 const Ly = 1.0  # Y box size in units of 2*pi
 const Lz = 1.0  # Z box size in units of 2*pi
