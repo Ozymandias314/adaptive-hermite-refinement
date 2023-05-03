@@ -1,11 +1,47 @@
 using LinearAlgebra 
-using .Brackets, .constants,.Diag,.Aux # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
+using .Brackets, .constants,.Diag,.Aux,.functions # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
 
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
 
-# phik,nek,akpar,uekpar,gk,dummy_real,bracket_akpar_uekpar
+# Only allocating the arrays that would be undefined. Many are returned from a function before use, for 
+# example, dxapar, etc. However, dxg must be indexed the first time it is used, so must define here. Not sure if this is the best way
+
+# LIST OF NEEDED CONSTANTS:
+
+# nkx,nky,ngtot,gmin,ginc,dx,dy,CFL_frac,hyper_ν_g, hyper_ν, hyper_η,rhos_de,hyper_order,hyper_order_g
+# hyper_coef,hyper_coef_g,kperpmax,hyperm_coef,hyper_morder, init_aa0_fac,tmax, low
+
+phik = Array{ComplexF64}(undef,nkx,nky)
+nek = Array{ComplexF64}(undef,nkx,nky)
+akpar = Array{ComplexF64}(undef,nkx,nky)
+uekpar = Array{ComplexF64}(undef,nkx,nky)
+dummy_real = Array{Real}(undef,nkx,nky)
+
+gk = Array{ComplexF64}(undef,nkx,nky,ngtot)
+dxg = Array{Real}(undef,nkx,nky,ngtot)
+dyg = Array{Real}(undef,nkx,nky,ngtot)
+fgm_old = Array{ComplexF64}(undef,nkx,nky,ngtot)
+
+nek_star = Array{ComplexF64}(undef,nkx,nky)
+phik_star = Array{ComplexF64}(undef,nkx,nky)
+akpar_star = Array{ComplexF64}(undef,nkx,nky)
+uekpar_star = Array{ComplexF64}(undef,nkx,nky)
+gk_star = Array{ComplexF64}(undef,nkx,nky,ngtot)
+dxg_star = Array{Real}(undef,nkx,nky,ngtot)
+dyg_star = Array{Real}(undef,nkx,nky,ngtot)
+
+akpar_new = Array{ComplexF64}(undef,nkx,nky)
+uekpar_new = Array{ComplexF64}(undef,nkx,nky)
+nek_new = Array{ComplexF64}(undef,nkx,nky)
+gk_new = Array{ComplexF64}(undef,nkx,nky,ngtot)
+fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
+
+rel_error_array = Array{ComplexF64}(undef,nkx,nky)
+
+
+
 
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
@@ -31,7 +67,7 @@ bymax = maxumum(abs(by))
 bperp = sqrt.(bx.^2+by.^2)
 bperp_max = maximum(bperp)
 
-omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
+omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
 # Calculate CFL fraction/timestep
 if g_inc
@@ -61,7 +97,7 @@ end
 if hyper_colls_fixed
     hyper_νei=hyper_colls
 else    
-    hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
+    hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
 end
 
 
@@ -133,7 +169,7 @@ for t = 0:tmax
     end
 
     # Get SI operator necessary for corrector step loop
-    semi_implicit_operator = calc_semi_implicit_operator(dti,bperp_max,aa0)
+    semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
 
     # Start Predictor ("star") step
     
@@ -227,13 +263,13 @@ for t = 0:tmax
         relative_error = 0.0 # reset value of relative error
         for i = 1:nkx
             for j = 1:nky
-                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i.j]+
+                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i,j]+
                     dti/2.0*exp_eta(i,j,η2,dti)*fApar_old[i,j]+ 
                     dti/2.0*fapar_pred[i,j]+
                     (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]+
                     semi_implicit_operator[i,j]/4.0*guess[i,j])
                 
-                uekpar_new = -kperp(i,j)^2*akpar_new[i,j]
+                uekpar_new[i,j] = -kperp(i,j)^2*akpar_new[i,j]
                 
                 # Take difference between akpar t=n and akpar_new, ie at t=n+1. Note akpar is only updated after p_loop. So this is akpar, n+1,p+1 - akpar,n
                 sum_apar_rel_error = sum_apar_rel_error + (abs(akpar_new[i,j]-akpar[i,j]))^2 # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
