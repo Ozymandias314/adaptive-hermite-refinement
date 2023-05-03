@@ -193,8 +193,8 @@ for t = 0:tmax
     # if not converged after one step
     for p_iter = 0:1
         p_count +=1
-        rel_err = 0.0
-        rel_error = 0.0
+        sum_apar_rel_error = 0.0
+        rel_error_array = 0.0 # array of zeros?
         old_error = 0.0
         if p_iter == 0 # use star values as p=0
             fapar_pred = fapar_star
@@ -205,7 +205,7 @@ for t = 0:tmax
             value_gx = dxg_star
             value_gy = dyg_star
         else
-            old_error = relative_error
+            old_error = relative_error # Old error stores relative error from last update. Use to check if divergent
             if g_inc
                 fapar_pred = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
             else
@@ -221,7 +221,7 @@ for t = 0:tmax
             vlaue_gy = dyg
         end
 
-        relative_error = 0.0
+        relative_error = 0.0 # reset value of relative error
         for i = 1:nkx
             for j = 1:nky
                 akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i.j]+
@@ -231,8 +231,9 @@ for t = 0:tmax
                     semi_implicit_operator[i,j]/4.0*guess[i,j])
                 
                 uekpar_new = -kperp(i,j)^2*akpar_new[i,j]
-
-                rel_err = rel_err + (abs(akpar_new[i,j]-akpar[i,j]))^2
+                
+                # Take difference between akpar t=n and akpar_new, ie at t=n+1. Note akpar is only updated after p_loop. So this is akpar, n+1,p+1 - akpar,n
+                sum_apar_rel_error = sum_apar_rel_error + (abs(akpar_new[i,j]-akpar[i,j]))^2 # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
             end
         end
 
@@ -245,11 +246,15 @@ for t = 0:tmax
             for j = 1:nky
                 nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j] + dti/2.0*fne_pred[i,j]
 
-                # Error for this p iteration NEED TO FIGURE OUT WHAT REL ERR SHOULD BE HERE. IN VIRIATO, IT IS PASSED THRU SUM-REDUCE FIRST
-                rel_error[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(rel_err/(nkx*nky))
+                # Error for this p iteration at each location. Note that guess hold the value of akpar_new from previous p_loop iteration so this is akpar,n+1,p+1 - akpar,n+1,p 
+                rel_error_array[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(sum_apar_rel_error/(nkx*nky))
             end
         end
         
+        # Get relative error for this p loop. Should definitely also put loop break statements here--no need to recalc g if we are only doing one p step!
+        # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
+        relative_error = maxval(abs(rel_error_array))
+
         phik_new = phi_pot(nek_new)
 
         # update phi, ne derivatives
@@ -307,9 +312,8 @@ for t = 0:tmax
         end    
             
         # Now have all necessary values at p=1
-        # Might want to move where this gets calced
-        relative_error = maxval(abs(rel_err))
 
+        # Test for convergence
         if p_iter >= 1 && relative_error/old_error >= 1.0
             dti = low*dti
             z=z+1
