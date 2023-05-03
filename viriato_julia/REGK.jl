@@ -368,4 +368,31 @@ for t = 0:tmax
         CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
     end
 
-    dti = CFL_frac*CFL_flow # TIMESTEP!
+    dti_temp = CFL_frac*CFL_flow # TIMESTEP!
+
+    # Here can call diagnostics if necessary, do I/O stuff
+    
+    # Calculate new timestep!
+    dti = dtnext(relative_error,dti_temp,noinc) # NEED TO IMPLEMENT THIS IN AUX
+
+    # Calc new hyper coeffs
+    if hyper_fixed
+        ν_g = hyper_ν_g
+        ν2 = hyper_ν
+        η2 = hyper_η
+    else
+        ν_g = hyper_coef_g/dti/kperpmax^(2*hyper_order_g)
+        ν2 = hyper_coef/dti/kperpmax^(2*hyper_order)
+        if kperpmax^2*de^2 > 1
+            η2 = hyper_coef/dti/kperpmax^(2*hyper_order-2)*de^2
+        else
+            η2=hyper_coef/dti/kperpmax^(2*hyper_order)
+        end
+    end
+
+    if hyper_colls_fixed
+        hyper_νei=hyper_colls
+    else    
+        hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
+    end
+end # END OF TIMELOOP
