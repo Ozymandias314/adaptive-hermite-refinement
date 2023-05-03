@@ -63,20 +63,13 @@ namespace ahr {
         }
 
         void for_each_mxy(std::invocable<Dim, Dim, Dim> auto fun) {
-            for (Dim m = 0; m < X; ++m) {
+            for (Dim m = 0; m < M; ++m) {
                 for (Dim x = 0; x < X; ++x) {
                     for (Dim y = 0; y < Y; ++y) {
                         fun(m, x, y);
                     }
                 }
             }
-        }
-
-        void mxy_copy(std::invocable<Dim, Dim, Dim> auto const &        src,        std::invocable<Dim, Dim, Dim> auto &dest
-        ) {
-            for_each_mxy([&](Dim m, Dim x, Dim y) {
-                dest(m, x, y) = src(m, x, y);
-            });
         }
 
         /// sliceXY returns a 2D mdspan of values in the XY space for a specified m.
@@ -89,7 +82,8 @@ namespace ahr {
         /// Uses other views for temporary storage, and stores results in viewPH_X.
         /// Currently really greedy.
         void bracketHalf(const ViewXY &viewPH, ViewXY viewPH_X, ViewXY viewPH_Y, ViewXY view_X, ViewXY view_Y,
-                         const ViewXY &otherX, const ViewXY &otherY) {
+                         const ViewXY &otherX,
+                         const ViewXY &otherY, ViewXY bracket, ViewXY bracketPH) {
             for_each_xy([&](Dim kx, Dim ky) {
                 viewPH_X(kx, ky) = -double(kx) * 1i * viewPH(kx, ky);
                 viewPH_Y(kx, ky) = -double(ky) * 1i * viewPH(kx, ky);
@@ -99,10 +93,10 @@ namespace ahr {
             planInv(viewPH_Y, view_Y);
 
             for_each_xy([&](Dim x, Dim y) {
-                view_X(x, y) = view_X(x, y) * otherY(x, y) - view_Y(x, y) * otherX(x, y);
+                bracket(x, y) = view_X(x, y) * otherY(x, y) - view_Y(x, y) * otherX(x, y);
             });
 
-            plan(view_X, viewPH_X);
+            plan(bracket, bracketPH);
         }
     };
 
