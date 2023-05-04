@@ -220,7 +220,7 @@ function func_lastg(hyper_nuei, niu2, Dxgm, Dygm, Dxg, Dyg, Dxphi, Dyphi, Dxapar
         for j = 1:nky
             bracket_akpar_gk[i,j] = (rhos_de^2 * (ngtot+1)) / ((ngtot+1) * nu_ei +
                 (ngtot+1)^(2*hyper_morder) * hyper_nuei +
-                niu * kperp[i,j]^2 + niu2*kperp[i,j]^(2*hyper_order)) * bracket_akpar_gk[i,j]
+                niu * kperp(i,j)^2 + niu2*kperp(i,j)^(2*hyper_order)) * bracket_akpar_gk[i,j]
         end
     end
     

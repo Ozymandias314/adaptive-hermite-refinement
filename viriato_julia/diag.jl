@@ -19,8 +19,8 @@ function Convol(Fk)
     for k in 1:nlz_par
         for i in 1:nkx_par
             for j in 1:nky
-                Fk_ikx[j,i,k] = im*kx[i]*Fk[j,i,k]
-                Fk_iky[j,i,k] = im*ky[i]*Fk[j,i,k]
+                Fk_ikx[i,j,k] = im*kx[i]*Fk[i,j,k]
+                Fk_iky[i,j,k] = im*ky[i]*Fk[i,j,k]
             end
         end
     end
