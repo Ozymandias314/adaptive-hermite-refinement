@@ -141,6 +141,48 @@ function func_g2(Dxg2, Dyg2, Dxphi, Dyphi, Dxapar, Dyapar, Dxg3, Dyg3, bracket_a
     return fg2
 end
 
+
+using ..constants: gmin, ngtot, npe, nlx, nly, nly_par, nlz_par, nky, nkx_par,
+                   kpar0, j1, omega0, facpm, amplitude, Lz, pi, lambda, de, notanj,
+                   rhos_de, rhoe_lte
+using ..grid: ky, zz
+using ..mp: iproc, proc0
+using ..Functions: anj_kron
+
+function Funcgm_3(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar, akpar, t)
+
+
+
+    #...  intent OUT
+    #...  size is nky * nkx_par * nlz_par
+    fgm = zeros(ComplexF64, nkx_par, nky, nlz_par)
+    #... Local vars
+    braakpargpm = zeros(ComplexF64, nky, nkx_par, nlz_par)
+    braphikg = zeros(ComplexF64, nky, nkx_par, nlz_par)
+    Akpar = zeros(ComplexF64, nky, nkx_par, nlz_par)
+
+    #feel like this part might be wrong....
+    lte_kron = zeros(Float64, ngtot)
+    lte_kron[gmin+1] = 1.0
+
+    Bracket(Dxphi, Dyphi, Dxg, Dyg, braphikg)
+
+    Bracket(DxApar, DyApar, sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dxgm, sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dygm
+    , braakpargpm)
+
+    for k = 1:nlz_par
+        for i = 1:nkx_par
+            for j = 1:nky
+                fgm[j, i, k] = -braphikg[j, i, k] + rhos_de * braakpargpm[j, i, k] +
+                    notanj * lte_kron[m] * sqrt(3.0)/(2.0*de^2) *
+                    rhoe_lte*(0.0, 1.0) * ky[j] * Akpar[j, i, k]
+                # +notanj*lte_kron(m)*sqrt(3.0/2.0)*rhos_de*rhoe_LTe*(0.0,1.0)*ky(j)*Akpar(j,i,k)
+                # NFL: 24/05/13 commented line above had wrong normalizations
+            end
+        end
+    end
+end
+
 # ok now funcgm is used by two interfaces. not gonna do it now since I think they r related to the dimensionality and maybe we only need to do one. 
 
 # Calculates nonlinear part of last moment closure. Not explicitly in paper, but described in Eq 22
