@@ -1,6 +1,10 @@
 using LinearAlgebra 
 using .Brackets, .constants,.Diag,.Aux,.functions # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
-
+include("Constants.jl")
+include("Brackets.jl")
+include("aux.jl")
+include("diag.jl")
+include("functions.jl")
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
