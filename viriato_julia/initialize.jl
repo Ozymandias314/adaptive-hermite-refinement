@@ -41,9 +41,9 @@ function equilibrium()
     if equilib_type=="gaus"
         for j in 1:nly_par     
             for i in 1:nlx
-                Apar_eq[i,j,k] = a0*exp(-(yy(j)*2*pi*2/ly)^2)*
+                Apar_eq[i,j] = a0*exp(-(yy(j)*2*pi*2/ly)^2)*
                                 exp(-(xx(i)*2*pi*2/lx)^2)
-                phi_eq[i,j,k]=0
+                phi_eq[i,j]=0
             end do
         end do
         
