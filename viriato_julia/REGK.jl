@@ -1,4 +1,4 @@
-using LinearAlgebra 
+using LinearAlgebra, FFTW
 using .Brackets, .constants,.Diag,.Aux,.functions # Ought to define these as "modules" using module __ at beginning, then choosing what data to export
 include("Constants.jl")
 include("Brackets.jl")
