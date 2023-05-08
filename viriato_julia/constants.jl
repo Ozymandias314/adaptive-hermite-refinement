@@ -1,22 +1,22 @@
 # ********** CONSTANT DECLARATION *************
 # BOX PARAMETERS:
-const three_d = false
-const PI = 3.1415926535 # Just use Julia Pi?
+#const three_d = false
+#const PI = 3.1415926535 # TODO: Just use Julia Pi?
 const Lx = 1.0  # X box size in units of 2*pi
 const Ly = 1.0  # Y box size in units of 2*pi
 const Lz = 1.0  # Z box size in units of 2*pi
 const NLx = 16  # number of grid points in X
 const NLy = 16  # number of grid points in Y
 const NLz = 16  # number of grid points in Z
-const mm = 2
-const nn = 2
+#const mm = 2
+#const nn = 2
 const g_inc = false  # true included g's in the calculation
 const gtot = 0  # number of Hermite moments; set to zero to run without g's
 const gmin = 0
-const dim_vec = 2  # dimension of the solution vector. 
+#const dim_vec = 2  # dimension of the solution vector. 
              # E.g., if g_inc=false dim_vec=2 (ne and Apar)
-const NPE = 1  # number of processors
-const NPEz = 1
+#const NPE = 1  # number of processors
+#const NPEz = 1
 # time parameters:
 const tmax = 1000  # maximum number of iterations	
 const init_aa0_fac = 0.1  # multiplier on the SI operator   
@@ -33,8 +33,8 @@ const rhos_de = 0.0
 # MHD:
 const small_rhoi = 1e-6  # if rhoi<small_rhoi, code evolves the RMHD eqs.
 # ANJOR:
-const anjor = true
-const notanj = 1.0
+#const anjor = true
+#const notanj = 1.0 # TODO: should just set all instances of notanj to 1.0
 const zcharge = 1.0
 const tite = 1.0
 const betai = 1.0
@@ -91,7 +91,7 @@ const feps::Float64 = 0.0
 
 #definitions I guess
 
-nkx::Int64
+nkx::Int64 = nlx/2+1
 nky::Int64
 nkz::Int64
 x_loc::Int64
