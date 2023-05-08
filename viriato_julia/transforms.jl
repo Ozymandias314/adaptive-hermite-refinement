@@ -1,8 +1,9 @@
 using LinearAlgebra,FFTW
 
+#need to make plans global?
 
-# 2D FFT. Input:
-function fft2d(array::Array{Float64},first_fft::Bool)
+# 2D FFT
+function FFT2d_direct(array::Array{Float64},first_fft::Bool)
     
     if first_fft
         rcfft_plan = plan_rfft(array)
@@ -12,8 +13,8 @@ function fft2d(array::Array{Float64},first_fft::Bool)
     array_k = rcfft_plan*array
 end
 
-# 2D IFFT. Output:
-function ifft2d(array_k::Array{ComplexF64},first_ifft::Bool)
+# 2D IFFT
+function FFT2d_inv(array_k::Array{ComplexF64},first_ifft::Bool)
     
 
     if first_ifft

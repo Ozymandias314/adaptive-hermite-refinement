@@ -23,8 +23,8 @@ function Convol(Fk)
     end
 
     # Assuming DxF, DyF are iFFT of Fk_ikx
-    DxF = ifft(Fk_ikx)
-    DyF = ifft(Fk_iky)
+    DxF = FFT2d_inv(Fk_ikx,first_ifft)
+    DyF = FFT2d_inv(Fk_iky,first_ifft)
 
     return DxF, DyF
 end

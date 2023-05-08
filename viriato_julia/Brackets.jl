@@ -1,5 +1,6 @@
 #  use Brackets,   only: funcne_i, funcAkpar_i, funcg2, funcgm, func_lastg, bracket_3
 include("constants.jl")
+include("transforms.jl")
 print(lambda)
 
 # NOT USED?
@@ -50,7 +51,7 @@ function Bracket_4(dxF, dyF, dxG, dyG)
     else 
         @. braxy = dxF * dyG - dyF * dxG
 
-        #call the fft2d_direct on braxy, braxyk
+        braxyk = FFT2d_direct(braxy,first_fft)
 
         if mod(iproc, npe) == 0
             braxyk[1, 1, :, ngmin:ngmax] .= 0.0 # insures that no zeroth mode is created
@@ -72,7 +73,7 @@ function Bracket_3(dxF, dyF, dxG, dyG)
     else
         @. braxy = dxF * dyG - dyF * dxG
 
-        #some weird ifdef gasca2d, gasca3d thing, seems like it just affects how the FFT is calculated
+        braxyk = FFT2d_direct(braxy,first_fft)
 
         if mod(iproc, npe) == 0
             braxyk[1, 1, :, :] .= 0.0 # insures that no zeroth mode is created

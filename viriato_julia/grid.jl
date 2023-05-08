@@ -1,4 +1,4 @@
-include("constants.jl")
+include("constants.jl") # Need to include constants everywhere?
 
 
 function kperp(i::Int,j::Int)
