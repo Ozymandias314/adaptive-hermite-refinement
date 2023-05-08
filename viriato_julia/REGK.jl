@@ -52,6 +52,8 @@ rel_error_array = Array{ComplexF64}(undef,nkx,nky)
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
+
+# TODO: MAKE SURE THE CONVOL DEFINITIONS ARE NOT CONVOL3,CONVOL4, just convol. Only need 2D! Im sure this will throw an error bc convol isnt defined!
 dxphi,dyphi = convol(phik) # Better to write functions like this or as something that modifies value?
 dxne, dyne = convol(nek)
 dxapar,dyapar = convol(akpar)

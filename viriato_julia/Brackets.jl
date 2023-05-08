@@ -51,7 +51,7 @@ function Bracket_4(dxF, dyF, dxG, dyG)
     else 
         @. braxy = dxF * dyG - dyF * dxG
 
-        braxyk = FFT2d_direct(braxy,first_fft)
+        braxyk = FFT2d_direct(braxy)
 
         if mod(iproc, npe) == 0
             braxyk[1, 1, :, ngmin:ngmax] .= 0.0 # insures that no zeroth mode is created
@@ -73,7 +73,7 @@ function Bracket_3(dxF, dyF, dxG, dyG)
     else
         @. braxy = dxF * dyG - dyF * dxG
 
-        braxyk = FFT2d_direct(braxy,first_fft)
+        braxyk = FFT2d_direct(braxy)
 
         if mod(iproc, npe) == 0
             braxyk[1, 1, :, :] .= 0.0 # insures that no zeroth mode is created

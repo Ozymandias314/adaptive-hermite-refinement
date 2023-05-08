@@ -1,5 +1,5 @@
 include("constants.jl")
-include("grids.jl")
+include("grid.jl")
 include("transforms.jl")
 
 function init_perturb()
@@ -30,17 +30,17 @@ function init_perturb()
 end
 
 function equilibrium()
-    Apar_eq = Array{Real}(undef, nlx, nly_par)
+    Apar_eq = Array{Real}(undef, nlx, nly)
     phi_eq = similar(Apar_eq)
-    AKpar_eq = Array{Complex}(undef, nkx_par, nky)
+    AKpar_eq = Array{Complex}(undef, nkx, nky)
     
     phi_eq .= 0.0
     Apar_eq .= 0.0
     AKpar_eq .= 0.0
 
     if equilib_type=="gaus"
-        for j in 1:nly_par     
-            for i in 1:nlx
+        for i in 1:nlx     
+            for j in 1:nly
                 Apar_eq[i,j] = a0*exp(-(yy(j)*2*pi*2/ly)^2)*
                                 exp(-(xx(i)*2*pi*2/lx)^2)
                 phi_eq[i,j]=0

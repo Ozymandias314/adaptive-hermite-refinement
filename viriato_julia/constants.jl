@@ -47,7 +47,7 @@ const lambda = 1.0
 const sigma = 1.0
 const rhos_diag = 0.0
 # Background electron temp gradient:
-const rhoe_LTe = 0.0
+#const rhoe_LTe = 0.0
 const kc0 = 0.0
 # DIFFUSION:
 const nu_ei = 0.00	  # collisions
@@ -77,37 +77,39 @@ const perturb_amp::Float64 = 0.0
 const equilib_type::String = "none" # AVK: Changed default equil to none
 const perturb_type::String = "none"
 #*********************************
-#**** TURBULENT SOURCE PARAMETERS ******
-const turb::Bool = true
-# const gturb::Bool = false
-const kfp1::Float64 = 1.0
-const kfp2::Float64 = 2.0
-const kfz1::Float64 = 1.0
-const kfz2::Float64 = 1.0
-const feps::Float64 = 0.0
+#**** TURBULENT SOURCE PARAMETERS ****** TODO: Not needed!
+# const turb::Bool = true
+# # const gturb::Bool = false
+# const kfp1::Float64 = 1.0
+# const kfp2::Float64 = 2.0
+# const kfz1::Float64 = 1.0
+# const kfz2::Float64 = 1.0
+# const feps::Float64 = 0.0
 
 
 #Skipped a bunch of stuff related to saving data
 
 #definitions I guess
 
+# TODO:give real definitions! Some things here not needed, others are depended on constants defined above, like nkx,nky, dx,dy. 
+# See Viriato code for clarification? Idk
 nkx::Int64 = nlx/2+1
-nky::Int64
-nkz::Int64
-x_loc::Int64
-y_loc::Int64
-z_loc::Int64
+nky::Int64 = nly
+#nkz::Int64
+#x_loc::Int64
+#y_loc::Int64
+#z_loc::Int64
 k_max::Int64
 kperpmax::Int64
-nkx_par::Int64
-nly_par::Int64
-nlypar_old::Int64
-nlz_par::Int64
+#nkx_par::Int64 # TODO: make sure to change all uses of "_par" to just the nkx as this has to do with the parallelization!
+#nly_par::Int64
+#nlypar_old::Int64
+#nlz_par::Int64
 dx::Float64
 dy::Float64
-dz::Float64
-etaz::Float64 = 0.0
-etaz_g::Float64 = 0.0
+#dz::Float64
+#etaz::Float64 = 0.0
+#etaz_g::Float64 = 0.0
 scale::Float64
 
 #read data from input file

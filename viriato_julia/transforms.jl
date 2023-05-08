@@ -10,7 +10,7 @@ irfft_plan = plan_irfft(array_k,nlx)
 
 # 2D FFT
 function FFT2d_direct(array::Array{Float64})
-    array_k = rcfft_plan*array/sqrt(nlx*nly) # Must normalize by number of modes!
+    array_k = rcfft_plan*array/sqrt(nlx*nly) # Must normalize by number of modes! Luka made a comment that we might want to do this in the bracket funciton instead of here, but can change this later. 
 end
 
 # 2D IFFT
