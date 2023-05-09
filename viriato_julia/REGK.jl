@@ -1,4 +1,4 @@
-using LinearAlgebra, FFTW
+using LinearAlgebra, FFTW, Logging
 
 include("constants.jl")
 include("transforms.jl")
@@ -21,7 +21,15 @@ include("initialize.jl")
 
 function main() # This seems to be a way to reduce use of "global"
 
-    debugging = true # Debugging print statements
+#vincent: I added the logger here. for messages that are debug messages you want to log, just do @debug "message". For messages that are of "higher importance", such as maybe logging the parameters (I am not that familiar with what)
+# should actually be logged, use @info "parameter". @info is a higher importance than @debug, so if you change it to logger = Logging.SimpleLogger(log_file, Logging.Info) it will only record the @Info messages
+log_file = open("mylog.log", "w")
+logger = Logging.SimpleLogger(log_file, Logging.Debug)
+
+Logging.global_logger(logger)
+
+
+debugging = true # Debugging print statements
 
 
 phik = Array{ComplexF64}(undef,nkx,nky)
@@ -300,6 +308,8 @@ for t = 0:tmax
         print("Starting corrector loop \n")
     end
 
+    @debug "Starting corrector loop!!!!!!!!!"
+
     p_iter = 0
     for p_iter = 0:1
         p_count +=1
@@ -527,7 +537,7 @@ end # END OF TIMELOOP
 if debugging
     print("End of REGK \n")
 end
-
+close(log_file)
 end # End of main 
 
 main()
