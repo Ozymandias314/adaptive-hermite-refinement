@@ -2,15 +2,16 @@
 # BOX PARAMETERS:
 #const three_d = false
 #const PI = 3.1415926535 # TODO: Just use Julia Pi?
-const Lx = 1.0  # X box size in units of 2*pi
-const Ly = 1.0  # Y box size in units of 2*pi
-const Lz = 1.0  # Z box size in units of 2*pi
-const NLx = 16  # number of grid points in X
-const NLy = 16  # number of grid points in Y
-const NLz = 16  # number of grid points in Z
+#commenting all of these out beacuse you read them from the json
+#const lx = 1.0  # X box size in units of 2*pi
+#const ly = 1.0  # Y box size in units of 2*pi
+#const lz = 1.0  # Z box size in units of 2*pi
+#const nlx = 16  # number of grid points in X
+#const nly = 16  # number of grid points in Y
+#const nlz = 16  # number of grid points in Z
 #const mm = 2
 #const nn = 2
-const g_inc = false  # true included g's in the calculation
+#const g_inc = false  # true included g's in the calculation
 const gtot = 0  # number of Hermite moments; set to zero to run without g's
 const gmin = 0
 #const dim_vec = 2  # dimension of the solution vector. 
@@ -18,20 +19,20 @@ const gmin = 0
 #const NPE = 1  # number of processors
 #const NPEz = 1
 # time parameters:
-const tmax = 1000  # maximum number of iterations	
-const init_aa0_fac = 0.1  # multiplier on the SI operator   
+#const tmax = 1000  # maximum number of iterations	
+#const init_aa0_fac = 0.1  # multiplier on the SI operator   
   
-const CFL_frac = 0.25
-const epsilon = 1e-10     # sets the tolerance for the pth iteration at each time step
+#const CFL_frac = 0.25
+#const epsilon = 1e-10     # sets the tolerance for the pth iteration at each time step
 # const g_epsilon=1.e-3
-const pmax = 1  # maximum number of iterations per time step 
+#const pmax = 1  # maximum number of iterations per time step 
 # FLR:      
-const rhoi = 1e-8
-const rhos = 1e-8
-const de = 1e-8
+#const rhoi = 1e-8
+#const rhos = 1e-8
+#const de = 1e-8
 const rhos_de = 0.0
 # MHD:
-const small_rhoi = 1e-6  # if rhoi<small_rhoi, code evolves the RMHD eqs.
+#const small_rhoi = 1e-6  # if rhoi<small_rhoi, code evolves the RMHD eqs.
 # ANJOR:
 #const anjor = true
 #const notanj = 1.0 # TODO: should just set all instances of notanj to 1.0
@@ -50,32 +51,32 @@ const rhos_diag = 0.0
 #const rhoe_LTe = 0.0
 const kc0 = 0.0
 # DIFFUSION:
-const nu_ei = 0.00	  # collisions
-const res = 0.0  # nu_ei*de**2
-const niu = 0.0  # viscosity
-const hyper_coef = 1.0  # 0.25   # set to zero for no hyper-diffusion
-const hyper_coef_g = 0.0  # 0.25   # set to zero for no hyper-diffusion on the g's
-const hyperm_coef = 2.0  # 0.25
-const hyper_fixed = false  # Fixes the hyper coeffs, if false, scales with d
-const hyper_order = 3  # this means it's k^(2*hyper_order)
-const hyper_order_g = 3  # this means it's k^(2*hyper_order_g) in the g eqs
-const hyper_morder = 3  # this means it's k^(2*hyper_order)
-const hyper_eta = 1.0  # 3.0e-8  
-const hyper_nu::Float64 = 1.0 # 3.0e-8
-const hyper_nu_g::Float64 = 0.0 # 0.25
-const hyper_colls_fixed::Bool = false
-const hyper_colls::Float64 = 0.0
+#const nu_ei = 0.00	  # collisions
+#const res = 0.0  # nu_ei*de**2
+#const niu = 0.0  # viscosity
+#const hyper_coef = 1.0  # 0.25   # set to zero for no hyper-diffusion
+#const hyper_coef_g = 0.0  # 0.25   # set to zero for no hyper-diffusion on the g's
+#const hyperm_coef = 2.0  # 0.25
+#const hyper_fixed = false  # Fixes the hyper coeffs, if false, scales with d
+#const hyper_order = 3  # this means it's k^(2*hyper_order)
+#const hyper_order_g = 3  # this means it's k^(2*hyper_order_g) in the g eqs
+#const hyper_morder = 3  # this means it's k^(2*hyper_order)
+#const hyper_eta = 1.0  # 3.0e-8  
+#const hyper_nu::Float64 = 1.0 # 3.0e-8
+#const hyper_nu_g::Float64 = 0.0 # 0.25
+#const hyper_colls_fixed::Bool = false
+#const hyper_colls::Float64 = 0.0
 
 #********** EQUILIBRIUM VALUES **************
-const A0::Float64 = 0.0
-const PHI0::Float64 = 0.0 # not used
-const Leq::Float64 = 0.3
+#const A0::Float64 = 0.0
+#const PHI0::Float64 = 0.0 # not used
+#const Leq::Float64 = 0.3
 # const perturb_A::Float64 = 0.0 # 1.e-5*A0
 # const perturb_PHI::Float64 = 0.0 # 1.0e-8 or 1.e-5*PHI0
 # const g_perturb::Float64 = 0.0
-const perturb_amp::Float64 = 0.0
-const equilib_type::String = "none" # AVK: Changed default equil to none
-const perturb_type::String = "none"
+#const perturb_amp::Float64 = 0.0
+#const equilib_type::String = "none" # AVK: Changed default equil to none
+#const perturb_type::String = "none"
 #*********************************
 #**** TURBULENT SOURCE PARAMETERS ****** TODO: Not needed!
 # const turb::Bool = true
@@ -91,33 +92,35 @@ const perturb_type::String = "none"
 
 #definitions I guess
 
-# TODO:give real definitions! Some things here not needed, others are depended on constants defined above, like nkx,nky, dx,dy. 
+# TODO:give real definitions! Some things here not needed, others are depended on constants defined above, like nkx,nky, dx,dy.
+# vincent: nlx and stuff are above, they used to be upper case whoops
+
 # See Viriato code for clarification? Idk
-nkx::Int64 = nlx/2+1
-nky::Int64 = nly
+#nkx::Int64 = nlx/2+1
+#nky::Int64 = nly
 #nkz::Int64
 #x_loc::Int64
 #y_loc::Int64
 #z_loc::Int64
-k_max::Int64
-kperpmax::Int64
+#k_max::Int64 = nkx - div(nkx, 2)
+#kperpmax::Float64 = sqrt(nkx^2 + (nky/2)^2) # confused! changed to float64
 #nkx_par::Int64 # TODO: make sure to change all uses of "_par" to just the nkx as this has to do with the parallelization!
 #nly_par::Int64
 #nlypar_old::Int64
 #nlz_par::Int64
-dx::Float64
-dy::Float64
+#dx::Float64
+#dy::Float64
 #dz::Float64
 #etaz::Float64 = 0.0
 #etaz_g::Float64 = 0.0
-scale::Float64
+#scale::Float64
 
 #read data from input file
 
 using JSON
 
 # Load the JSON file
-const_data = JSON.parsefile("input.json")
+const_data = JSON.parsefile("viriato_julia/example_inputs.json")
 
 # Extract values from the "box_parameters" object
 lx = const_data["box_parameters"]["lx"]
