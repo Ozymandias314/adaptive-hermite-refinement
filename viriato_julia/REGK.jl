@@ -28,11 +28,13 @@ phik = Array{ComplexF64}(undef,nkx,nky)
 nek = Array{ComplexF64}(undef,nkx,nky)
 akpar = Array{ComplexF64}(undef,nkx,nky)
 uekpar = Array{ComplexF64}(undef,nkx,nky)
+nek_perturb = Array{ComplexF64}(undef,nkx,nky)
+
 dummy_real = Array{Float64}(undef,nlx,nly)
 
 gk = Array{ComplexF64}(undef,nkx,nky,ngtot)
-dxg = Array{Float64}(undef,nkx,nky,ngtot)
-dyg = Array{Float64}(undef,nkx,nky,ngtot)
+dxg = Array{Float64}(undef,nlx,nly,ngtot)
+dyg = Array{Float64}(undef,nlx,nly,ngtot)
 fgm_old = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
 nek_star = Array{ComplexF64}(undef,nkx,nky)
@@ -40,12 +42,13 @@ phik_star = Array{ComplexF64}(undef,nkx,nky)
 akpar_star = Array{ComplexF64}(undef,nkx,nky)
 uekpar_star = Array{ComplexF64}(undef,nkx,nky)
 gk_star = Array{ComplexF64}(undef,nkx,nky,ngtot)
-dxg_star = Array{Float64}(undef,nkx,nky,ngtot)
-dyg_star = Array{Float64}(undef,nkx,nky,ngtot)
+dxg_star = Array{Float64}(undef,nlx,nly,ngtot)
+dyg_star = Array{Float64}(undef,nlx,nly,ngtot)
 
 akpar_new = Array{ComplexF64}(undef,nkx,nky)
 uekpar_new = Array{ComplexF64}(undef,nkx,nky)
 nek_new = Array{ComplexF64}(undef,nkx,nky)
+phik_new = Array{ComplexF64}(undef,nkx,nky)
 gk_new = Array{ComplexF64}(undef,nkx,nky,ngtot)
 fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
@@ -57,9 +60,43 @@ end
 
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep, Initial conditions
 
-# Get initial conditions
+# Get initial conditions, load actual values into arrays!
 
-akpar_eq, phik_eq = equilibrium()
+apar_eq, phi_eq = equilibrium()
+
+akpar_eq = FFT2d_direct(apar_eq) # will be used later!
+
+#apar_perturb = init_perturb(apar_perturb) # TODO:Implement perturbation to phi or Apar
+# apar = apar_eq + apar_perturb
+# phi = phi_eq + phi_perturb
+apar = apar_eq
+phi = phi_eq 
+
+akpar = FFT2d_direct(apar)
+phik = FFT2d_direct(phi)
+
+if rhoi < small_rhoi
+    for i = 1:nkx
+        for j = 1:nky
+            nek_perturb[i,j] = -kperp(i,j)^2*phik[i,j]
+        end
+    end
+else
+    for i = 1:nkx
+        for j = 1:nky
+            nek_perturb[i,j] = 2.0/rhoi^2*(Γ₀(kperp(i,j)^2*rhoi^2/2.0)-1)*phik[i,j]
+        end
+    end
+end
+nek = nek_perturb
+
+for i = 1:nkx
+    for j = 1:nky
+        uekpar[i,j] = -kperp(i,j)^2*akpar[i,j]
+    end
+end
+
+# In Viriato, take invFFT to get ne, uepar in real space. But these only used for diagnostics, so dont do that here yet
 
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
@@ -122,6 +159,8 @@ end
 if debugging
     print("Calced hypercoeffs, ready to begin timeloop \n")
 end
+
+savetime = 0.0
 ############## TIME LOOP ###################
 
 #First some values which must be initialized for LOOP
@@ -176,7 +215,7 @@ for t = 0:tmax
                 dxg[:,:,gmin+1],dyg[:,:,gmin+1],bracket_akpar_uekpar)
                 # \mathcal{gm}
                 for ng = gmin+1:ngtot-1
-                    fgm_old[:,:,ng] = func_gm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
+                    fgm_old[:,:,ng] .= func_gm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
                     dxphi,dyphi,dxapar,dyapar) 
                 end
                 # \mathcal{glast}
@@ -218,8 +257,8 @@ for t = 0:tmax
             for j = 1:nky
                 gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
                 
-                gk_star[i,j,ngtot] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
-                    dti/2.0*(1.0+exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
+                gk_star[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
+                    dti/2.0*(1.0+exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
             end 
         end
         # get the rest of the gs
@@ -265,7 +304,7 @@ for t = 0:tmax
     for p_iter = 0:1
         p_count +=1
         sum_apar_rel_error = 0.0
-        rel_error_array = 0.0 # array of zeros?
+        rel_error_array .= 0.0 # array of zeros?
         old_error = 0.0
         if p_iter == 0 # use star values as p=0
             fapar_pred = fapar_star
@@ -289,7 +328,7 @@ for t = 0:tmax
             value_phix = dxphi
             value_phiy = dyphi
             value_gx = dxg
-            vlaue_gy = dyg
+            value_gy = dyg
         end
 
         relative_error = 0.0 # reset value of relative error
@@ -324,13 +363,13 @@ for t = 0:tmax
         
         # Get relative error for this p loop. Should definitely also put loop break statements here--no need to recalc g if we are only doing one p step!
         # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
-        relative_error = maxval(abs(rel_error_array))
+        relative_error = maximum(abs.(rel_error_array))
 
         phik_new = phi_pot(nek_new)
 
         # update phi, ne derivatives
         dxphi, dyphi = convol(phik_new)
-        dxne,dyne = convol(ne)
+        dxne,dyne = convol(nek_new)
 
         
         # now get next mathcal gs 
@@ -347,13 +386,13 @@ for t = 0:tmax
                 end
             end
 
-            dxg[:,:,gmin],dyg[:,:,gmin] = convol(gknew[:,:,gmin])
+            dxg[:,:,gmin],dyg[:,:,gmin] = convol(gk_new[:,:,gmin])
             # get gm p+1
             for ng = gmin+1:ngtot-1
                 
                 dxgm = dxg[:,:,ng-1] # need this bc gm p+1 relies on gm-1 p+1
                 dygm = dyg[:,:,ng-1]
-                fgm_pred[:,:,ng] = func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
+                fgm_pred[:,:,ng] .= func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
                 dxphi,dyphi,dxapar,dyapar)
 
                 for i = 1:nkx
@@ -372,8 +411,8 @@ for t = 0:tmax
                 dxphi,dyphi,dxapar,dyapar)
             for i = 1:nkx
                 for j = 1:nky
-                    gk_new[i,j,ngtot] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
-                        dti/2.0*exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fglast_old[i,j]+
+                    gk_new[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
+                        dti/2.0*exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fglast_old[i,j]+
                             dti/2.0*f_lastg[i,j]
                 end
             end
@@ -432,17 +471,17 @@ for t = 0:tmax
 
     # Now re-evaluate the flows to evaluate CFL condition
     
-    vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi)
-    vxmax = maximum(max(abs(vex),abs(vrhosx)))
-    vymax = maximum(max(abs(vey),abs(vrhosxy)))
+    vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi,dxne,dyne)
+    vxmax = max(maximum(abs.(vex)),maximum(abs.(vrhosx)))
+    vymax = max(maximum(abs.(vey)),maximum(abs.(vrhosy)))
 
     bx,by = bfield(dxapar,dyapar)
-    bxmax = maximum(abs(bx))
-    bymax = maxumum(abs(by))
+    bxmax = maximum(abs.(bx))
+    bymax = maximum(abs.(by))
     bperp = sqrt.(bx.^2+by.^2)
     bperp_max = maximum(bperp)
 
-    omega_kaw(bperp_max) # Function omega_kaw--its value is public in the function def
+    omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
     # Seems to be just a diagnostic.
     # uxavg = (uxavg+ vex)/(p+1.0)
@@ -456,7 +495,7 @@ for t = 0:tmax
     # Here can call diagnostics if necessary, do I/O stuff
     
     # Calculate new timestep!
-    dti = dtnext(relative_error,dti_temp,noinc) # NEED TO IMPLEMENT THIS IN AUX
+    dti = dtnext(relative_error,dti_temp,noinc,dti) 
 
     # Calc new hyper coeffs
     if hyper_fixed
@@ -476,13 +515,13 @@ for t = 0:tmax
     if hyper_colls_fixed
         hyper_νei=hyper_colls
     else    
-        hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
+        hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
     end
 
     if debugging
         print("End of timeloop, moving to next iteration \n")
+        print("Timestep ", t, "\n")
     end
-
 end # END OF TIMELOOP
 
 if debugging

@@ -65,7 +65,7 @@ end
 # Calculates nonlinear operator in 2nd moment
 function func_g2(Dxg2, Dyg2, Dxphi, Dyphi, Dxapar, Dyapar, Dxg3, Dyg3, bracket_akpar_uekpar)
     nlx, nly = size(Dxapar)
-    nkx, nky = size(braakparuekpar)
+    nkx, nky = size(bracket_akpar_uekpar)
 
     fg2 = zeros(ComplexF64, nkx, nky)
 
@@ -93,11 +93,11 @@ using ..Functions: anj_kron
 =#
 function func_gm(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar)
 
-    fgm = zeros(ComplexF64, nkx_par, nky, nlz_par)
+    fgm = zeros(ComplexF64, nkx, nky)
     #... Local vars
-    braakpargpm = zeros(ComplexF64, nky, nkx_par, nlz_par)
-    braphikg = zeros(ComplexF64, nky, nkx_par, nlz_par)
-    Akpar = zeros(ComplexF64, nky, nkx_par, nlz_par)
+    bracket_akpar_gpm = zeros(ComplexF64, nkx, nky)
+    bracket_phik_g = zeros(ComplexF64, nkx, nky)
+    
 
     #feel like this part might be wrong....
     lte_kron = zeros(Float64, ngtot)
@@ -114,6 +114,8 @@ function func_gm(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyap
             fgm[i, j] = -bracket_phik_g[i, j] + rhos_de * bracket_akpar_gpm[i, j]
         end
     end
+
+    return fgm
 end
 
 # Calculates nonlinear part of last moment closure. Not explicitly in paper, but described in Eq 22

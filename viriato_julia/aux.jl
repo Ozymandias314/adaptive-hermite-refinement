@@ -25,13 +25,9 @@ end
 
 #Note: @inbounds macro is used to eliminate bounds checking inside the loops for performance optimization.
 
-function phi_pot(nek::Array{ComplexF64,2}, phiK::Array{ComplexF64,2})
+function phi_pot(nek::Array{ComplexF64,2})
     @inbounds begin
-        for i in 1:nkx
-            for j in 1:nky 
-                 phiK[i,j] = 0.0 + 0.0im 
-            end
-        end
+        phiK = zeros(ComplexF64,nkx,nky)
 
         if (rhoi < small_rhoi)
             for i in 1:nkx
@@ -47,6 +43,7 @@ function phi_pot(nek::Array{ComplexF64,2}, phiK::Array{ComplexF64,2})
             end
         end
     end
+    return phiK
 end
 
 function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
@@ -70,7 +67,7 @@ function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
     return SI_oper
 end
 
-function dtnext(relative_error::Real,x::Real,noinc::Bool,dti::Real)
+function dtnext(relative_error::Float64,dti_temp::Float64,noinc::Bool,dti::Float64)
     if noinc
         inc_fac = 1.0
         noinc = false # need to make noinc global
@@ -79,13 +76,13 @@ function dtnext(relative_error::Real,x::Real,noinc::Bool,dti::Real)
     end
 
     if relative_error < 0.8*epsilon
-        if x < inc_fac*dti
-            dti = x
+        if dti_temp < inc_fac*dti
+            dti = dti_temp
         else
             dti = inc_fac*dti
         end
     else
-        dti = min(x,dti)
+        dti = min(dti_temp,dti)
     end
 
     return dti

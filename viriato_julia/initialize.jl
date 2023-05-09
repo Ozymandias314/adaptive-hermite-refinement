@@ -43,11 +43,7 @@ function equilibrium()
                 phi_eq[i,j]=0
             end 
         end
-        
-        #not sure what happens in the FFT
-        Akpar_eq = FFT2d_direct(Apar_eq)
-        phik_eq = FFT2d_direct(phi_eq)
      end
 
-    return Akpar_eq, phik_eq
+    return Apar_eq, phi_eq
 end
