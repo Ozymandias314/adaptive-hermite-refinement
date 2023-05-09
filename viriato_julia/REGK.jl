@@ -1,6 +1,6 @@
 using LinearAlgebra, FFTW
 
-include("Constants.jl")
+include("constants.jl")
 include("transforms.jl")
 include("Brackets.jl")
 include("aux.jl")

@@ -199,9 +199,11 @@ nlz_par = div(nlz - 1, npez) + 1
 dx = lx / nkx
 dy = ly / nky
 dz = lz / nlz
+etaz = 0
+etaz_g = 0
 etaz = etaz * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
 etaz_g = etaz_g * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
 scale = 1.0 / (nlx * nly)  # scale factor for FFTs
-
+kperp0 = 1 #i think? -vincent
 j1 = div(kperp0 * ly, lx) + 1
 j2 = nky - j1 + 2

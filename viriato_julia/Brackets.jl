@@ -142,14 +142,16 @@ function func_g2(Dxg2, Dyg2, Dxphi, Dyphi, Dxapar, Dyapar, Dxg3, Dyg3, bracket_a
     return fg2
 end
 
-
+#commented out the below block because it seems like it is using modules, and maybe we can just use include? or if we want to use module
+# have to actually export correctly
+#=
 using ..constants: gmin, ngtot, npe, nlx, nly, nly_par, nlz_par, nky, nkx_par,
                    kpar0, j1, omega0, facpm, amplitude, Lz, pi, lambda, de, notanj,
                    rhos_de, rhoe_lte
 using ..grid: ky, zz
 using ..mp: iproc, proc0
 using ..Functions: anj_kron
-
+=#
 function Funcgm_3(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar, akpar, t)
 
 
