@@ -36,3 +36,11 @@ function Γ₀(x::Float64)
     end
     
 end
+
+function xx(i::Int)
+   xx = lx*(i-1.0-nlx/2)/nlx 
+end
+
+function yy(j::Int)
+    xx = ly*(j-1.0-nly/2)/nly 
+end

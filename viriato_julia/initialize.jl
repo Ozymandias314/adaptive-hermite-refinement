@@ -30,13 +30,10 @@ function init_perturb()
 end
 
 function equilibrium()
-    Apar_eq = Array{Real}(undef, nlx, nly)
+    Apar_eq = Array{Float64}(undef, nlx, nly)
     phi_eq = similar(Apar_eq)
-    AKpar_eq = Array{Complex}(undef, nkx, nky)
-    
     phi_eq .= 0.0
     Apar_eq .= 0.0
-    AKpar_eq .= 0.0
 
     if equilib_type=="gaus"
         for i in 1:nlx     
@@ -48,8 +45,9 @@ function equilibrium()
         end
         
         #not sure what happens in the FFT
-        FFT2d_direct(Apar_eq(:, :), AKpar_eq(:, :)) # This is needed to calc the perturbed spectrum. Not sure this will work if not done in 3D, so be mindful of this. A. Velb 5/26/22
+        Akpar_eq = FFT2d_direct(Apar_eq)
+        phik_eq = FFT2d_direct(phi_eq)
      end
 
-    return Apar_eq, phi_eq
-    end
+    return Akpar_eq, phik_eq
+end

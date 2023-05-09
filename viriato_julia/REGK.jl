@@ -55,7 +55,12 @@ if debugging
     print("Finished Initializing arrays \n")
 end
 
-# Begin setup of necessary values, dx,dys, hypercoeffs, timestep
+# Begin setup of necessary values, dx,dys, hypercoeffs, timestep, Initial conditions
+
+# Get initial conditions
+
+akpar_eq, phik_eq = equilibrium()
+
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
 
@@ -104,7 +109,7 @@ else
     if kperpmax^2*de^2 > 1
         η2 = hyper_coef/dti/kperpmax^(2*hyper_order-2)*de^2
     else
-        res2=hyper_coef/dti/kperpmax^(2*hyper_order)
+        η2=hyper_coef/dti/kperpmax^(2*hyper_order)
     end
 end
 
@@ -189,7 +194,7 @@ for t = 0:tmax
 
     
     # Start Predictor ("star") step
-    
+
     if debugging
         print("Starting predictor step \n")
     end
@@ -207,7 +212,7 @@ for t = 0:tmax
         end
     end
     
-    if ginc
+    if g_inc
         # Get first and last g
         for i = 1:nkx
             for j = 1:nky
@@ -228,12 +233,11 @@ for t = 0:tmax
         end
 
     end
-
-    # Start Predictor step here (pmax = 1 always for this code so only one corrector step)
     for ng = gmin:ngtot
         dxg_star[:,:,ng],dyg_star[:,:,ng] = convol(gk_star[:,:,ng])
     end 
     
+
     phik_star = phi_pot(nek_star)
     dxphi_star,dyphi_star = convol(phik_star) 
     dxne_star, dyne_star = convol(nek_star)
@@ -247,6 +251,8 @@ for t = 0:tmax
         fapar_star = func_Akpar(dxapar_star,dyapar_star,dxphi_star,dyphi_star,
             dxne_star,dyne_star,dxuepar_star,dyuepar_star,dummy_real,dummy_real)
     end
+    
+    
 
     # begin corrector "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
     # if not converged after one step
