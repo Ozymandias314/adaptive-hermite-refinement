@@ -1,4 +1,4 @@
-module transforms
+xmodule transforms
 
   !TTR
   !. FPP macro to simplify RZG PERFLIB calls (performance-counter)

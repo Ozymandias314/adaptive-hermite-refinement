@@ -13,7 +13,6 @@
 #const nn = 2
 #const g_inc = false  # true included g's in the calculation
 const gtot = 0  # number of Hermite moments; set to zero to run without g's
-const gmin = 0
 #const dim_vec = 2  # dimension of the solution vector. 
              # E.g., if g_inc=false dim_vec=2 (ne and Apar)
 #const NPE = 1  # number of processors
@@ -30,7 +29,6 @@ const gmin = 0
 #const rhoi = 1e-8
 #const rhos = 1e-8
 #const de = 1e-8
-const rhos_de = 0.0
 # MHD:
 #const small_rhoi = 1e-6  # if rhoi<small_rhoi, code evolves the RMHD eqs.
 # ANJOR:
@@ -46,7 +44,6 @@ const inkz = 1
 
 const lambda = 1.0
 const sigma = 1.0
-const rhos_diag = 0.0
 # Background electron temp gradient:
 #const rhoe_LTe = 0.0
 const kc0 = 0.0
@@ -187,23 +184,31 @@ rs_time = const_data["data_sav"]["rs_time"]
 # Definitions
 nkx = div(nlx, 2) + 1
 nky = nly
-nkz = 2 * div(nlz - 1, 3) + 1
-x_loc = div(nlx, 2) + 1
-y_loc = div(nly, 2) + 1
-z_loc = div(nlz, 2) + 1
+#nkz = 2 * div(nlz - 1, 3) + 1
+#x_loc = div(nlx, 2) + 1
+#y_loc = div(nly, 2) + 1
+#z_loc = div(nlz, 2) + 1
 k_max = nkx - div(nkx, 2)  # maximum k after filtering
 kperpmax = sqrt(nkx^2 + div(nky, 2)^2)
-nkx_par = div(nkx - 1, npe) + 1
-nly_par = div(nly - 1, npe) + 1
-nlz_par = div(nlz - 1, npez) + 1
+#nkx_par = div(nkx - 1, npe) + 1
+#nly_par = div(nly - 1, npe) + 1
+#nlz_par = div(nlz - 1, npez) + 1
 dx = lx / nkx
 dy = ly / nky
-dz = lz / nlz
-etaz = 0
-etaz_g = 0
-etaz = etaz * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
-etaz_g = etaz_g * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
+#dz = lz / nlz
+#etaz = 0
+#etaz_g = 0
+#etaz = etaz * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
+#etaz_g = etaz_g * dz^2  # AVK z viscosity will act on kz .ge. nlz/3 == dealiasing?
 scale = 1.0 / (nlx * nly)  # scale factor for FFTs
 kperp0 = 1 #i think? -vincent
 j1 = div(kperp0 * ly, lx) + 1
 j2 = nky - j1 + 2
+
+# Since we always have "anjor = false", need to calc some things from the set_anjor function in Viriato
+const gmin = 2
+const rhos_de = rhos/de
+const rhos_diag = rhos
+
+# NOTE, "notanj" = 1.0 always, should just replace in code...
+const notanj = 1.0

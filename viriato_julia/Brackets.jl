@@ -1,59 +1,7 @@
 #  use Brackets,   only: funcne_i, funcAkpar_i, funcg2, funcgm, func_lastg, bracket_3
 include("constants.jl")
 include("transforms.jl")
-print(lambda)
-
-# NOT USED?
-# function Funcne_i(dxphi, dyphi, dxne, dyne, dxapar, dyapar, dxuepar, dyuepar, fne, braakparuekpar)
-#     # assuming the necessary constants are defined in a module called "constants"
-#     nkx = constants.nkx
-#     nly = constants.nly
-#     nlz_par = constants.nlz_par
-#     nlx = constants.nlx
-#     nly = constants.nly
-#     nky = constants.nky
-
-#     # I don't think you need to declare them like that in julia ^, once you do include(constants.jl) you can just use the name directly
-
-#     braphiknek = Array{ComplexF64}(undef, nky, nkx, nlz_par)
-#     for k in 1:nlz_par, i in 1:nkx, j in 1:nky
-#         braphiknek[j, i, k] = dxphi[i, j, k] + im * dyphi[i, j, k] + dxne[i, j, k] + im * dyne[i, j, k]
-#     end
-
-#     braakparuekpar = Array{ComplexF64}(undef, nky, nkx, nlz_par)
-#     for k in 1:nlz_par, i in 1:nkx, j in 1:nky
-#         braakparuekpar[j, i, k] = dxapar[i, j, k] + im * dyapar[i, j, k] + dxuepar[i, j, k] + im * dyuepar[i, j, k]
-#     end
-
-#     for k in 1:nlz_par, i in 1:nkx, j in 1:nky
-#         fne[j, i, k] = -braphiknek[j, i, k] + braakparuekpar[j, i, k] # assuming the commented line is not required
-#     end
-#     return nothing  # assuming the "braakparuekpar" output argument was modified in-place
-# end
-
-# Not needed
-function Bracket_4(dxF, dyF, dxG, dyG)
-    # this subroutine calculates the "bracket" of two quantities, i.e., 
-    # dxk/dx*dyk/dy-dxk/dy*dyk/dx. inputs are xk and yk, the quantities in
-    # k space. returns
-    # braxyk, the value of the bracket also in k-space.
-
-    #i think we can infer that it has the same shape
-    braxy = similar(dxG)
-
-    ngmin = 1
-
-    #or ngtot I guess
-    ngmax = size(dxG, 4)
-    @. braxy = dxF * dyG - dyF * dxG
-
-    braxyk = FFT2d_direct(braxy)
-
-    if mod(iproc, npe) == 0
-        braxyk[1, 1, :, ngmin:ngmax] .= 0.0 # insures that no zeroth mode is created
-    end
-    return braxyk
-end
+#print(lambda)
 
 # Only need bracket 3. Also, dont need the nlz stuff, as we are only
 function Bracket_3(dxF, dyF, dxG, dyG)
@@ -68,9 +16,8 @@ function Bracket_3(dxF, dyF, dxG, dyG)
 
     braxyk = FFT2d_direct(braxy)
 
-    if mod(iproc, npe) == 0
-        braxyk[1, 1, :, :] .= 0.0 # insures that no zeroth mode is created
-    end
+    braxyk[1, 1] = 0.0 # ensures that no zeroth mode is created
+
     return braxyk
 end
 
@@ -91,7 +38,7 @@ end
 
 # Calculates nonlinear operator in 1st moment equation (Eq 45)
 function func_Akpar(DxApar,DyApar,Dxphi,Dyphi,Dxne,Dyne,Dxuepar,Dyuepar,Dxg2,Dyg2)
-    FApar = zeros(ComplexF64, nkx, nky)
+    fapar = zeros(ComplexF64, nkx, nky)
 
     tempx = Dxphi - rhos^2*(Dxne +sqrt(2.0)*Dxg2 )
     tempy = Dyphi - rhos^2*(Dyne +sqrt(2.0)*Dyg2 )
@@ -106,13 +53,13 @@ function func_Akpar(DxApar,DyApar,Dxphi,Dyphi,Dxne,Dyne,Dxuepar,Dyuepar,Dxg2,Dyg
             # fapar[j, i, k] = 1.0/(1.0+kperp[j, i]^2*de^2)*
             #     (braakparphik[j, i, k] - de^2*brauekparphik[j, i, k] -
             #      notanj*1.0/sqrt(2.0)*rhos_de*rhoe_LTe*(0.0,1.0)*ky[j]*akpar[j, i, k])
-            fapar[i, j] = 1.0/(1.0+kperp[i, j]^2*de^2)*
+            fapar[i, j] = 1.0/(1.0+kperp(i,j)^2*de^2)*
                 (bracket_akpar_phik[i, j] - de^2*bracket_uekpar_phik[i, j])
         end
     end
 
 
-    return FApar
+    return fapar
 
 end 
 # Calculates nonlinear operator in 2nd moment
@@ -144,12 +91,8 @@ using ..grid: ky, zz
 using ..mp: iproc, proc0
 using ..Functions: anj_kron
 =#
-function Funcgm_3(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar, akpar, t)
+function func_gm(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar)
 
-
-
-    #...  intent OUT
-    #...  size is nky * nkx_par * nlz_par
     fgm = zeros(ComplexF64, nkx_par, nky, nlz_par)
     #... Local vars
     braakpargpm = zeros(ComplexF64, nky, nkx_par, nlz_par)
@@ -160,25 +103,18 @@ function Funcgm_3(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dya
     lte_kron = zeros(Float64, ngtot)
     lte_kron[gmin+1] = 1.0
 
-    Bracket_3(Dxphi, Dyphi, Dxg, Dyg, braphikg)
+    bracket_phik_g = Bracket_3(Dxphi, Dyphi, Dxg, Dyg)
 
-    Bracket_3(DxApar, DyApar, sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dxgm, sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dygm
-    , braakpargpm)
+    bracket_akpar_gpm = Bracket_3(Dxapar, Dyapar, 
+        sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .*  Dxgm, 
+        sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .*  Dygm)
 
-    for k = 1:nlz_par
-        for i = 1:nkx_par
-            for j = 1:nky
-                fgm[j, i, k] = -braphikg[j, i, k] + rhos_de * braakpargpm[j, i, k] +
-                    notanj * lte_kron[m] * sqrt(3.0)/(2.0*de^2) *
-                    rhoe_lte*(0.0, 1.0) * ky[j] * Akpar[j, i, k]
-                # +notanj*lte_kron(m)*sqrt(3.0/2.0)*rhos_de*rhoe_LTe*(0.0,1.0)*ky(j)*Akpar(j,i,k)
-                # NFL: 24/05/13 commented line above had wrong normalizations
-            end
+    for i = 1:nkx
+        for j = 1:nky
+            fgm[i, j] = -bracket_phik_g[i, j] + rhos_de * bracket_akpar_gpm[i, j]
         end
     end
 end
-
-# ok now funcgm is used by two interfaces. not gonna do it now since I think they r related to the dimensionality and maybe we only need to do one. 
 
 # Calculates nonlinear part of last moment closure. Not explicitly in paper, but described in Eq 22
 function func_lastg(hyper_nuei, niu2, Dxgm, Dygm, Dxg, Dyg, Dxphi, Dyphi, Dxapar, Dyapar)

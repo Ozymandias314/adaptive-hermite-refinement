@@ -24,7 +24,7 @@ function convol(Fk)
 end
 
 function flows(dxfi,dyfi,dxne,dyne)
-    vex = Array{Float64}(undef, nlx, nly_par)
+    vex = Array{Float64}(undef, nlx, nly)
     vey = similar(vex)
     vrhosx = similar(vex)
     vrhosy = similar(vex)
@@ -44,7 +44,7 @@ function flows(dxfi,dyfi,dxne,dyne)
 end
 
 function bfield(dxapar,dyapar)
-    bx = Array{Float64}(undef, nlx, nly_par)
+    bx = Array{Float64}(undef, nlx, nly)
     by = similar(bx)
     bx = dyapar
     by = -dxapar

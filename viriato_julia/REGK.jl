@@ -19,15 +19,20 @@ include("initialize.jl")
 # nkx,nky,ngtot,gmin,ginc,dx,dy,CFL_frac,hyper_ν_g, hyper_ν, hyper_η,rhos_de,hyper_order,hyper_order_g
 # hyper_coef,hyper_coef_g,kperpmax,hyperm_coef,hyper_morder, init_aa0_fac,tmax, low
 
+function main() # This seems to be a way to reduce use of "global"
+
+    debugging = true # Debugging print statements
+
+
 phik = Array{ComplexF64}(undef,nkx,nky)
 nek = Array{ComplexF64}(undef,nkx,nky)
 akpar = Array{ComplexF64}(undef,nkx,nky)
 uekpar = Array{ComplexF64}(undef,nkx,nky)
-dummy_real = Array{Real}(undef,nkx,nky)
+dummy_real = Array{Float64}(undef,nlx,nly)
 
 gk = Array{ComplexF64}(undef,nkx,nky,ngtot)
-dxg = Array{Real}(undef,nkx,nky,ngtot)
-dyg = Array{Real}(undef,nkx,nky,ngtot)
+dxg = Array{Float64}(undef,nkx,nky,ngtot)
+dyg = Array{Float64}(undef,nkx,nky,ngtot)
 fgm_old = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
 nek_star = Array{ComplexF64}(undef,nkx,nky)
@@ -35,8 +40,8 @@ phik_star = Array{ComplexF64}(undef,nkx,nky)
 akpar_star = Array{ComplexF64}(undef,nkx,nky)
 uekpar_star = Array{ComplexF64}(undef,nkx,nky)
 gk_star = Array{ComplexF64}(undef,nkx,nky,ngtot)
-dxg_star = Array{Real}(undef,nkx,nky,ngtot)
-dyg_star = Array{Real}(undef,nkx,nky,ngtot)
+dxg_star = Array{Float64}(undef,nkx,nky,ngtot)
+dyg_star = Array{Float64}(undef,nkx,nky,ngtot)
 
 akpar_new = Array{ComplexF64}(undef,nkx,nky)
 uekpar_new = Array{ComplexF64}(undef,nkx,nky)
@@ -45,6 +50,10 @@ gk_new = Array{ComplexF64}(undef,nkx,nky,ngtot)
 fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
 rel_error_array = Array{ComplexF64}(undef,nkx,nky)
+
+if debugging
+    print("Finished Initializing arrays \n")
+end
 
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
@@ -105,7 +114,9 @@ else
     hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
 end
 
-
+if debugging
+    print("Calced hypercoeffs, ready to begin timeloop \n")
+end
 ############## TIME LOOP ###################
 
 #First some values which must be initialized for LOOP
@@ -119,7 +130,7 @@ noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
 for t = 0:tmax
-    global repeat, noinc, divergent, first, phik, uekpar, nek, akpar # to make sure julia doesn't make them local
+    #global repeat, noinc, divergent, first, phik, uekpar, nek, akpar,dti # to make sure julia doesn't make them local
     #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
     if repeat
         repeat = false
@@ -161,7 +172,7 @@ for t = 0:tmax
                 # \mathcal{gm}
                 for ng = gmin+1:ngtot-1
                     fgm_old[:,:,ng] = func_gm(ng,dxg[:,:,ng-1],dyg[:,:,ng-1],dxg[:,:,ng],dyg[:,:,ng],dxg[:,:,ng+1],dyg[:,:,ng+1],
-                    dxphi,dyphi,dxapar,dyapar,akpar) 
+                    dxphi,dyphi,dxapar,dyapar) 
                 end
                 # \mathcal{glast}
                 fglast_old = func_lastg(hyper_νei,η2,dxg[:,:,ngtot-1],dyg[:,:,ngtot-1],dxg[:,:,ngtot],dyg[:,:,ngtot],
@@ -176,8 +187,13 @@ for t = 0:tmax
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
 
+    
     # Start Predictor ("star") step
     
+    if debugging
+        print("Starting predictor step \n")
+    end
+
     guess = akpar
     
     for i = 1:nkx
@@ -232,8 +248,13 @@ for t = 0:tmax
             dxne_star,dyne_star,dxuepar_star,dyuepar_star,dummy_real,dummy_real)
     end
 
-    # begin predictor "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
+    # begin corrector "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
     # if not converged after one step
+    
+    if debugging
+        print("Starting corrector loop \n")
+    end
+
     p_iter = 0
     for p_iter = 0:1
         p_count +=1
@@ -327,7 +348,7 @@ for t = 0:tmax
                 dxgm = dxg[:,:,ng-1] # need this bc gm p+1 relies on gm-1 p+1
                 dygm = dyg[:,:,ng-1]
                 fgm_pred[:,:,ng] = func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
-                dxphi,dyphi,dxapar,dyapar,akpar_new)
+                dxphi,dyphi,dxapar,dyapar)
 
                 for i = 1:nkx
                     for j = 1:nky 
@@ -379,6 +400,10 @@ for t = 0:tmax
 
         guess = akpar_new
     end # end of p loop
+
+    if debugging
+        print("End of corrector loop \n")
+    end
 
     if divergent
         continue # go to next time loop iteration with divergent = true
@@ -447,4 +472,17 @@ for t = 0:tmax
     else    
         hyper_νei=hyperm_coef/dti/(Ngtot+1)^(2*hyper_morder)
     end
+
+    if debugging
+        print("End of timeloop, moving to next iteration \n")
+    end
+
 end # END OF TIMELOOP
+
+if debugging
+    print("End of REGK \n")
+end
+
+end # End of main 
+
+main()

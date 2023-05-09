@@ -15,7 +15,7 @@
         "three_D": true
     },
         "time_parameters": {
-        "tmax": 10000000,
+        "tmax": 10,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,
