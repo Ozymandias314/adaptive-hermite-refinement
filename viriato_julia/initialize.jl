@@ -44,11 +44,12 @@ function equilibrium()
                 Apar_eq[i,j] = a0*exp(-(yy(j)*2*pi*2/ly)^2)*
                                 exp(-(xx(i)*2*pi*2/lx)^2)
                 phi_eq[i,j]=0
-            end do
-        end do
+            end 
+        end
         
         #not sure what happens in the FFT
         FFT2d_direct(Apar_eq(:, :), AKpar_eq(:, :)) # This is needed to calc the perturbed spectrum. Not sure this will work if not done in 3D, so be mindful of this. A. Velb 5/26/22
      end
 
     return Apar_eq, phi_eq
+    end

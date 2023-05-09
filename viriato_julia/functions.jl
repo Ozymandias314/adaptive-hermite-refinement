@@ -1,5 +1,5 @@
 include("constants.jl")
-include("grids.jl") #assuming this will exist
+include("grid.jl") #assuming this will exist
 
 # Need to resolve kperp array from grids
 
@@ -13,3 +13,4 @@ end
 
 function exp_eta(i, j, res2,dti)
     exp(-(res*kperp[i, j]^2+res2*kperp[i, j]^(2*hyper_order))*dti/(1.0+kperp[i, j]^2*de^2))
+end

@@ -1,6 +1,5 @@
 include("constants.jl") # Need to include constants everywhere?
 
-
 function kperp(i::Int,j::Int)
     kperp = sqrt(ky(j)^2+kx(i)^2)
 end
@@ -12,7 +11,7 @@ end
 
 # Get ky to respect the order of frequencies returned by fft WITHOUT any FFTSHIFT calls
 function ky(j::Int)
-    if i <= nky/2+1
+    if j <= nky/2+1
         ky = (j-1)*lx/ly
     else
         ky = (j-nky-1)*lx/ly

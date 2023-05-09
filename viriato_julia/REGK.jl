@@ -46,9 +46,6 @@ fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
 rel_error_array = Array{ComplexF64}(undef,nkx,nky)
 
-
-
-
 # Begin setup of necessary values, dx,dys, hypercoeffs, timestep
 
 # Take derivaties necesary to calculate hypercoeffs, timestep for first iteration
@@ -65,13 +62,13 @@ if g_inc
     end
 end 
 
-vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi)
-vxmax = maximum(max(abs(vex),abs(vrhosx)))
-vymax = maximum(max(abs(vey),abs(vrhosxy)))
+vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi,dxne, dyne)
+vxmax = max(maximum(abs.(vex)),maximum(abs.(vrhosx)))
+vymax = max(maximum(abs.(vey)),maximum(abs.(vrhosy)))
 
 bx,by = bfield(dxapar,dyapar)
-bxmax = maximum(abs(bx))
-bymax = maxumum(abs(by))
+bxmax = maximum(abs.(bx))
+bymax = maximum(abs.(by))
 bperp = sqrt.(bx.^2+by.^2)
 bperp_max = maximum(bperp)
 
@@ -121,10 +118,10 @@ repeat = false # Flags for certain behaviors in loop. Trying again with smaller 
 noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
-for t = 0:tmax 
+for t = 0:tmax
+    global repeat, noinc, divergent, first, phik, uekpar, nek, akpar # to make sure julia doesn't make them local
     #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
-
-    if repeat 
+    if repeat
         repeat = false
         t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else

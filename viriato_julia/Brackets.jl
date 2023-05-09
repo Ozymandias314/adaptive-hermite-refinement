@@ -45,17 +45,12 @@ function Bracket_4(dxF, dyF, dxG, dyG)
 
     #or ngtot I guess
     ngmax = size(dxG, 4)
+    @. braxy = dxF * dyG - dyF * dxG
 
-    if linear
-        braxy .= 0.0
-    else 
-        @. braxy = dxF * dyG - dyF * dxG
+    braxyk = FFT2d_direct(braxy)
 
-        braxyk = FFT2d_direct(braxy)
-
-        if mod(iproc, npe) == 0
-            braxyk[1, 1, :, ngmin:ngmax] .= 0.0 # insures that no zeroth mode is created
-        end
+    if mod(iproc, npe) == 0
+        braxyk[1, 1, :, ngmin:ngmax] .= 0.0 # insures that no zeroth mode is created
     end
     return braxyk
 end
@@ -66,20 +61,17 @@ function Bracket_3(dxF, dyF, dxG, dyG)
     # dxk/dx*dyk/dy-dxk/dy*dyk/dx. inputs are xk and yk, the quantities in
     # k space. Returns braxyk, the value of the bracket also in k-space.
 
-    braxyk = zeros(nky, nkx, nlz_par)
+    braxyk = zeros(nkx, nky)
+    braxy = Array{Float64}(undef, nlx, nly)
 
-    if linear 
-        return braxyk
-    else
-        @. braxy = dxF * dyG - dyF * dxG
+    @. braxy = dxF * dyG - dyF * dxG
 
-        braxyk = FFT2d_direct(braxy)
+    braxyk = FFT2d_direct(braxy)
 
-        if mod(iproc, npe) == 0
-            braxyk[1, 1, :, :] .= 0.0 # insures that no zeroth mode is created
-        end
-        return braxyk
+    if mod(iproc, npe) == 0
+        braxyk[1, 1, :, :] .= 0.0 # insures that no zeroth mode is created
     end
+    return braxyk
 end
 
 #ok we need to figure out how the Bracket interface in FORTRAN is overloaded. I still don't get it. 
@@ -89,8 +81,8 @@ function func_ne(Dxphi, Dyphi, Dxne, Dyne, DxApar, DyApar, Dxuepar, Dyuepar)
     fne = zeros(ComplexF64, nkx, nky)
 
     #ya need to figure out bracket!
-    bracket_phik_nek = bracket(Dxphi, Dyphi, Dxne, Dyne)
-    bracket_akpar_uekpar = bracket(DxApar, DyApar, Dxuepar, Dyuepar)
+    bracket_phik_nek = Bracket_3(Dxphi, Dyphi, Dxne, Dyne)
+    bracket_akpar_uekpar = Bracket_3(DxApar, DyApar, Dxuepar, Dyuepar)
 
     @. fne = -bracket_phik_nek + bracket_akpar_uekpar
 
@@ -104,8 +96,8 @@ function func_Akpar(DxApar,DyApar,Dxphi,Dyphi,Dxne,Dyne,Dxuepar,Dyuepar,Dxg2,Dyg
     tempx = Dxphi - rhos^2*(Dxne +sqrt(2.0)*Dxg2 )
     tempy = Dyphi - rhos^2*(Dyne +sqrt(2.0)*Dyg2 )
 
-    bracket_akpar_phik = bracket(DxApar, DyApar, tempx, tempy)
-    bracket_uekpar_phik = bracket(Dxuepar, Dyuepar, Dxphi, Dyphi)
+    bracket_akpar_phik = Bracket_3(DxApar, DyApar, tempx, tempy)
+    bracket_uekpar_phik = Bracket_3(Dxuepar, Dyuepar, Dxphi, Dyphi)
 
     # these lines have like some random constants that are never defined? or commente dout? idk whats going on there 
     # also braakparuekpar never used in this subroutine (yes should be brauekparphi FIXED). For our purposes, notanj = 1.0 and rhoe_LTe = 0.0
@@ -130,8 +122,8 @@ function func_g2(Dxg2, Dyg2, Dxphi, Dyphi, Dxapar, Dyapar, Dxg3, Dyg3, bracket_a
 
     fg2 = zeros(ComplexF64, nkx, nky)
 
-    bracket_g2_phik = bracket(Dxg2, Dyg2, Dxphi, Dyphi)
-    bracket_akpar_g3 = bracket(Dxapar, Dyapar, Dxg3, Dyg3)
+    bracket_g2_phik = Bracket_3(Dxg2, Dyg2, Dxphi, Dyphi)
+    bracket_akpar_g3 = Bracket_3(Dxapar, Dyapar, Dxg3, Dyg3)
 
     for i in 1:nkx, j in 1:nky
         fg2[i,j] = bracket_g2_phik[i,j] + sqrt(gmin+1.0) * rhos_de * bracket_akpar_g3[i,j] +
@@ -168,9 +160,9 @@ function Funcgm_3(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dya
     lte_kron = zeros(Float64, ngtot)
     lte_kron[gmin+1] = 1.0
 
-    Bracket(Dxphi, Dyphi, Dxg, Dyg, braphikg)
+    Bracket_3(Dxphi, Dyphi, Dxg, Dyg, braphikg)
 
-    Bracket(DxApar, DyApar, sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dxgm, sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dygm
+    Bracket_3(DxApar, DyApar, sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dxgm, sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .* (1.0-1.0/lambda*anj_kron(m)*(1.0-notanj)) .* Dygm
     , braakpargpm)
 
     for k = 1:nlz_par
@@ -215,8 +207,8 @@ function func_lastg(hyper_nuei, niu2, Dxgm, Dygm, Dxg, Dyg, Dxphi, Dyphi, Dxapar
     
     fglast = zeros(ComplexF64,nkx,nky)
 
-    bracket_phik_gk = Bracket(Dxphi, Dyphi, Dxg, Dyg)
-    bracket_akpar_gk = Bracket(Dxapar, Dyapar, Dxg, Dyg)
+    bracket_phik_gk = Bracket_3(Dxphi, Dyphi, Dxg, Dyg)
+    bracket_akpar_gk = Bracket_3(Dxapar, Dyapar, Dxg, Dyg)
 
     
     for i = 1:nkx
@@ -228,7 +220,7 @@ function func_lastg(hyper_nuei, niu2, Dxgm, Dygm, Dxg, Dyg, Dxphi, Dyphi, Dxapar
     end
     
     dx_bracket_akpar_gk,dy_bracket_akpar_gk = convol(bracket_akpar_gk)
-    total_bracket = Bracket(Dxapar,Dyapar,dx_bracket_akpar_gk + rhos_de*sqrt(ngtot*1.0)*Dxgm,
+    total_bracket = Bracket_3(Dxapar,Dyapar,dx_bracket_akpar_gk + rhos_de*sqrt(ngtot*1.0)*Dxgm,
         dy_bracket_akpar_gk + rhos_de*sqrt(ngtot*1.0)*Dygm)
     
     fglast = -bracket_phik_gk + total_bracket

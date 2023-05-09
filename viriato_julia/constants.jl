@@ -138,7 +138,7 @@ three_D = const_data["box_parameters"]["three_D"]
 # Extract values from the "time_parameters" object
 tmax = const_data["time_parameters"]["tmax"]
 init_aa0_fac = const_data["time_parameters"]["init_aa0_fac"]
-cfl_frac = const_data["time_parameters"]["cfl_frac"]
+CFL_frac = const_data["time_parameters"]["cfl_frac"]
 epsilon = const_data["time_parameters"]["epsilon"]
 pmax = const_data["time_parameters"]["pmax"]
 

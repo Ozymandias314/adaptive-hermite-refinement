@@ -1,24 +1,18 @@
 include("constants.jl")
+include("grid.jl")
 using FFTW
 
-function Convol(Fk)
-    nkx_par = constants.nkx_par
-    nky = constants.nky
-    nlx = constants.nlx
-    nly_par = constants.nly_par
-    
-    # Does Fk need to be defined again?
-    # Fk = Array{ComplexF64}(undef, nky, nkx_par, nlz_par)
-    DxF = Array{Float64}(undef, nlx, nly_par)
+function convol(Fk)
+    DxF = Array{Float64}(undef, nlx, nly)
     DyF = similar(DxF)
 
     Fk_ikx = similar(Fk)
     Fk_iky = similar(Fk)
 
-    for i in 1:nkx_par
+    for i in 1:nkx
         for j in 1:nky
-            Fk_ikx[i,j] = im*kx[i]*Fk[i,j]
-            Fk_iky[i,j] = im*ky[i]*Fk[i,j]
+            Fk_ikx[i,j] = im*kx(i)*Fk[i,j]
+            Fk_iky[i,j] = im*ky(j)*Fk[i,j]
         end
     end
 
@@ -30,7 +24,6 @@ function Convol(Fk)
 end
 
 function flows(dxfi,dyfi,dxne,dyne)
-    # Assuming you don't have to define inputs again
     vex = Array{Float64}(undef, nlx, nly_par)
     vey = similar(vex)
     vrhosx = similar(vex)
@@ -50,9 +43,10 @@ function flows(dxfi,dyfi,dxne,dyne)
     return vex, vey, vrhosx, vrhosy
 end
 
-function b_field(dxapar,dyapar)
+function bfield(dxapar,dyapar)
     bx = Array{Float64}(undef, nlx, nly_par)
     by = similar(bx)
     bx = dyapar
     by = -dxapar
     return bx, by
+end
