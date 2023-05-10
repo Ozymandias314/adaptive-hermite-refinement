@@ -1,4 +1,4 @@
-using LinearAlgebra, JLD2, Plots
+using LinearAlgebra, JLD2, Plots, LaTeXStrings
 
 function plotData(filename)
     data = load_object(filename)
@@ -6,9 +6,9 @@ function plotData(filename)
     field_type = split(filename,"_")[1]
     timestamp = split(filename,['_','.'])[2]
     colormap = heatmap(data,c = :thermal)
-    plot!(colormap,title = field_type*" at time "*timestamp)
+    plot!(colormap,title = L"A_∥"* " at time "*timestamp,xaxis=L"x",yaxis=L"y",right_margin=12Plots.mm,aspect_ratio=:equal,grid=false,lims=(0,256))
 
 end
 
-filename = "apar_0.jld2"
+filename = "apar_200.jld2"
 plotData(filename)

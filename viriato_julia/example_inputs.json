@@ -12,7 +12,8 @@
         "ngtot": 10,
         "npe": 16,
         "npez": 16,
-        "three_D": false
+        "three_D": false,
+        "hou_li_filter": false
     },
         "time_parameters": {
         "tmax": 1000,
@@ -52,12 +53,12 @@
         "leq": 0.0,
         "perturb_amp": 1.0e-5,
         "equilib_type": "OT01",
-        "perturb_type": "none"
+        "perturb_type": "allk"
     },
         "data_sav": {
         "save_energyfiles": 1600,
         "save_checkpoints": 3200,
-        "save_datafiles": 100,
+        "save_datafiles": 200,
         "restart": 0,
         "rs_time": 0.0
     }

@@ -131,6 +131,7 @@ ngtot = const_data["box_parameters"]["ngtot"]
 npe = const_data["box_parameters"]["npe"]
 npez = const_data["box_parameters"]["npez"]
 three_D = const_data["box_parameters"]["three_D"]
+hou_li_filter = const_data["box_parameters"]["hou_li_filter"]
 
 # Extract values from the "time_parameters" object
 tmax = const_data["time_parameters"]["tmax"]
