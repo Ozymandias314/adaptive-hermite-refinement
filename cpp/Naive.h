@@ -82,7 +82,7 @@ namespace ahr {
         BracketBuf<fftw::mdbuffer<2u>> nablaPerpAPar{X, Y};
 
         /// Temporary buffers used for various things.
-        std::array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS> temp;
+        std::array<BracketBuf<fftw::mdbuffer<2u>>, N_TEMP_BUFFERS> temp;
 
         /// @}
 
