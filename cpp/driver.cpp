@@ -6,6 +6,8 @@
 #include <argparse/argparse.hpp>
 #include <experimental/mdspan>
 #include <iostream>
+#include <fstream>
+#include <optional>
 
 // TODO
 using namespace ahr;
@@ -30,6 +32,9 @@ int main(int argc, const char *argv[]) {
             .scan<'i', Dim>()
             .default_value(Dim{20});
 
+    arguments.add_argument("inFile")
+            .help("The path to the file that contains initial moment data")
+            .default_value("");
 
     try {
         arguments.parse_args(argc, argv);
@@ -44,12 +49,27 @@ int main(int argc, const char *argv[]) {
             M = arguments.get<Dim>("M"),
             nr = arguments.get<Dim>("nr");
 
+    std::optional<std::ifstream> inFile{};
+    if (auto fPath = arguments.get("inFile"); !fPath.empty()) {
+        inFile = std::ifstream{fPath};
+    }
 
     Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
-    // TODO
-    naive.init({}, nr, 0.01);
-    naive.run();
-    auto moments = naive.getFinalValues();
+    stdex::mdarray<Real, stdex::dextents<size_t, 3u>> initialMoments{M, X, X};
+    for (int m = 0; m < M; ++m) {
+        for (int x = 0; x < X; ++x) {
+            for (int y = 0; y < X; ++y) {
+                if (inFile)
+                    *inFile >> initialMoments(m, x, y);
+                else
+                    initialMoments(m, x, y) = 0;
+            }
+        }
+    }
+
+    runner.init(initialMoments, nr, 0.01);
+    runner.run();
+    auto moments = runner.getFinalValues();
 }
