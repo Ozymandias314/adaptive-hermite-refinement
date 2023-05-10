@@ -21,7 +21,7 @@ namespace {
 
 namespace ahr {
     Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y), temp{
-            forward_to_array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS>(X, Y)} {}
+            forward_to_array < BracketBuf < fftw::mdbuffer<2u>>, N_TEMP_BUFFERS>(X, Y)} {}
 
     void Naive::init(mdspan<Real, dextents<Dim, 3u>> initialMoments, Dim N_, Real initialDT_) {
         initialDT = initialDT_;
@@ -38,6 +38,7 @@ namespace ahr {
         fftInv = fftw::plan<2u>::dft(sliceXY(moments.PH, 0), sliceXY(momentsReal, 0), fftw::BACKWARD, fftw::MEASURE);
 
         // Initialize moments
+        // TODO only ne and A_PAR
         for_each_mxy([&](Dim m, Dim x, Dim y) {
             momentsReal(m, x, y) = initialMoments(m, x, y);
         });
@@ -71,18 +72,30 @@ namespace ahr {
             // Compute A
             fullBracket(phi, sliceXY(moments, A_PAR));
             for_each_xy([&](Dim kx, Dim ky) {
-                double const de = 1.2; //TODO
-                nablaPerpAPar.PH(kx, ky) = de*de*nablaPerpAPar.PH(kx, ky);
+                double const de = 1.2; // TODO is de constant? In other words can we apply it in real space?
+                temp[0].PH(kx, ky) = de * de * nablaPerpAPar.PH(kx, ky);
             });
 
             // already using phi for temp storage
-            fullBracket(phi, nablaPerpAPar, nablaPerpAPar.DX, nablaPerpAPar.PH_DX);
+            fullBracket(phi, temp[0], temp[0].DX, temp[0].PH_DX);
+
+            for_each_xy([&](Dim kx, Dim ky) {
+                temp[1].PH(kx, ky) = std::sqrt(2) * moments.PH(2, kx, ky) + moments.PH(N_E, kx, ky);
+            });
+            fullBracket(temp[1], sliceXY(moments, A_PAR));
             // TODO use A
 
-            // TODO compute G2
+            // Compute G2
+            fullBracket(phi, sliceXY(moments, 2));
+            fullBracket(sliceXY(moments, A_PAR), sliceXY(moments, 3));
+            fullBracket(sliceXY(moments, A_PAR), nablaPerpAPar);
+            // TODO use G2
 
             for (int m = 3; m < M; ++m) {
-
+                fullBracket(sliceXY(moments, m), phi); // Inverted
+                fullBracket(sliceXY(moments, m - 1), sliceXY(moments, A_PAR)); // Inverted
+                fullBracket(sliceXY(moments, m + 1), sliceXY(moments, A_PAR)); // Inverted
+                // TODO use GM
             }
 
             // corrector step
