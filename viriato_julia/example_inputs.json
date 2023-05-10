@@ -51,7 +51,7 @@
         "phi0": 0.0,
         "leq": 0.0,
         "perturb_amp": 1.0e-5,
-        "equilib_type": "gaus",
+        "equilib_type": "OT01",
         "perturb_type": "allk"
     },
         "data_sav": {

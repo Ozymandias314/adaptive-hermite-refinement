@@ -74,9 +74,9 @@ apar_eq, phi_eq = equilibrium()
 
 akpar_eq = FFT2d_direct(apar_eq) # will be used later!
 
-#apar_perturb = init_perturb(apar_perturb) # TODO:Implement perturbation to phi or Apar
-# apar = apar_eq + apar_perturb
-# phi = phi_eq + phi_perturb
+apar_perturb = init_perturb() # TODO:Implement perturbation to phi or Apar
+apar = apar_eq + apar_perturb
+phi = phi_eq
 apar = apar_eq
 phi = phi_eq 
 
