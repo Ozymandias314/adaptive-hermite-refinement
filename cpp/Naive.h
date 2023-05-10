@@ -1,8 +1,11 @@
 #pragma once
 
 #include "HermiteRunner.h"
+#include "constants.h"
+#include "nonlinears.h"
 
 #include <fftw-cpp/fftw-cpp.h>
+#include <type_traits>
 
 namespace ahr {
     namespace stdex = std::experimental;
@@ -72,17 +75,17 @@ namespace ahr {
         /// Additionally, moments is used only at the start and end.
         /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
-        fftw::mdbuffer<3u> momentsReal{M, X, Y};
-        BracketBuf<fftw::mdbuffer<3u>> moments{M, X, Y};
+        fftw::mdbuffer<3u> moments{M, X, Y};
+        fftw::mdbuffer<3u> moments_K{M, X, Y};
 
         /// Φ: the electrostatic potential.
-        BracketBuf<fftw::mdbuffer<2u>> phi{X, Y};
+        fftw::mdbuffer<2u> phi_K{X, Y};
 
         /// sq(∇⊥) A∥
-        BracketBuf<fftw::mdbuffer<2u>> nablaPerpAPar{X, Y};
+        fftw::mdbuffer<2u> nablaPerpAPar_K{X, Y};
 
         /// Temporary buffers used for various things.
-        std::array<BracketBuf<fftw::mdbuffer<2u>>, N_TEMP_BUFFERS> temp;
+        std::array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS> temp;
 
         /// @}
 
@@ -90,6 +93,15 @@ namespace ahr {
             for (Dim x = 0; x < X; ++x) {
                 for (Dim y = 0; y < Y; ++y) {
                     fun(x, y);
+                }
+            }
+        }
+
+        /// Iterate in phase space, will later be changed to account for phase space dims
+        void for_each_kxky(std::invocable<Dim, Dim> auto fun) {
+            for (Dim kx = 0; kx < X; ++kx) {
+                for (Dim ky = 0; ky < Y; ++ky) {
+                    fun(kx, ky);
                 }
             }
         }
@@ -148,8 +160,52 @@ namespace ahr {
             bracket(op1.DX, op1.DY, op2.DX, op2.DY, brack);
             fft(brack, brackPH);
         }
+
         void fullBracket(BracketBuf<ViewXY> op1, BracketBuf<ViewXY> op2) {
             fullBracket(op1, op2, op1.DX, op1.PH_DX);
         };
+
+        /// Bracket that only takes inputs and allocates temporaries and output
+        [[nodiscard]] fftw::mdbuffer<2u> fullBracket(ViewXY op1, ViewXY op2);;
+
+        // =================
+        // Math helpers
+        // TODO other file/class
+        // =================
+
+        // Nonlinear operators
+
+
+        void NonlinearN(const ViewXY &bracketPhiNE_K, const ViewXY &bracketAParNablaPerpAPar_K, ViewXY result) {
+            for_each_kxky([&](Dim kx, Dim ky) {
+                result(kx, ky) = -bracketPhiNE_K(kx, ky) + bracketAParNablaPerpAPar_K(kx, ky);
+            });
+        }
+
+        void NonlinearA(const ViewXY &bracketPhiAPar_K, const ViewXY &bracketPhiDeNablaPerpAPar_K,
+                        const ViewXY &bracketNeG2APar_K, ViewXY result) {
+            for_each_kxky([&](Dim kx, Dim ky) {
+                result(kx, ky) = (-bracketPhiAPar_K(kx, ky) + bracketPhiDeNablaPerpAPar_K(kx, ky) +
+                                  rhoS * rhoS * bracketNeG2APar_K(kx, ky)) / (1 + de * de * kPerp(kx, ky));
+            });
+        }
+
+        void NonlinearG2(const ViewXY &bracketPhiG2_K, const ViewXY &bracketAParG3_K,
+                         const ViewXY &bracketAParNablaPerpAPar_K, ViewXY result) {
+            for_each_kxky([&](Dim kx, Dim ky) {
+                result(kx, ky) = -bracketPhiG2_K(kx, ky) +
+                                 std::sqrt(3.0) * rhoS / de * bracketAParG3_K(kx, ky) +
+                                 std::sqrt(2.0) * bracketAParNablaPerpAPar_K(kx, ky);
+            });
+        }
+
+        void NonlinearGM(Dim m, const ViewXY &bracketPhiGM_K, const ViewXY &bracketAParGMMinus_K,
+                         const ViewXY &bracketAParGMPlus_K, ViewXY result) {
+            for_each_kxky([&](Dim kx, Dim ky) {
+                result(kx, ky) = -bracketPhiGM_K(kx, ky) +
+                                 std::sqrt(m - 1) * rhoS / de * bracketAParGMMinus_K(kx, ky) +
+                                 std::sqrt(m) * rhoS / de * bracketAParGMPlus_K(kx, ky);
+            });
+        }
     };
 };
