@@ -21,7 +21,7 @@ namespace {
 
 namespace ahr {
     Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y), temp{
-            forward_to_array < BracketBuf < fftw::mdbuffer<2u>>, N_TEMP_BUFFERS>(X, Y)} {}
+            forward_to_array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS>(X, Y)} {}
 
     void Naive::init(mdspan<Real, dextents<Dim, 3u>> initialMoments, Dim N_, Real initialDT_) {
         initialDT = initialDT_;
@@ -34,23 +34,23 @@ namespace ahr {
         assert(X == Y);
 
         // Plan FFTs both ways
-        fft = fftw::plan<2u>::dft(sliceXY(momentsReal, 0), sliceXY(moments.PH, 0), fftw::FORWARD, fftw::MEASURE);
-        fftInv = fftw::plan<2u>::dft(sliceXY(moments.PH, 0), sliceXY(momentsReal, 0), fftw::BACKWARD, fftw::MEASURE);
+        fft = fftw::plan<2u>::dft(sliceXY(moments, 0), sliceXY(moments_K, 0), fftw::FORWARD, fftw::MEASURE);
+        fftInv = fftw::plan<2u>::dft(sliceXY(moments_K, 0), sliceXY(moments, 0), fftw::BACKWARD, fftw::MEASURE);
 
         // Initialize moments
         // TODO only ne and A_PAR
         for_each_mxy([&](Dim m, Dim x, Dim y) {
-            momentsReal(m, x, y) = initialMoments(m, x, y);
+            moments(m, x, y) = initialMoments(m, x, y);
         });
 
         // Transform moments into phase space
         for (int m = 0; m < M; ++m) {
-            fft(sliceXY(momentsReal, m), sliceXY(moments.PH, m));
+            fft(sliceXY(moments, m), sliceXY(moments_K, m));
         }
     }
 
     void Naive::run() {
-
+        Real dt = initialDT;
         for (int t = 0; t < N; ++t) {
             // predictor step
 
@@ -59,43 +59,46 @@ namespace ahr {
 
             // Nabla
             for_each_xy([&](Dim kx, Dim ky) {
-                auto dkx = double(kx), dky = double(ky), kPerp = dkx * dkx + dky * dky;
-                // TODO minus or not? (kperp should already have a minus)
-                nablaPerpAPar.PH(kx, ky) = kPerp * moments.PH(A_PAR, kx, ky);
+                nablaPerpAPar_K(kx, ky) = kPerp(kx, ky) * moments_K(A_PAR, kx, ky);
             });
+
+            // store results of nonlinear operators
+            fftw::mdbuffer<3u> GM_K_Star{M, X, Y};
 
             // Compute N
-            fullBracket(phi, sliceXY(moments, N_E));
-            fullBracket(sliceXY(moments, A_PAR), nablaPerpAPar);
-            // TODO use N
+            auto bracketPhiNE_K = fullBracket(phi_K, sliceXY(moments_K, N_E));
+            auto bracketAParNablaPerpAPar_K = fullBracket(sliceXY(moments_K, A_PAR), nablaPerpAPar_K);
+//            NonlinearN(bracketPhiNE_K, bracketAParNablaPerpAPar_K, sliceXY(GM_K_Star, N_E));
+            for_each_kxky([&](Dim kx, Dim ky) {
+                GM_K_Star(N_E, kx, ky) = exp_nu(kx, ky, v2, dt) * moments_K(N_E, kx, ky) +
+                                         dt / 2.0 * (1 + exp_nu(kx, ky, v2, dt)) *
+                                         nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParNablaPerpAPar_K(kx, ky));
+            });
 
             // Compute A
-            fullBracket(phi, sliceXY(moments, A_PAR));
+            auto bracketPhiAPar_K = fullBracket(phi_K, sliceXY(moments_K, A_PAR));
             for_each_xy([&](Dim kx, Dim ky) {
-                double const de = 1.2; // TODO is de constant? In other words can we apply it in real space?
-                temp[0].PH(kx, ky) = de * de * nablaPerpAPar.PH(kx, ky);
+                temp[0](kx, ky) = de * de * nablaPerpAPar_K(kx, ky);
             });
 
-            // already using phi for temp storage
-            fullBracket(phi, temp[0], temp[0].DX, temp[0].PH_DX);
+            auto bracketPhiDeNablaPerpAPar_K = fullBracket(phi_K, temp[0]);
 
             for_each_xy([&](Dim kx, Dim ky) {
-                temp[1].PH(kx, ky) = std::sqrt(2) * moments.PH(2, kx, ky) + moments.PH(N_E, kx, ky);
+                temp[1](kx, ky) = std::sqrt(2) * moments_K(2, kx, ky) + moments_K(N_E, kx, ky);
             });
-            fullBracket(temp[1], sliceXY(moments, A_PAR));
-            // TODO use A
+            auto bracketNeG2APar_K = fullBracket(temp[1], sliceXY(moments_K, A_PAR));
+            NonlinearA(bracketPhiAPar_K, bracketPhiDeNablaPerpAPar_K, bracketNeG2APar_K, sliceXY(GM_K_Star, A_PAR));
 
             // Compute G2
-            fullBracket(phi, sliceXY(moments, 2));
-            fullBracket(sliceXY(moments, A_PAR), sliceXY(moments, 3));
-            fullBracket(sliceXY(moments, A_PAR), nablaPerpAPar);
-            // TODO use G2
+            auto bracketPhiG2_K = fullBracket(phi_K, sliceXY(moments_K, 2));
+            auto bracketAParG3_K = fullBracket(sliceXY(moments_K, A_PAR), sliceXY(moments_K, 3));
+            NonlinearG2(bracketPhiG2_K, bracketAParG3_K, bracketAParNablaPerpAPar_K, sliceXY(GM_K_Star, 2));
 
             for (int m = 3; m < M; ++m) {
-                fullBracket(sliceXY(moments, m), phi); // Inverted
-                fullBracket(sliceXY(moments, m - 1), sliceXY(moments, A_PAR)); // Inverted
-                fullBracket(sliceXY(moments, m + 1), sliceXY(moments, A_PAR)); // Inverted
-                // TODO use GM
+                auto bracketPhiGM_K = fullBracket(phi_K, sliceXY(moments_K, m));
+                auto bracketAParGMMinus_K = fullBracket(sliceXY(moments_K, A_PAR), sliceXY(moments_K, m - 1));
+                auto bracketAParGMPlus_K = fullBracket(sliceXY(moments_K, A_PAR), sliceXY(moments_K, m + 1));
+                NonlinearGM(m, bracketPhiGM_K, bracketAParGMMinus_K, bracketAParGMPlus_K, sliceXY(GM_K_Star, m));
             }
 
             // corrector step
@@ -104,14 +107,28 @@ namespace ahr {
 
     mdarray<Real, dextents<Dim, 3u>> Naive::getFinalValues() {
         for (int m = 0; m < M; ++m) {
-            fftInv(sliceXY(moments.PH, m), sliceXY(momentsReal, m));
+            fftInv(sliceXY(moments_K, m), sliceXY(moments, m));
         }
 
         mdarray<Real, dextents<Dim, 3u>> result{M, X, Y};
         for_each_mxy([&](Dim m, Dim x, Dim y) {
-            result(m, x, y) = momentsReal(m, x, y).real();
+            result(m, x, y) = moments(m, x, y).real();
         });
 
         return result;
+    }
+
+    [[nodiscard]] fftw::mdbuffer<2u> Naive::fullBracket(Naive::ViewXY op1, Naive::ViewXY op2) {
+        auto bufs = forward_to_array<fftw::mdbuffer<2u>, 8u>(X, Y);
+        prepareDXY_PH(op1, bufs[0], bufs[1]);
+        fftInv(bufs[0], bufs[2]);
+        fftInv(bufs[1], bufs[3]);
+        prepareDXY_PH(op2, bufs[4], bufs[5]);
+        fftInv(bufs[4], bufs[6]);
+        fftInv(bufs[5], bufs[7]);
+
+        bracket(bufs[2], bufs[3], bufs[6], bufs[7], bufs[1]);
+        fft(bufs[1], bufs[0]);
+        return std::move(bufs[0]);
     }
 }
