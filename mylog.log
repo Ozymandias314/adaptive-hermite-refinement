@@ -1,22 +1,2002 @@
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
 ┌ Debug: Starting corrector loop!!!!!!!!!
-└ @ Main /Users/lsh/Documents/MIT/18.337/adaptive-hermite-refinement/viriato_julia/REGK.jl:311
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342
+┌ Debug: Starting corrector loop!!!!!!!!!
+└ @ Main /Users/alexvelberg/Documents/GitHub/adaptive-hermite-refinement/viriato_julia/REGK.jl:342

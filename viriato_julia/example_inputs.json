@@ -4,18 +4,18 @@
     "box_parameters": {
         "lx": 1.0,
         "ly": 1.0,
-        "lz": 2.0,
-        "nlx": 16,
-        "nly": 16,
-        "nlz": 16,
+        "lz": 1.0,
+        "nlx": 64,
+        "nly": 64,
+        "nlz": 1,
         "g_inc": true,
         "ngtot": 10,
         "npe": 16,
         "npez": 16,
-        "three_D": true
+        "three_D": false
     },
         "time_parameters": {
-        "tmax": 10,
+        "tmax": 1000,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,
@@ -31,9 +31,9 @@
     },
         "diffusion": {
         "nu_ei": 0.0001,
-        "res": 0.0,
-        "niu": 0.0,
-        "hyper_coef": 1.0,
+        "res": 100.0,
+        "niu": 100.0,
+        "hyper_coef": 0.0,
         "hyper_coef_g": 0.0,
         "hyperm_coef": 0.0,
         "hyper_fixed": false,
@@ -47,17 +47,17 @@
         "hyper_colls": 0.01
     },
         "equil": {
-        "a0": 0.82436,
+        "a0": 1.0,
         "phi0": 0.0,
         "leq": 0.0,
         "perturb_amp": 1.0e-5,
         "equilib_type": "OT01",
-        "perturb_type": "allk"
+        "perturb_type": "none"
     },
         "data_sav": {
         "save_energyfiles": 1600,
         "save_checkpoints": 3200,
-        "save_datafiles": 1600,
+        "save_datafiles": 100,
         "restart": 0,
         "rs_time": 0.0
     }

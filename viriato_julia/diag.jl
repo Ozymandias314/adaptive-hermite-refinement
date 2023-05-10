@@ -3,6 +3,7 @@ include("grid.jl")
 using FFTW
 
 function convol(Fk)
+    #print(Fk[32,32],"\n")
     DxF = Array{Float64}(undef, nlx, nly)
     DyF = similar(DxF)
 

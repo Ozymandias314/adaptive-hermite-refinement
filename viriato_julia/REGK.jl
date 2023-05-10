@@ -1,4 +1,4 @@
-using LinearAlgebra, FFTW, Logging
+using LinearAlgebra, FFTW, Logging, JLD2
 
 include("constants.jl")
 include("transforms.jl")
@@ -29,7 +29,7 @@ logger = Logging.SimpleLogger(log_file, Logging.Debug)
 Logging.global_logger(logger)
 
 
-debugging = true # Debugging print statements
+debugging = false # Debugging print statements
 
 
 phik = Array{ComplexF64}(undef,nkx,nky)
@@ -40,16 +40,19 @@ nek_perturb = Array{ComplexF64}(undef,nkx,nky)
 
 dummy_real = Array{Float64}(undef,nlx,nly)
 
-gk = Array{ComplexF64}(undef,nkx,nky,ngtot)
+gk = zeros(ComplexF64,nkx,nky,ngtot)
 dxg = Array{Float64}(undef,nlx,nly,ngtot)
 dyg = Array{Float64}(undef,nlx,nly,ngtot)
 fgm_old = Array{ComplexF64}(undef,nkx,nky,ngtot)
-
+if debugging
+    print("Gk","\n")
+    print(gk[32,32,gmin],'\n')
+end
 nek_star = Array{ComplexF64}(undef,nkx,nky)
 phik_star = Array{ComplexF64}(undef,nkx,nky)
 akpar_star = Array{ComplexF64}(undef,nkx,nky)
 uekpar_star = Array{ComplexF64}(undef,nkx,nky)
-gk_star = Array{ComplexF64}(undef,nkx,nky,ngtot)
+gk_star = zeros(ComplexF64,nkx,nky,ngtot)
 dxg_star = Array{Float64}(undef,nlx,nly,ngtot)
 dyg_star = Array{Float64}(undef,nlx,nly,ngtot)
 
@@ -57,7 +60,7 @@ akpar_new = Array{ComplexF64}(undef,nkx,nky)
 uekpar_new = Array{ComplexF64}(undef,nkx,nky)
 nek_new = Array{ComplexF64}(undef,nkx,nky)
 phik_new = Array{ComplexF64}(undef,nkx,nky)
-gk_new = Array{ComplexF64}(undef,nkx,nky,ngtot)
+gk_new = zeros(ComplexF64,nkx,nky,ngtot)
 fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
 rel_error_array = Array{ComplexF64}(undef,nkx,nky)
@@ -79,6 +82,11 @@ apar = apar_eq + apar_perturb
 phi = phi_eq
 apar = apar_eq
 phi = phi_eq 
+
+if debugging
+    print("initialized values","\n")
+    print(apar_eq[32,32],apar[32,32],phi[32,32],'\n')
+end
 
 akpar = FFT2d_direct(apar)
 phik = FFT2d_direct(phi)
@@ -115,11 +123,22 @@ dxne, dyne = convol(nek)
 dxapar,dyapar = convol(akpar)
 dxuepar,dyuepar = convol(uekpar)
 
+if debugging
+    print("Data from initial convol call","\n")
+    print(dxuepar[32,32],dxapar[32,32],dxne[32,32],dxuepar[32,32],'\n')
+end
+
+print(gk[32,32,gmin],"\n")
 if g_inc 
     for ng = 1:ngtot
         dxg[:,:,ng],dyg[:,:,ng] = convol(gk[:,:,ng])
     end
 end 
+
+if debugging
+    print("initial dxg dyg calls","\n")
+    print(dxg[32,32,gmin],dyg[32,32,gmin],gk[32,32,gmin],'\n')
+end
 
 vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi,dxne, dyne)
 vxmax = max(maximum(abs.(vex)),maximum(abs.(vrhosx)))
@@ -196,7 +215,6 @@ for t = 0:tmax
             p_count = 0 # Number of loops through corrector step 
             
             if first 
-
                 dxphi,dyphi = convol(phik)
                 dxne, dyne = convol(nek)
                 dxapar,dyapar = convol(akpar)
@@ -206,7 +224,9 @@ for t = 0:tmax
                     for ng = 1:ngtot
                         dxg[:,:,ng],dyg[:,:,ng] = convol(gk[:,:,ng])
                     end
-                end 
+                end
+
+
             end
             first = false
 
@@ -234,6 +254,14 @@ for t = 0:tmax
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dummy_real,dummy_real)
             end
         end 
+    end
+
+    if debugging
+        print("Data from first func cals","\n")
+        print(fApar_old[32,32],fgm_old[32,32,1],fne_old[32,32],'\n')
+
+        print("Inputs to fApar","\n")
+        print(dxapar[32,32],dyapar[32,32,1],dxphi[32,32],dyphi[32,32],dxne[32,32],dyne[32,32],dxuepar[32,32],dyuepar[32,32],dxg[32,32,gmin],dyg[32,32,gmin],'\n')
     end
 
     # Get SI operator necessary for corrector step loop
@@ -299,7 +327,10 @@ for t = 0:tmax
             dxne_star,dyne_star,dxuepar_star,dyuepar_star,dummy_real,dummy_real)
     end
     
-    
+    if debugging
+        print("Data from star step","\n")
+        print(phik_star[32,32],nek_star[32,32],akpar_star[32,32],'\n')
+    end
 
     # begin corrector "loop", although here we only do pmax = 1, so just do this once. Will lower timestep if not converged in timestep
     # if not converged after one step
@@ -472,6 +503,11 @@ for t = 0:tmax
 
     # Update Variables to "new" values (i.e. p+1)
 
+    if debugging
+        print("Data at new timestep","\n")
+        print(phik_new[32,32],nek_new[32,32],akpar_new[32,32],'\n')
+    end
+
     nek = nek_new
     akpar = akpar_new
     phik = phik_new
@@ -532,6 +568,26 @@ for t = 0:tmax
         print("End of timeloop, moving to next iteration \n")
         print("Timestep ", t, "\n")
     end
+
+
+    if debugging
+        print("Final Data","\n")
+        print(phi[32,32],nek[32,32],akpar[32,32],'\n')
+    end
+
+    # DIAGNOSTICS GO HERE
+    if t%save_datafiles == 0
+    file_string_apar = "apar_"*string(t)*".jld2"
+    file_string_ne = "ne_"*string(t)*".jld2"
+    # Save Apar, ne in real space
+    apar = FFT2d_inv(akpar)
+    ne = FFT2d_inv(nek)
+    save_object(file_string_apar,apar)
+    save_object(file_string_ne,ne)
+    end
+
+
+
 end # END OF TIMELOOP
 
 if debugging
