@@ -38,6 +38,7 @@ int main(int argc, const char *argv[]) {
 
     try {
         arguments.parse_args(argc, argv);
+        if (arguments.get<Dim>("M") < 4) throw std::invalid_argument("At least 4 moments required");
     }
     catch (const std::runtime_error &err) {
         std::cerr << err.what() << std::endl;
@@ -72,4 +73,14 @@ int main(int argc, const char *argv[]) {
     runner.init(initialMoments, nr, 0.01);
     runner.run();
     auto moments = runner.getFinalValues();
+
+    for (int m = 0; m < M; ++m) {
+        std::cout << "m=" << m << std::endl;
+        for (int x = 0; x < X; ++x) {
+            for (int y = 0; y < X; ++y) {
+                std::cout << moments(m, x, y) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 }
