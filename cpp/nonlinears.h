@@ -58,21 +58,21 @@ namespace ahr {
             }
         }
 
-        [[nodiscard]] inline Complex N(Complex bracketPhiNE_K, Complex bracketAParNablaPerpAPar_K) {
-            return -bracketPhiNE_K + bracketAParNablaPerpAPar_K;
+        [[nodiscard]] inline Complex N(Complex bracketPhiNE_K, Complex bracketAParUEKPar_K) {
+            return -bracketPhiNE_K + bracketAParUEKPar_K;
         }
 
-        [[nodiscard]] inline Complex A(Complex bracketPhiAPar_K, Complex bracketPhiDeNablaPerpAPar_K,
+        [[nodiscard]] inline Complex A(Complex bracketPhiAPar_K, Complex bracketPhiDeUEKPar_K,
                                        Complex bracketNeG2APar_K, Dim kx, Dim ky) {
-            return (-bracketPhiAPar_K + bracketPhiDeNablaPerpAPar_K +
+            return (-bracketPhiAPar_K + bracketPhiDeUEKPar_K +
                     rhoS * rhoS * bracketNeG2APar_K) / (1 + de * de * kPerp(kx, ky));
         }
 
         [[nodiscard]] inline Complex G2(Complex bracketPhiG2_K, Complex bracketAParG3_K,
-                                        Complex bracketAParNablaPerpAPar_K) {
+                                        Complex bracketAParUEKPar_K) {
             return -bracketPhiG2_K +
                    std::sqrt(3.0) * rhoS / de * bracketAParG3_K +
-                   std::sqrt(2.0) * bracketAParNablaPerpAPar_K;
+                   std::sqrt(2.0) * bracketAParUEKPar_K;
         }
 
         [[nodiscard]] inline Complex GM(Dim m, Complex bracketPhiGM_K, Complex bracketAParGMMinus_K,
