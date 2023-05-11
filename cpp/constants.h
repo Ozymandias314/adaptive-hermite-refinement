@@ -3,6 +3,9 @@
 #include "typedefs.h"
 
 namespace ahr {
+    // TODO this actually means MaxP+1 is the last computed value
+    constexpr Dim MaxP = 1;
+
     constexpr Real rhoI = 4.6; // TODO
     constexpr Real rhoS = 0.1; // TODO
     constexpr Real de = 1.2; // TODO
