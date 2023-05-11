@@ -173,20 +173,25 @@ namespace ahr {
     }
 
     [[nodiscard]] fftw::mdbuffer<2u> Naive::fullBracket(Naive::ViewXY op1, Naive::ViewXY op2) {
-        auto bufs = forward_to_array<fftw::mdbuffer<2u>, 8u>(X, Y);
-        prepareDXY_PH(op1, bufs[0], bufs[1]);
-        fftInv(bufs[0], bufs[2]);
-        fftInv(bufs[1], bufs[3]);
-        prepareDXY_PH(op2, bufs[4], bufs[5]);
-        fftInv(bufs[4], bufs[6]);
-        fftInv(bufs[5], bufs[7]);
+        DxDy<fftw::mdbuffer<2u>> derOp1{X, Y}, derOp2{X, Y};
+        derivatives(op1, derOp1);
+        derivatives(op2, derOp2);
 
-        bracket(bufs[2], bufs[3], bufs[6], bufs[7], bufs[1]);
-        fft(bufs[1], bufs[0]);
-        for_each_xy([&](Dim kx, Dim ky) {
-            bufs[0](kx, ky) /= double(X) * double(Y);
-        });
+        return halfBracket(derOp1, derOp2);
+    }
 
-        return std::move(bufs[0]);
+    void Naive::derivatives(const Naive::ViewXY &op, Naive::DxDy<Naive::ViewXY> output) {
+        DxDy<fftw::mdbuffer<2u>> Der_K{X, Y};
+        prepareDXY_PH(op, Der_K.DX, Der_K.DY);
+        fftInv(Der_K.DX.to_mdspan(), output.DY);
+        fftInv(Der_K.DY.to_mdspan(), output.DY);
+    }
+
+    fftw::mdbuffer<2u> Naive::halfBracket(Naive::DxDy<Naive::ViewXY> derOp1, Naive::DxDy<Naive::ViewXY> derOp2) {
+        fftw::mdbuffer<2u> br{X, Y}, br_K{X, Y};
+        bracket(derOp1, derOp2, br);
+        fft(br, br_K);
+
+        return br_K;
     }
 }

@@ -66,6 +66,28 @@ namespace ahr {
             }
         };
 
+        template<class Buffer>
+        struct DxDy {
+            using buffer_t = Buffer;
+            Buffer DX, DY;
+
+            template<typename ...Args>
+            requires std::constructible_from<Buffer, Args...>
+            explicit DxDy(Args &&...args) :
+                    DX{std::forward<Args>(args)...},
+                    DY{std::forward<Args>(args)...} {}
+
+            DxDy(Buffer dx, Buffer dy) : DX(dx), DY(dy) {}
+
+            template<class U>
+            requires std::convertible_to<Buffer, U>
+            operator DxDy<U>() { // NOLINT(google-explicit-constructor)
+                return {U(DX), U(DY)};
+            }
+        };
+
+
+
         /// \defgroup Buffers for all the physical quantities used.
         /// Names ending in PH mean the values are in phase space.
         /// @{
@@ -143,12 +165,18 @@ namespace ahr {
         }
 
 
-        /// computes bracket [view, other]
-        void bracket(const ViewXY &viewX, const ViewXY &view_Y, const ViewXY &otherX, const ViewXY &otherY,
-                     const ViewXY &bracket) {
+        /// computes bracket [view, other], also normalizing in the process
+        void bracket(const ViewXY &dxOp1, const ViewXY &dyOp1, const ViewXY &dxOp2, const ViewXY &dyOp2,
+                     const ViewXY &output) {
             for_each_xy([&](Dim x, Dim y) {
-                bracket(x, y) = viewX(x, y) * otherY(x, y) - view_Y(x, y) * otherX(x, y);
+                output(x, y) = dxOp1(x, y) * dyOp2(x, y) - dyOp1(x, y) * dxOp2(x, y);
+                output(x, y) /= double(X) * double(Y);
             });
+        }
+
+        /// bracket overload for DxDy params
+        void bracket(const DxDy<ViewXY> &op1, const DxDy<ViewXY> &op2, const ViewXY &output) {
+            bracket(op1.DX, op1.DY, op2.DX, op2.DY, output);
         }
 
         void fullBracket(BracketBuf<ViewXY> op1, BracketBuf<ViewXY> op2, ViewXY brack, ViewXY brackPH) {
@@ -168,7 +196,13 @@ namespace ahr {
         };
 
         /// Bracket that only takes inputs and allocates temporaries and output
-        [[nodiscard]] fftw::mdbuffer<2u> fullBracket(ViewXY op1, ViewXY op2);;
+        [[nodiscard]] fftw::mdbuffer<2u> fullBracket(ViewXY op1, ViewXY op2);
+
+        /// Compute derivatives in real space and store them in output
+        void derivatives(const ViewXY &value, DxDy<ViewXY> output);
+
+        /// Bracket that takes in derivatives that were already computed
+        [[nodiscard]] fftw::mdbuffer<2u> halfBracket(DxDy<ViewXY> op1, DxDy<ViewXY> op2);
 
         // =================
         // Math helpers
