@@ -105,8 +105,8 @@ namespace ahr {
         /// Φ: the electrostatic potential.
         fftw::mdbuffer<2u> phi_K{X, Y}, phi_K_Star{X, Y};
 
-        /// sq(∇⊥) A∥
-        fftw::mdbuffer<2u> nablaPerpAPar_K{X, Y}, nablaPerpAPar_K_Star{X, Y};
+        /// sq(∇⊥) A∥, also parallel electron velocity
+        fftw::mdbuffer<2u> ueKPar_K{X, Y}, ueKPar_K_Star{X, Y};
 
         /// Temporary buffers used for various things.
         std::array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS> temp;

@@ -57,8 +57,8 @@ namespace ahr {
             // Phi & Nabla
             for_each_kxky([&](Dim ky, Dim kx) {
                 phi_K(kx, ky) = nonlinear::phi(moments_K(N_E, kx, ky), kx, ky);
-                nablaPerpAPar_K(kx, ky) = kPerp(kx, ky) * moments_K(A_PAR, kx, ky);
-                temp[0](kx, ky) = de * de * nablaPerpAPar_K(kx, ky);
+                ueKPar_K(kx, ky) = kPerp(kx, ky) * moments_K(A_PAR, kx, ky);
+                temp[0](kx, ky) = de * de * ueKPar_K(kx, ky);
                 temp[1](kx, ky) = std::sqrt(2) * moments_K(G_MIN, kx, ky) + moments_K(N_E, kx, ky);
             });
 
@@ -67,11 +67,11 @@ namespace ahr {
 
             // Compute N
             auto bracketPhiNE_K = fullBracket(phi_K, sliceXY(moments_K, N_E));
-            auto bracketAParNablaPerpAPar_K = fullBracket(sliceXY(moments_K, A_PAR), nablaPerpAPar_K);
+            auto bracketAParUEKPar_K = fullBracket(sliceXY(moments_K, A_PAR), ueKPar_K);
 
             // Compute A
             auto bracketPhiAPar_K = fullBracket(phi_K, sliceXY(moments_K, A_PAR));
-            auto bracketPhiDeNablaPerpAPar_K = fullBracket(phi_K, temp[0]);
+            auto bracketPhiDeUEKPar_K = fullBracket(phi_K, temp[0]);
             auto bracketNeG2APar_K = fullBracket(temp[1], sliceXY(moments_K, A_PAR));
 
             // Compute G2
@@ -87,18 +87,18 @@ namespace ahr {
             auto bracketTotalGLast_K = fullBracket(sliceXY(moments_K, A_PAR), bracketAParGLast_K);
 
             for_each_kxky([&](Dim kx, Dim ky) {
-                GM_Nonlinear(N_E, kx, ky) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParNablaPerpAPar_K(kx, ky));
+                GM_Nonlinear(N_E, kx, ky) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
                 GM_K_Star(N_E, kx, ky) = exp_nu(kx, ky, v2, dt) * moments_K(N_E, kx, ky) +
                                          dt / 2.0 * (1 + exp_nu(kx, ky, v2, dt)) * GM_Nonlinear(N_E, kx, ky);
 
                 GM_Nonlinear(A_PAR, kx, ky) = nonlinear::A(bracketPhiAPar_K(kx, ky),
-                                                           bracketPhiDeNablaPerpAPar_K(kx, ky),
+                                                           bracketPhiDeUEKPar_K(kx, ky),
                                                            bracketNeG2APar_K(kx, ky), kx, ky);
                 GM_K_Star(A_PAR, kx, ky) = exp_eta(kx, ky, eta2, dt) * moments_K(A_PAR, kx, ky) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, eta2, dt)) * GM_Nonlinear(A_PAR, kx, ky);
 
                 GM_Nonlinear(G_MIN, kx, ky) = nonlinear::G2(bracketPhiG2_K(kx, ky), bracketAParG3_K(kx, ky),
-                                                            bracketAParNablaPerpAPar_K(kx, ky));
+                                                            bracketAParUEKPar_K(kx, ky));
                 GM_K_Star(G_MIN, kx, ky) = exp_nu(kx, ky, v2, dt) * moments_K(G_MIN, kx, ky) +
                                            dt / 2.0 * (1 + exp_nu(kx, ky, v2, dt)) * GM_Nonlinear(G_MIN, kx, ky);
 
@@ -133,21 +133,21 @@ namespace ahr {
             // Phi, Nabla, and other prep for A bracket
             for_each_kxky([&](Dim ky, Dim kx) {
                 phi_K_Star(kx, ky) = nonlinear::phi(GM_K_Star(N_E, kx, ky), kx, ky);
-                nablaPerpAPar_K_Star(kx, ky) = kPerp(kx, ky) * GM_K_Star(A_PAR, kx, ky);
-                temp[0](kx, ky) = de * de * nablaPerpAPar_K_Star(kx, ky);
+                ueKPar_K_Star(kx, ky) = kPerp(kx, ky) * GM_K_Star(A_PAR, kx, ky);
+                temp[0](kx, ky) = de * de * ueKPar_K_Star(kx, ky);
                 temp[1](kx, ky) = std::sqrt(2) * GM_K_Star(G_MIN, kx, ky) + GM_K_Star(N_E, kx, ky);
             });
 
             // First, compute A_par
             auto bracketPhiAPar_K_Star = fullBracket(phi_K_Star, sliceXY(GM_K_Star, A_PAR));
-            auto bracketPhiDeNablaPerpAPar_K_Star = fullBracket(phi_K_Star, temp[0]);
+            auto bracketPhiDeUEKPar_K_Star = fullBracket(phi_K_Star, temp[0]);
             auto bracketNeG2APar_K_Star = fullBracket(temp[1], sliceXY(GM_K_Star, A_PAR));
 
             fftw::mdbuffer<2u> nonlinearA_K_Star{X, Y}, semiImplicitOperator{X, Y};
             for_each_kxky([&](Dim kx, Dim ky) {
 
                 nonlinearA_K_Star(kx, ky) = nonlinear::A(bracketPhiAPar_K_Star(kx, ky),
-                                                         bracketPhiDeNablaPerpAPar_K_Star(kx, ky),
+                                                         bracketPhiDeUEKPar_K_Star(kx, ky),
                                                          bracketNeG2APar_K_Star(kx, ky), kx, ky);
 
                 semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kx, ky);
