@@ -390,6 +390,8 @@ for t = 0:tmax
 
         dxapar,dyapar = convol(akpar_new)
         dxuepar,dyuepar = convol(uekpar_new)
+
+        println("maximum diff is ",maximum(abs.(akpar_new-akpar)))
         
         # to get next ne, use the last timetep values of everything except the new apar
         fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
@@ -508,10 +510,10 @@ for t = 0:tmax
         print(phik_new[32,32],nek_new[32,32],akpar_new[32,32],'\n')
     end
 
-    nek = nek_new
-    akpar = akpar_new
-    phik = phik_new
-    uekpar = uekpar_new
+    nek = deepcopy(nek_new)
+    akpar = deepcopy(akpar_new)
+    phik = deepcopy(phik_new)
+    uekpar = deepcopy(uekpar_new)
 
     savetime = savetime + dti # update the simulation timestep
 
