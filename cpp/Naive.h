@@ -35,6 +35,8 @@ namespace ahr {
 
         static constexpr Dim N_E = 0;
         static constexpr Dim A_PAR = 1;
+        static constexpr Dim G_MIN = 2;
+        Dim LAST = M - 1;
 
         static constexpr Dim N_TEMP_BUFFERS = 3;
 
@@ -76,13 +78,13 @@ namespace ahr {
         /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
         fftw::mdbuffer<3u> moments{M, X, Y};
-        fftw::mdbuffer<3u> moments_K{M, X, Y};
+        fftw::mdbuffer<3u> moments_K{M, X, Y}, momentsPred_K{M, X, Y};
 
         /// Φ: the electrostatic potential.
-        fftw::mdbuffer<2u> phi_K{X, Y};
+        fftw::mdbuffer<2u> phi_K{X, Y}, phi_K_Star{X, Y};
 
         /// sq(∇⊥) A∥
-        fftw::mdbuffer<2u> nablaPerpAPar_K{X, Y};
+        fftw::mdbuffer<2u> nablaPerpAPar_K{X, Y}, nablaPerpAPar_K_Star{X, Y};
 
         /// Temporary buffers used for various things.
         std::array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS> temp;
@@ -117,12 +119,12 @@ namespace ahr {
         }
 
         /// Returns a 2D mdspan of values in the XY space for a specified m.
-        static auto sliceXY(fftw::mdbuffer<3u> &moments, int m) {
+        static auto sliceXY(fftw::mdbuffer<3u> &moments, Dim m) {
             return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
         }
 
         /// Returns a BracketBuf of 2D mdspans for a specified m.
-        static auto sliceXY(BracketBuf<fftw::mdbuffer<3u>> &moments, int m) {
+        static auto sliceXY(BracketBuf<fftw::mdbuffer<3u>> &moments, Dim m) {
             return BracketBuf{
                     sliceXY(moments.PH, m),
                     sliceXY(moments.PH_DX, m),
@@ -174,38 +176,5 @@ namespace ahr {
         // =================
 
         // Nonlinear operators
-
-
-        void NonlinearN(const ViewXY &bracketPhiNE_K, const ViewXY &bracketAParNablaPerpAPar_K, ViewXY result) {
-            for_each_kxky([&](Dim kx, Dim ky) {
-                result(kx, ky) = -bracketPhiNE_K(kx, ky) + bracketAParNablaPerpAPar_K(kx, ky);
-            });
-        }
-
-        void NonlinearA(const ViewXY &bracketPhiAPar_K, const ViewXY &bracketPhiDeNablaPerpAPar_K,
-                        const ViewXY &bracketNeG2APar_K, ViewXY result) {
-            for_each_kxky([&](Dim kx, Dim ky) {
-                result(kx, ky) = (-bracketPhiAPar_K(kx, ky) + bracketPhiDeNablaPerpAPar_K(kx, ky) +
-                                  rhoS * rhoS * bracketNeG2APar_K(kx, ky)) / (1 + de * de * kPerp(kx, ky));
-            });
-        }
-
-        void NonlinearG2(const ViewXY &bracketPhiG2_K, const ViewXY &bracketAParG3_K,
-                         const ViewXY &bracketAParNablaPerpAPar_K, ViewXY result) {
-            for_each_kxky([&](Dim kx, Dim ky) {
-                result(kx, ky) = -bracketPhiG2_K(kx, ky) +
-                                 std::sqrt(3.0) * rhoS / de * bracketAParG3_K(kx, ky) +
-                                 std::sqrt(2.0) * bracketAParNablaPerpAPar_K(kx, ky);
-            });
-        }
-
-        void NonlinearGM(Dim m, const ViewXY &bracketPhiGM_K, const ViewXY &bracketAParGMMinus_K,
-                         const ViewXY &bracketAParGMPlus_K, ViewXY result) {
-            for_each_kxky([&](Dim kx, Dim ky) {
-                result(kx, ky) = -bracketPhiGM_K(kx, ky) +
-                                 std::sqrt(m - 1) * rhoS / de * bracketAParGMMinus_K(kx, ky) +
-                                 std::sqrt(m) * rhoS / de * bracketAParGMPlus_K(kx, ky);
-            });
-        }
     };
 };
