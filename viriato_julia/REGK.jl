@@ -274,7 +274,7 @@ for t = 0:tmax
         print("Starting predictor step \n")
     end
 
-    guess = akpar
+    guess = deepcopy(akpar)
     
     for i = 1:nkx
         for j = 1:nky
@@ -486,7 +486,7 @@ for t = 0:tmax
             break # exit p loop
         end
 
-        guess = akpar_new
+        guess = deepcopy(akpar_new)
     end # end of p loop
 
     if debugging
