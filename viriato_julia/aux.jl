@@ -85,5 +85,5 @@ function dtnext(relative_error::Float64,dti_temp::Float64,noinc::Bool,dti::Float
         dti = min(dti_temp,dti)
     end
 
-    return dti
+    return dti,noinc
 end

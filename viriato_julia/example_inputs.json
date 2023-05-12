@@ -8,7 +8,7 @@
         "nlx": 64,
         "nly": 64,
         "nlz": 1,
-        "g_inc": true,
+        "g_inc": false,
         "ngtot": 10,
         "npe": 16,
         "npez": 16,
@@ -16,7 +16,7 @@
         "hou_li_filter": false
     },
         "time_parameters": {
-        "tmax": 1000,
+        "tmax": 20000,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,
@@ -32,8 +32,8 @@
     },
         "diffusion": {
         "nu_ei": 0.0001,
-        "res": 100.0,
-        "niu": 100.0,
+        "res": 1.0,
+        "niu": 1.0,
         "hyper_coef": 0.0,
         "hyper_coef_g": 0.0,
         "hyperm_coef": 0.0,
@@ -58,7 +58,7 @@
         "data_sav": {
         "save_energyfiles": 1600,
         "save_checkpoints": 3200,
-        "save_datafiles": 200,
+        "save_datafiles": 2000,
         "restart": 0,
         "rs_time": 0.0
     }

@@ -10,28 +10,33 @@ irfft_plan = plan_irfft(array_k,nlx)
 
 # 2D FFT
 function FFT2d_direct(array::Array{Float64})
-    array_k = rcfft_plan*array/sqrt(nlx*nly) # Must normalize by number of modes! Luka made a comment that we might want to do this in the bracket funciton instead of here, but can change this later. 
+    array_k = rcfft_plan*array # Must normalize by number of modes! Luka made a comment that we might want to do this in the bracket funciton instead of here, but can change this later. 
     # Do Fourier filtering
     if hou_li_filter
         for i in 1:nkx
-            for j in 1:nky
-                array_k[i,j] *= exp(-36*(kperp(i,j)/kperpmax)^36)
-            end
+            array_k[i,:] *= exp(-36*(kx(i)/nkx)^36)
+        end
+        for j in 1:nky
+            array_k[:,j] *= exp(-36*(ky(j)/nky)^36)
         end
     else 
         for i in 1:nkx
-            for j in 1:nky
-                if kperp(i,j)/kperpmax > 2.0/3.0
-                    array_k[i,j] *= 0.0
-                end 
+            if kx(i)/nkx > 2.0/3.0
+                array_k[i,:] .= 0.0
+            end
+            
+        end
+            
+        for j in 1:nky
+            if ky(j)/nky > 2.0/3.0
+                array_k[:,j] .= 0.0
             end
         end
-
     end
     return array_k
 end
 
 # 2D IFFT
 function FFT2d_inv(array_k::Array{ComplexF64})
-    array = irfft_plan*array_k/sqrt(nlx*nly)
+    array = irfft_plan*array_k
 end

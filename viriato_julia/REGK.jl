@@ -38,7 +38,7 @@ akpar = Array{ComplexF64}(undef,nkx,nky)
 uekpar = Array{ComplexF64}(undef,nkx,nky)
 nek_perturb = Array{ComplexF64}(undef,nkx,nky)
 
-dummy_real = Array{Float64}(undef,nlx,nly)
+dummy_real = zeros(Float64,nlx,nly)
 
 gk = zeros(ComplexF64,nkx,nky,ngtot)
 dxg = Array{Float64}(undef,nlx,nly,ngtot)
@@ -63,6 +63,12 @@ phik_new = Array{ComplexF64}(undef,nkx,nky)
 gk_new = zeros(ComplexF64,nkx,nky,ngtot)
 fgm_pred = Array{ComplexF64}(undef,nkx,nky,ngtot)
 
+# Initialze these variables here, otherwise julia forgets about them between for loop iterations when Repeat or Divergent are activated
+fne_old = undef
+fApar_old = undef
+fglast_old = undef
+
+
 rel_error_array = Array{ComplexF64}(undef,nkx,nky)
 
 if debugging
@@ -83,13 +89,25 @@ phi = phi_eq
 apar = apar_eq
 phi = phi_eq 
 
+file_string_apar = "apar_initial.jld2"
+file_string_ne = "ne_initial.jld2"
+# Save Apar, ne in real space
+save_object(file_string_apar,apar)
+
+
 if debugging
     print("initialized values","\n")
     print(apar_eq[32,32],apar[32,32],phi[32,32],'\n')
+    println("Initial maximum akpar", maximum(abs.(akpar)))
+    println()
+    println("Initial maximum apar", maximum(abs.(apar)))
+    println()
+    println("Initial maximum apar from iFFT akpar ", maximum(abs.(FFT2d_inv(akpar))))
 end
 
 akpar = FFT2d_direct(apar)
 phik = FFT2d_direct(phi)
+
 
 if rhoi < small_rhoi
     for i = 1:nkx
@@ -126,9 +144,9 @@ dxuepar,dyuepar = convol(uekpar)
 if debugging
     print("Data from initial convol call","\n")
     print(dxuepar[32,32],dxapar[32,32],dxne[32,32],dxuepar[32,32],'\n')
+    print(gk[32,32,gmin],"\n")
 end
 
-print(gk[32,32,gmin],"\n")
 if g_inc 
     for ng = 1:ngtot
         dxg[:,:,ng],dyg[:,:,ng] = convol(gk[:,:,ng])
@@ -188,6 +206,7 @@ if debugging
 end
 
 savetime = 0.0
+low = 0.92
 ############## TIME LOOP ###################
 
 #First some values which must be initialized for LOOP
@@ -200,7 +219,8 @@ repeat = false # Flags for certain behaviors in loop. Trying again with smaller 
 noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
-for t = 0:tmax
+t = 0
+while t < tmax
     #global repeat, noinc, divergent, first, phik, uekpar, nek, akpar,dti # to make sure julia doesn't make them local
     #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
     if repeat
@@ -208,11 +228,12 @@ for t = 0:tmax
         t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else
         if divergent
+            #print("Here divergent true")
             divergent = false
             t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
         else
 
-            p_count = 0 # Number of loops through corrector step 
+            #p_count = 0 # Number of loops through corrector step 
             
             if first 
                 dxphi,dyphi = convol(phik)
@@ -226,9 +247,9 @@ for t = 0:tmax
                     end
                 end
 
-
+                first = false
             end
-            first = false
+            
 
             # Get the nonlinear operator values
             
@@ -343,7 +364,7 @@ for t = 0:tmax
 
     p_iter = 0
     for p_iter = 0:1
-        p_count +=1
+        #p_count +=1
         sum_apar_rel_error = 0.0
         rel_error_array .= 0.0 # array of zeros?
         old_error = 0.0
@@ -353,8 +374,10 @@ for t = 0:tmax
             value_ney = dyne_star
             value_phix = dxphi_star
             value_phiy = dyphi_star
-            value_gx = dxg_star
-            value_gy = dyg_star
+            if g_inc
+                value_gx = dxg_star
+                value_gy = dyg_star
+            end
         else
             old_error = relative_error # Old error stores relative error from last update. Use to check if divergent
             if g_inc
@@ -368,8 +391,10 @@ for t = 0:tmax
             value_ney = dyne
             value_phix = dxphi
             value_phiy = dyphi
-            value_gx = dxg
-            value_gy = dyg
+            if g_inc
+                value_gx = dxg
+                value_gy = dyg
+            end
         end
 
         relative_error = 0.0 # reset value of relative error
@@ -390,9 +415,11 @@ for t = 0:tmax
 
         dxapar,dyapar = convol(akpar_new)
         dxuepar,dyuepar = convol(uekpar_new)
-
-        println("maximum diff is ",maximum(abs.(akpar_new-akpar)))
         
+        if debugging
+        println("maximum diff is ",maximum(abs.(akpar_new-akpar)))
+        end
+
         # to get next ne, use the last timetep values of everything except the new apar
         fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
         for i = 1:nkx
@@ -494,12 +521,13 @@ for t = 0:tmax
     end
 
     if divergent
+        t += 1
         continue # go to next time loop iteration with divergent = true
     end
     
     if repeat
-        redo_timestep = true
         noinc = true
+        t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
 
@@ -514,7 +542,9 @@ for t = 0:tmax
     akpar = deepcopy(akpar_new)
     phik = deepcopy(phik_new)
     uekpar = deepcopy(uekpar_new)
-
+    if g_inc 
+        gk = deepcopy(gk_new)
+    end
     savetime = savetime + dti # update the simulation timestep
 
     # Now re-evaluate the flows to evaluate CFL condition
@@ -543,7 +573,7 @@ for t = 0:tmax
     # Here can call diagnostics if necessary, do I/O stuff
     
     # Calculate new timestep!
-    dti = dtnext(relative_error,dti_temp,noinc,dti) 
+    dti,noinc = dtnext(relative_error,dti_temp,noinc,dti) 
 
     # Calc new hyper coeffs
     if hyper_fixed
@@ -576,7 +606,7 @@ for t = 0:tmax
         print("Final Data","\n")
         print(phi[32,32],nek[32,32],akpar[32,32],'\n')
     end
-
+    #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
     if t%save_datafiles == 0
     file_string_apar = "apar_"*string(t)*".jld2"
@@ -586,10 +616,11 @@ for t = 0:tmax
     ne = FFT2d_inv(nek)
     save_object(file_string_apar,apar)
     save_object(file_string_ne,ne)
+    println("Saved data for timestep = ",t)
     end
 
 
-
+    t += 1
 end # END OF TIMELOOP
 
 if debugging
