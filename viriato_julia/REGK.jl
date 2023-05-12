@@ -216,20 +216,24 @@ aa0 = init_aa0_fac
 #p = 0
 #z = 0 # not necessary if 2d? Not sure if this is z as in z direction
 repeat = false # Flags for certain behaviors in loop. Trying again with smaller timestep, for example
+count_repeats = 0
+count_divergent = 0
 noinc = false
 divergent = false
 first = true # in priciple this should not be true if restarts are enabled, but lets get to that later
 t = 0
-while t < tmax
+while t <= tmax
     #global repeat, noinc, divergent, first, phik, uekpar, nek, akpar,dti # to make sure julia doesn't make them local
     #p = t-z # ? Not sure that this is necessary, controls when some files are written for diagnostics...
     if repeat
         repeat = false
+        count_repeats += 1
         t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else
         if divergent
             #print("Here divergent true")
             divergent = false
+            count_divergent += 1
             t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
         else
 
@@ -566,7 +570,14 @@ while t < tmax
     # uyavg = (uyave + vey)/(p+1.0)
 
     # Calculate CFL fraction/timestep. Not sure why so simple here...
-    CFL_flow=min(dx/vxmax,dy/vymax)
+    #CFL_flow=min(dx/vxmax,dy/vymax)
+
+    if g_inc
+        CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
+        (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
+    else 
+        CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
+    end
 
     dti_temp = CFL_frac*CFL_flow # TIMESTEP!
 
@@ -610,18 +621,22 @@ while t < tmax
     # DIAGNOSTICS GO HERE
     if t%save_datafiles == 0
     file_string_apar = "apar_"*string(t)*".jld2"
-    file_string_ne = "ne_"*string(t)*".jld2"
+    #file_string_ne = "ne_"*string(t)*".jld2"
     # Save Apar, ne in real space
     apar = FFT2d_inv(akpar)
-    ne = FFT2d_inv(nek)
+    #ne = FFT2d_inv(nek)
     save_object(file_string_apar,apar)
-    save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t)
+    #save_object(file_string_ne,ne)
+    println("Saved data for timestep = ",t, "savetime= ",savetime)
+
     end
 
 
     t += 1
 end # END OF TIMELOOP
+
+println("Repeat counts ",count_repeats)
+print("Divergent counts ",count_divergent)
 
 if debugging
     print("End of REGK \n")

@@ -10,5 +10,5 @@ function plotData(filename)
     #plot!(colormap,title = L"A_∥"* " at time ",xaxis=L"x",yaxis=L"y",right_margin=12Plots.mm,aspect_ratio=:equal,grid=false,lims=(0,64))
 end
 
-filename = "apar_20000.jld2"
+filename = "apar_3500.jld2"
 plotData(filename)

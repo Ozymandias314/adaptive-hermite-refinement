@@ -13,10 +13,10 @@
         "npe": 16,
         "npez": 16,
         "three_D": false,
-        "hou_li_filter": false
+        "hou_li_filter": true
     },
         "time_parameters": {
-        "tmax": 20000,
+        "tmax": 10000,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,
@@ -32,8 +32,8 @@
     },
         "diffusion": {
         "nu_ei": 0.0001,
-        "res": 1.0,
-        "niu": 1.0,
+        "res": 0.1,
+        "niu": 0.1,
         "hyper_coef": 0.0,
         "hyper_coef_g": 0.0,
         "hyperm_coef": 0.0,
@@ -58,7 +58,7 @@
         "data_sav": {
         "save_energyfiles": 1600,
         "save_checkpoints": 3200,
-        "save_datafiles": 2000,
+        "save_datafiles": 500,
         "restart": 0,
         "rs_time": 0.0
     }
