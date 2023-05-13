@@ -21,24 +21,24 @@ namespace ahr {
          */
         Naive(std::ostream &out, Dim M, Dim X, Dim Y);
 
-        void init(mdspan<Real, dextents<Dim, 3u>> initialMoments, Dim N_, Real initialDT_) override;
+        void init(Dim N_) override;
 
         void run() override;
 
-        mdarray<Real, dextents<Dim, 3u>> getFinalValues() override;
+        mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 
         using ViewXY = stdex::mdspan<Complex, stdex::dextents<Dim, 2u>>;
     private:
         Dim M, X, Y, N{};
         fftw::plan<2u> fft{}, fftInv{};
-        Real initialDT{};
+        Real bPerpMax{0};
 
         static constexpr Dim N_E = 0;
         static constexpr Dim A_PAR = 1;
         static constexpr Dim G_MIN = 2;
-        Dim LAST = M - 1;
+        const Dim LAST = M - 1;
 
-        static constexpr Dim N_TEMP_BUFFERS = 3;
+        static constexpr Dim N_TEMP_BUFFERS = 4;
 
         template<class Buffer>
         struct BracketBuf {
@@ -99,18 +99,16 @@ namespace ahr {
         /// Additionally, moments is used only at the start and end.
         /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
-        fftw::mdbuffer<3u> moments{M, X, Y};
-        fftw::mdbuffer<3u> moments_K{M, X, Y}, momentsPred_K{M, X, Y};
+        fftw::mdbuffer<3u> moments_K{M, X, Y}, momentsNew_K{M, X, Y};
+
+        /// A|| equilibrium value, used in corrector step
+        fftw::mdbuffer<2u> aParEq_K{X, Y};
 
         /// Φ: the electrostatic potential.
-        fftw::mdbuffer<2u> phi_K{X, Y}, phi_K_Star{X, Y};
+        fftw::mdbuffer<2u> phi_K{X, Y}, phi_K_New{X, Y};
 
         /// sq(∇⊥) A∥, also parallel electron velocity
-        fftw::mdbuffer<2u> ueKPar_K{X, Y}, ueKPar_K_Star{X, Y};
-
-        /// Temporary buffers used for various things.
-        std::array<fftw::mdbuffer<2u>, N_TEMP_BUFFERS> temp;
-
+        fftw::mdbuffer<2u> ueKPar_K{X, Y}, ueKPar_K_New{X, Y};
         /// @}
 
         void for_each_xy(std::invocable<Dim, Dim> auto fun) {
@@ -154,6 +152,11 @@ namespace ahr {
                     sliceXY(moments.DX, m),
                     sliceXY(moments.DY, m)
             };
+        }
+
+        /// Returns a DxDy of 2D mdspans for a specified m.
+        static auto sliceXY(DxDy<fftw::mdbuffer<3u>> &moments, Dim m) {
+            return DxDy{sliceXY(moments.DX, m), sliceXY(moments.DY, m)};
         }
 
         /// Prepares the δx and δy of viewPH in phase space
@@ -209,6 +212,66 @@ namespace ahr {
         // TODO other file/class
         // =================
 
-        // Nonlinear operators
+        /// getTimestep calculates flows and magnetic fields to determine a dt.
+        /// It also updates bPerpMax in the process.
+        [[nodiscard]] Real getTimestep(DxDy<ViewXY> dPhi, DxDy<ViewXY> dNE, DxDy<ViewXY> dAPar) {
+            // compute flows
+            DxDy<ViewXY> ve, b;
+            Real vyMax{0}, vxMax{0}, bxMax{0}, byMax{0};
+            bPerpMax = 0;
+
+            // Note that this is minus in Viriato, but we don't care because we're taking the absolute value anyway.
+            ve.DX = dPhi.DY;
+            ve.DY = dPhi.DX;
+            b.DX = dAPar.DY;
+            b.DY = dAPar.DX;
+
+            for_each_xy([&](Dim x, Dim y) {
+                bxMax = std::max(bxMax, std::abs(b.DX(x, y)));
+                byMax = std::max(byMax, std::abs(b.DY(x, y)));
+                bPerpMax = std::max(bPerpMax, std::sqrt(b.DX(x, y).real() * b.DX(x, y).real() +
+                                                        b.DY(x, y).real() * b.DY(x, y).real()));
+                vxMax = std::max(vxMax, std::abs(ve.DX(x, y)));
+                vyMax = std::max(vyMax, std::abs(ve.DY(x, y)));
+                if (rhoI >= smallRhoI) {
+                    vxMax = std::max(vxMax, rhoS * rhoS * std::abs(dNE.DX(x, y)));
+                    vyMax = std::max(vyMax, rhoS * rhoS * std::abs(dNE.DY(x, y)));
+                }
+            });
+
+            // TODO
+            auto ky = [&](Dim ky_) { return Real(ky_ <= (KY / 2 + 1) ? ky_ - 1 : ky_ - KY - 1) * Real(lx) / Real(ly); };
+            auto kx = [&](Dim kx_) { return Real(kx_ <= (KX / 2 + 1) ? kx_ - 1 : kx_ - KX - 1); }; // TODO r2c
+
+            Real kperpDum2 = std::pow(ky(KY / 2 + 1), 2) + std::pow(Real(kx(KX / 2 + 1)), 2);
+            Real omegaKaw;
+            if (rhoI < smallRhoI)
+                omegaKaw = std::sqrt(1.0 + kperpDum2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS))
+                           * ky(KY / 2 + 1) * bPerpMax / (1.0 + kperpDum2 * de * de);
+            else
+                omegaKaw = std::sqrt(kperpDum2 * (rhoS*rhoS - rhoI*rhoI / (Gamma0(0.5*kperpDum2*rhoI*rhoI)-1.0))) *
+                    ky(KY/2+1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
+
+            Real dx = lx / Real(KX), dy = ly / Real(KY);
+            Real CFLFlow = std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
+                                     std::min(dx / bxMax, dy / byMax) / rhoS / de / std::sqrt(M - 1)});
+
+            // DEBUG
+            std::cout << "CFLFlow: " << CFLFlow;
+
+            return CFLFrac * CFLFlow;
+        }
+
+        [[maybe_unused]] void print(ViewXY view) const {
+            for (int x = 0; x < view.extent(0); ++x) {
+                for (int y = 0; y < view.extent(1); ++y) {
+                    std::cout << view(x, y) << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "===========================================" << std::endl;
+        }
+
+        Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
     };
 };

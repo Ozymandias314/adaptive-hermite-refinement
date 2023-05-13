@@ -9,15 +9,16 @@ namespace ahr {
     }
 
     [[nodiscard]] inline Real exp_nu(Dim kx, Dim ky, Real niu2, Real dt) {
-        return std::exp(-(niu * kPerp(kx, ky) + niu2 * std::pow(kPerp(kx, ky), hyper_order) * dt));
+        return std::exp(-(nu * kPerp(kx, ky) + niu2 * std::pow(kPerp(kx, ky), hyper_order) * dt));
     }
 
     [[nodiscard]] inline Real exp_gm(Dim m, Real hyper_nuei, Real dt) {
-        return 0.0; // TODO
+        return exp(-(Real(m) * nu_ei + std::pow(m, (2 * hyper_morder)) * hyper_nuei) * dt);
     }
 
     [[nodiscard]] inline Real exp_eta(Dim kx, Dim ky, Real res2, Real dt) {
-        return 0.0; // TODO
+        return std::exp(-(res * kPerp(kx, ky) + res2 * std::pow(kPerp(kx, ky), hyper_order)) * dt /
+                        (1.0 + kPerp(kx, ky) * de * de));
     }
 
     [[nodiscard]] inline Real Gamma0(Real x) {
@@ -62,10 +63,9 @@ namespace ahr {
             return -bracketPhiNE_K + bracketAParUEKPar_K;
         }
 
-        [[nodiscard]] inline Complex A(Complex bracketPhiAPar_K, Complex bracketPhiDeUEKPar_K,
-                                       Complex bracketNeG2APar_K, Dim kx, Dim ky) {
-            return (-bracketPhiAPar_K + bracketPhiDeUEKPar_K +
-                    rhoS * rhoS * bracketNeG2APar_K) / (1 + de * de * kPerp(kx, ky));
+        [[nodiscard]] inline Complex A(Complex bracketAParPhiG2Ne_K, Complex bracketPhiDeUEKPar_K,
+                                       Dim kx, Dim ky) {
+            return (bracketAParPhiG2Ne_K - de * de * bracketPhiDeUEKPar_K) / (1 + de * de * kPerp(kx, ky));
         }
 
         [[nodiscard]] inline Complex G2(Complex bracketPhiG2_K, Complex bracketAParG3_K,
@@ -75,16 +75,19 @@ namespace ahr {
                    std::sqrt(2.0) * bracketAParUEKPar_K;
         }
 
-        [[nodiscard]] inline Complex GM(Dim m, Complex bracketPhiGM_K, Complex bracketAParGMMinus_K,
-                                        Complex bracketAParGMPlus_K) {
-            return -bracketPhiGM_K +
-                   std::sqrt(m) * rhoS / de * bracketAParGMMinus_K +
-                   std::sqrt(m + 1) * rhoS / de * bracketAParGMPlus_K;
-            // TODO verify, maybe this is m and m+1?
+        [[nodiscard]] inline Complex GM(Dim m, Complex bracketPhiGM_K, Complex bracketAParGMMinusPlus_K) {
+            return -bracketPhiGM_K + rhoS / de * bracketAParGMMinusPlus_K;
         }
 
         [[nodiscard]] inline Complex GLast(Complex bracketPhiGLast_K, Complex bracketTotalGLast_K) {
             return -bracketPhiGLast_K + bracketTotalGLast_K;
+        }
+
+        [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Dim kx, Dim ky, HyperCoefficients hyper) {
+            auto M1 = double(M + 1);
+            return (rhoS * rhoS * de * de * M1) /
+                   (M1 * hyper.nu_ei + std::pow(M1, 2 * hyper_morder) * hyper.nu_ei +
+                    nu * kPerp(kx, ky) + hyper.nu_2 * std::pow(kPerp(kx, ky), hyper_order));
         }
     }
 }
