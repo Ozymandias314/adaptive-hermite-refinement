@@ -86,8 +86,6 @@ akpar_eq = FFT2d_direct(apar_eq) # will be used later!
 apar_perturb = init_perturb() # TODO:Implement perturbation to phi or Apar
 apar = apar_eq + apar_perturb
 phi = phi_eq
-apar = apar_eq
-phi = phi_eq 
 
 file_string_apar = "apar_initial.jld2"
 file_string_ne = "ne_initial.jld2"
