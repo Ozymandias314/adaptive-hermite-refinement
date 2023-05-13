@@ -32,10 +32,6 @@ int main(int argc, const char *argv[]) {
             .scan<'i', Dim>()
             .default_value(Dim{20});
 
-    arguments.add_argument("inFile")
-            .help("The path to the file that contains initial moment data")
-            .default_value("");
-
     try {
         arguments.parse_args(argc, argv);
         if (arguments.get<Dim>("M") < 4) throw std::invalid_argument("At least 4 moments required");
@@ -50,37 +46,17 @@ int main(int argc, const char *argv[]) {
             M = arguments.get<Dim>("M"),
             nr = arguments.get<Dim>("nr");
 
-    std::optional<std::ifstream> inFile{};
-    if (auto fPath = arguments.get("inFile"); !fPath.empty()) {
-        inFile = std::ifstream{fPath};
-    }
-
     Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
-    stdex::mdarray<Real, stdex::dextents<size_t, 3u>> initialMoments{M, X, X};
-    for (int m = 0; m < M; ++m) {
-        for (int x = 0; x < X; ++x) {
-            for (int y = 0; y < X; ++y) {
-                if (inFile)
-                    *inFile >> initialMoments(m, x, y);
-                else
-                    initialMoments(m, x, y) = 0;
-            }
-        }
-    }
-
-    runner.init(initialMoments, nr, 0.01);
+    runner.init(nr);
     runner.run();
-    auto moments = runner.getFinalValues();
+    auto aPar = runner.getFinalAPar();
 
-    for (int m = 0; m < M; ++m) {
-        std::cout << "m=" << m << std::endl;
-        for (int x = 0; x < X; ++x) {
-            for (int y = 0; y < X; ++y) {
-                std::cout << moments(m, x, y) << " ";
-            }
-            std::cout << std::endl;
+    for (int x = 0; x < X; ++x) {
+        for (int y = 0; y < X; ++y) {
+            std::cout << aPar(x, y) << " ";
         }
+        std::cout << std::endl;
     }
 }

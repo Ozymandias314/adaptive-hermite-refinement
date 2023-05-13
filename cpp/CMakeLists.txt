@@ -30,7 +30,7 @@ option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off fo
 if (ENABLE_AVX512)
     add_compile_options("-mavx512f" "-march=native")
 endif ()
-add_compile_options("-fopencilk" "-ffast-math")
+add_compile_options("-fopencilk")
 add_link_options("-fopencilk")
 
 option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
