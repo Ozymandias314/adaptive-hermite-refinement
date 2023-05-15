@@ -29,7 +29,8 @@ namespace ahr {
 
         using ViewXY = stdex::mdspan<Complex, stdex::dextents<Dim, 2u>>;
     private:
-        Dim M, X, Y, N{};
+        Dim const M, X, Y, KX{X}, KY{Y};
+        Dim N{};
         fftw::plan<2u> fft{}, fftInv{};
         Real bPerpMax{0};
 
@@ -212,6 +213,9 @@ namespace ahr {
         // TODO other file/class
         // =================
 
+        auto ky_(Dim ky) { return Real(ky <= (KY / 2 + 1) ? ky - 1 : ky - KY - 1) * Real(lx) / Real(ly); };
+        auto kx_(Dim kx) { return Real(kx <= (KX / 2 + 1) ? kx - 1 : kx - KX - 1); }; // TODO r2c
+
         /// getTimestep calculates flows and magnetic fields to determine a dt.
         /// It also updates bPerpMax in the process.
         [[nodiscard]] Real getTimestep(DxDy<ViewXY> dPhi, DxDy<ViewXY> dNE, DxDy<ViewXY> dAPar) {
@@ -239,25 +243,21 @@ namespace ahr {
                 }
             });
 
-            // TODO
-            auto ky = [&](Dim ky_) { return Real(ky_ <= (KY / 2 + 1) ? ky_ - 1 : ky_ - KY - 1) * Real(lx) / Real(ly); };
-            auto kx = [&](Dim kx_) { return Real(kx_ <= (KX / 2 + 1) ? kx_ - 1 : kx_ - KX - 1); }; // TODO r2c
-
-            Real kperpDum2 = std::pow(ky(KY / 2 + 1), 2) + std::pow(Real(kx(KX / 2 + 1)), 2);
+            Real kperpDum2 = std::pow(ky_(KY / 2 + 1), 2) + std::pow(Real(kx_(KX / 2 + 1)), 2);
             Real omegaKaw;
             if (rhoI < smallRhoI)
                 omegaKaw = std::sqrt(1.0 + kperpDum2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS))
-                           * ky(KY / 2 + 1) * bPerpMax / (1.0 + kperpDum2 * de * de);
+                           * ky_(KY / 2 + 1) * bPerpMax / (1.0 + kperpDum2 * de * de);
             else
                 omegaKaw = std::sqrt(kperpDum2 * (rhoS*rhoS - rhoI*rhoI / (Gamma0(0.5*kperpDum2*rhoI*rhoI)-1.0))) *
-                    ky(KY/2+1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
+                    ky_(KY/2+1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
 
             Real dx = lx / Real(KX), dy = ly / Real(KY);
             Real CFLFlow = std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
                                      std::min(dx / bxMax, dy / byMax) / rhoS / de / std::sqrt(M - 1)});
 
             // DEBUG
-            std::cout << "CFLFlow: " << CFLFlow;
+            std::cout << "CFLFlow: " << CFLFlow << std::endl;
 
             return CFLFrac * CFLFlow;
         }

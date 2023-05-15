@@ -47,7 +47,7 @@ namespace ahr {
     struct HyperCoefficients {
         Real nu_g, nu_2, eta2, nu_ei;
 
-        static HyperCoefficients calculate(Real dt, Dim KX, Dim KY, Dim M) {
+        static constexpr HyperCoefficients calculate(Real dt, Dim KX, Dim KY, Dim M) {
             Real kPerpMax2 = std::pow(Real(KX) / 2, 2) + std::pow(Real(KY) / 2, 2); // TODO(r2c)
 
             HyperCoefficients ret{};
