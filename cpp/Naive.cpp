@@ -42,15 +42,15 @@ namespace ahr {
         print(aParEq);
         print(aParEq_K);
         // Transform moments into phase space
-        for (int m = 0; m < M; ++m) {
-            if (m == A_PAR) continue;
+        for (int m = G_MIN; m < M; ++m) {
             for_each_xy([&](Dim x, Dim y) {
                 moments_K(m, x, y) = 0;
             });
         }
 
-        // aPar and uekPar
+        // aPar, uekPar, ne
         for_each_kxky([&](Dim ky, Dim kx) {
+            moments_K(N_E, kx, ky) = nonlinear::phiInv(phi_K(kx, ky), kPerp2(kx, ky));
             moments_K(A_PAR, kx, ky) = aParEq_K(kx, ky);
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(A_PAR, kx, ky);
         });

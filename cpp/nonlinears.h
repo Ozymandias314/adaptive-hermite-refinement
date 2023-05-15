@@ -34,6 +34,13 @@ namespace ahr {
                 return rhoI * rhoI * 0.5 / (Gamma0(kPerp2 * rhoI * rhoI * 0.5) - 1.0) * ne_K;
         }
 
+        [[nodiscard]] inline Complex phiInv(Complex phi_K, Real kPerp2) {
+            if (rhoI < smallRhoI)
+                return - kPerp2 * phi_K;
+            else
+                return 2.0 / (rhoI * rhoI) * (Gamma0(kPerp2 * rhoI * rhoI * 0.5) - 1.0) * phi_K;
+        }
+
         [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Real kPerp2) {
             if (rhoI <= smallRhoI) {
                 return aa0 * aa0 * (1 + kPerp2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
