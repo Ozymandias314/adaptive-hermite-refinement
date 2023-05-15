@@ -213,8 +213,26 @@ namespace ahr {
         // TODO other file/class
         // =================
 
-        auto ky_(Dim ky) { return Real(ky <= (KY / 2 + 1) ? ky - 1 : ky - KY - 1) * Real(lx) / Real(ly); };
-        auto kx_(Dim kx) { return Real(kx <= (KX / 2 + 1) ? kx - 1 : kx - KX - 1); }; // TODO r2c
+        [[nodiscard]] auto ky_(Dim ky) const { return Real(ky <= (KY / 2 + 1) ? ky - 1 : ky - KY - 1) * Real(lx) / Real(ly); };
+        [[nodiscard]] auto kx_(Dim kx) const { return Real(kx <= (KX / 2 + 1) ? kx - 1 : kx - KX - 1); }; // TODO r2c
+
+        [[nodiscard]] Real kPerp(Dim kx, Dim ky) const {
+            auto dkx = kx_(kx), dky = ky_(ky);
+            return dkx * dkx + dky * dky;
+        }
+
+        [[nodiscard]] Real exp_nu(Dim kx, Dim ky, Real niu2, Real dt) const {
+            return std::exp(-(nu * kPerp(kx, ky) + niu2 * std::pow(kPerp(kx, ky), hyper_order) * dt));
+        }
+
+        [[nodiscard]] Real exp_gm(Dim m, Real hyper_nuei, Real dt) const {
+            return exp(-(Real(m) * nu_ei + std::pow(m, (2 * hyper_morder)) * hyper_nuei) * dt);
+        }
+
+        [[nodiscard]] Real exp_eta(Dim kx, Dim ky, Real res2, Real dt) const {
+            return std::exp(-(res * kPerp(kx, ky) + res2 * std::pow(kPerp(kx, ky), hyper_order)) * dt /
+                            (1.0 + kPerp(kx, ky) * de * de));
+        }
 
         /// getTimestep calculates flows and magnetic fields to determine a dt.
         /// It also updates bPerpMax in the process.

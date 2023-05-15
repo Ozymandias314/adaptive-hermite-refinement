@@ -3,25 +3,6 @@
 #include "constants.h"
 
 namespace ahr {
-    [[nodiscard]] inline Real kPerp(Dim kx, Dim ky) {
-        // TODO calculate ky & kx properly
-        auto dkx = Real(kx), dky = Real(ky);
-        return dkx * dkx + dky * dky;
-    }
-
-    [[nodiscard]] inline Real exp_nu(Dim kx, Dim ky, Real niu2, Real dt) {
-        return std::exp(-(nu * kPerp(kx, ky) + niu2 * std::pow(kPerp(kx, ky), hyper_order) * dt));
-    }
-
-    [[nodiscard]] inline Real exp_gm(Dim m, Real hyper_nuei, Real dt) {
-        return exp(-(Real(m) * nu_ei + std::pow(m, (2 * hyper_morder)) * hyper_nuei) * dt);
-    }
-
-    [[nodiscard]] inline Real exp_eta(Dim kx, Dim ky, Real res2, Real dt) {
-        return std::exp(-(res * kPerp(kx, ky) + res2 * std::pow(kPerp(kx, ky), hyper_order)) * dt /
-                        (1.0 + kPerp(kx, ky) * de * de));
-    }
-
     [[nodiscard]] inline Real Gamma0(Real x) {
         Real ax = std::abs(x);
 
@@ -46,17 +27,20 @@ namespace ahr {
 
     namespace nonlinear {
 
-        [[nodiscard]] inline Complex phi(Complex ne_K, Dim kx, Dim ky) {
-            if (rhoI<smallRhoI) return - ne_K *kPerp(kx, ky); else return rhoI *rhoI* 0.5 / (Gamma0(kPerp(kx, ky)*rhoI *rhoI* 0.5) - 1.0) *ne_K;
+        [[nodiscard]] inline Complex phi(Complex ne_K, Real kPerp) {
+            if (rhoI < smallRhoI)
+                return -ne_K * kPerp;
+            else
+                return rhoI * rhoI * 0.5 / (Gamma0(kPerp * rhoI * rhoI * 0.5) - 1.0) * ne_K;
         }
 
-        [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Dim kx, Dim ky) {
+        [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Real kPerp) {
             if (rhoI <= smallRhoI) {
-                return aa0 * aa0 * (1 + kPerp(kx, ky) * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
-                       std::pow(kPerp(kx, ky) * bPerpMax * dt, 2) / (1 + kPerp(kx, ky) * de * de);
+                return aa0 * aa0 * (1 + kPerp * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
+                       std::pow(kPerp * bPerpMax * dt, 2) / (1 + kPerp * de * de);
             } else {
-                return aa0 * aa0 * (3.0 * rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kPerp(kx, ky) * rhoI * rhoI) - 1)) *
-                       std::pow(kPerp(kx, ky) * bPerpMax * dt, 2) / (1 + kPerp(kx, ky) * de * de);
+                return aa0 * aa0 * (3.0 * rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kPerp * rhoI * rhoI) - 1)) *
+                       std::pow(kPerp * bPerpMax * dt, 2) / (1 + kPerp * de * de);
             }
         }
 
@@ -65,8 +49,8 @@ namespace ahr {
         }
 
         [[nodiscard]] inline Complex A(Complex bracketAParPhiG2Ne_K, Complex bracketPhiDeUEKPar_K,
-                                       Dim kx, Dim ky) {
-            return (bracketAParPhiG2Ne_K - de * de * bracketPhiDeUEKPar_K) / (1 + de * de * kPerp(kx, ky));
+                                       Real kPerp) {
+            return (bracketAParPhiG2Ne_K - de * de * bracketPhiDeUEKPar_K) / (1 + de * de * kPerp);
         }
 
         [[nodiscard]] inline Complex G2(Complex bracketPhiG2_K, Complex bracketAParG3_K,
@@ -84,11 +68,11 @@ namespace ahr {
             return -bracketPhiGLast_K + bracketTotalGLast_K;
         }
 
-        [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Dim kx, Dim ky, HyperCoefficients hyper) {
+        [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Real kPerp, HyperCoefficients hyper) {
             auto M1 = double(M + 1);
             return (rhoS * rhoS / de / de * M1) /
                    (M1 * hyper.nu_ei + std::pow(M1, 2 * hyper_morder) * hyper.nu_ei +
-                    nu * kPerp(kx, ky) + hyper.nu_2 * std::pow(kPerp(kx, ky), hyper_order));
+                    nu * kPerp + hyper.nu_2 * std::pow(kPerp, hyper_order));
         }
     }
 }
