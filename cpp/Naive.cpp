@@ -53,7 +53,7 @@ namespace ahr {
         for_each_kxky([&](Dim ky, Dim kx) {
             aParEq_K(kx, ky) /= std::sqrt(KX*KY);
             moments_K(A_PAR, kx, ky) = aParEq_K(kx, ky);
-            ueKPar_K(kx, ky) = kPerp(kx, ky) * moments_K(A_PAR, kx, ky);
+            ueKPar_K(kx, ky) = -kPerp(kx, ky) * moments_K(A_PAR, kx, ky);
         });
         print(aParEq_K);
     }
@@ -64,6 +64,7 @@ namespace ahr {
         DxDy<fftw::mdbuffer<2u>> dPhi{X, Y}, dUEKPar{X, Y};
 
         bool divergent = false, repeat = false, noInc = false;
+        int divergentCount = 0, repeatCount = 0;
         Real dt{0};
         HyperCoefficients hyper{};
 
@@ -133,7 +134,8 @@ namespace ahr {
                                                              bracketPhiDeUEKPar_K(kx, ky), kx, ky);
                 GM_K_Star(A_PAR, kx, ky) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(A_PAR, kx, ky) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
-                                           GM_Nonlinear_K(A_PAR, kx, ky);
+                                           GM_Nonlinear_K(A_PAR, kx, ky) +
+                                           (1.0 - exp_eta(kx, ky, hyper.eta2, dt)) * aParEq_K(kx, ky);
 
                 GM_Nonlinear_K(G_MIN, kx, ky) = nonlinear::G2(bracketPhiG2_K(kx, ky), bracketAParG3_K(kx, ky),
                                                               bracketAParUEKPar_K(kx, ky));
@@ -174,7 +176,7 @@ namespace ahr {
             // Phi, Nabla, and other prep for A bracket
             for_each_kxky([&](Dim ky, Dim kx) {
                 phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(N_E, kx, ky), kx, ky);
-                ueKPar_K_New(kx, ky) = kPerp(kx, ky) * GM_K_Star(A_PAR, kx, ky);
+                ueKPar_K_New(kx, ky) = -kPerp(kx, ky) * GM_K_Star(A_PAR, kx, ky);
             });
 
 
@@ -233,7 +235,7 @@ namespace ahr {
                                                    dt / 2.0 * GM_Nonlinear_K_Loop(A_PAR, kx, ky) +
                                                    (1.0 - exp_eta(kx, ky, hyper.eta2, dt)) * aParEq_K(kx, ky) +
                                                    semiImplicitOperator(kx, ky) / 4.0 * guessAPar_K(kx, ky));
-                    ueKPar_K_New(kx, ky) = kPerp(kx, ky) * momentsNew_K(A_PAR, kx, ky);
+                    ueKPar_K_New(kx, ky) = -kPerp(kx, ky) * momentsNew_K(A_PAR, kx, ky);
 
                     sumAParRelError += std::norm(momentsNew_K(A_PAR, kx, ky) - moments_K(A_PAR, kx, ky));
                 });
@@ -299,10 +301,11 @@ namespace ahr {
                         GM_Nonlinear_K_Loop(m, kx, ky) = nonlinear::GM(m, bracketPhiGM_K_Loop(kx, ky),
                                                                        bracketAParGMMinusPlus_K_Loop(kx, ky));
                         // TODO(OPT) reuse star
-                        momentsNew_K(m, kx, ky) = exp_gm(m, hyper.nu_ei, dt) * moments_K(m, kx, ky) +
-                                                  dt / 2.0 * (1 + exp_gm(m, hyper.nu_ei, dt)) *
-                                                  GM_Nonlinear_K(m, kx, ky) +
-                                                  dt / 2.0 * GM_Nonlinear_K_Loop(m, kx, ky);
+                        momentsNew_K(m, kx, ky) =
+                                exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(m, kx, ky) +
+                                dt / 2.0 * exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) *
+                                GM_Nonlinear_K(m, kx, ky) +
+                                dt / 2.0 * GM_Nonlinear_K_Loop(m, kx, ky);
                     });
 
                     DerivateNewMoment(m);
@@ -326,8 +329,8 @@ namespace ahr {
                                                                          bracketTotalGLast_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(LAST, kx, ky) =
-                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky,hyper.nu_2, dt) * moments_K(LAST, kx, ky) +
-                            dt / 2.0 * (1 + exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt)) *
+                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(LAST, kx, ky) +
+                            dt / 2.0 * exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) *
                             GM_Nonlinear_K(LAST, kx, ky) +
                             dt / 2.0 * GM_Nonlinear_K_Loop(LAST, kx, ky);
                 });
@@ -337,18 +340,20 @@ namespace ahr {
 
                 if (p != 0 and relative_error / old_error > 1.0) {
                     divergent = true;
+                    divergentCount++;
                     dt = low * dt;
                     break;
                 }
                 if (p == MaxP) {
                     // did not converge well enough
                     repeat = true;
+                    repeatCount++;
                     dt = low * dt;
                     break;
                 }
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    guessAPar_K(kx, ky) = moments_K(A_PAR, kx, ky);
+                    guessAPar_K(kx, ky) = momentsNew_K(A_PAR, kx, ky);
                 });
             }
             if (divergent) continue;
@@ -366,6 +371,9 @@ namespace ahr {
             std::swap(phi_K, phi_K_New);
             std::swap(ueKPar_K, ueKPar_K_New);
         }
+
+        std::cout << "repeat: " << repeatCount << std::endl <<
+                  "divergent: " << divergentCount << std::endl;
     }
 
     Real Naive::updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const {
@@ -407,6 +415,10 @@ namespace ahr {
         fftw::mdbuffer<2u> br{X, Y}, br_K{X, Y};
         bracket(derOp1, derOp2, br);
         fft(br, br_K);
+
+        for_each_kxky([&](Dim kx, Dim ky) {
+            // TODO filter
+        });
 
         return br_K;
     }

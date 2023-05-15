@@ -4,6 +4,7 @@
 
 namespace ahr {
     [[nodiscard]] inline Real kPerp(Dim kx, Dim ky) {
+        // TODO calculate ky & kx properly
         auto dkx = Real(kx), dky = Real(ky);
         return dkx * dkx + dky * dky;
     }
@@ -85,7 +86,7 @@ namespace ahr {
 
         [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Dim kx, Dim ky, HyperCoefficients hyper) {
             auto M1 = double(M + 1);
-            return (rhoS * rhoS * de * de * M1) /
+            return (rhoS * rhoS / de / de * M1) /
                    (M1 * hyper.nu_ei + std::pow(M1, 2 * hyper_morder) * hyper.nu_ei +
                     nu * kPerp(kx, ky) + hyper.nu_2 * std::pow(kPerp(kx, ky), hyper_order));
         }
