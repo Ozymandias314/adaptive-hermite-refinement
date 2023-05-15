@@ -5,8 +5,8 @@
         "lx": 1.0,
         "ly": 1.0,
         "lz": 1.0,
-        "nlx": 64,
-        "nly": 64,
+        "nlx": 8,
+        "nly": 8,
         "nlz": 1,
         "g_inc": false,
         "ngtot": 10,
@@ -16,7 +16,7 @@
         "hou_li_filter": true
     },
         "time_parameters": {
-        "tmax": 10000,
+        "tmax": 2,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,
@@ -53,12 +53,12 @@
         "leq": 0.0,
         "perturb_amp": 1.0e-5,
         "equilib_type": "OT01",
-        "perturb_type": "allk"
+        "perturb_type": "none"
     },
         "data_sav": {
         "save_energyfiles": 1600,
         "save_checkpoints": 3200,
-        "save_datafiles": 500,
+        "save_datafiles": 10,
         "restart": 0,
         "rs_time": 0.0
     }

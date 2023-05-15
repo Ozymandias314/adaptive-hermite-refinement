@@ -6,7 +6,7 @@ end
 
 #not strictly needed, but maybe later for parallelization?
 function kx(i::Int)
-    kx = i
+    kx = i-1 # TODO:maybe needs to be i-1?
 end
 
 # Get ky to respect the order of frequencies returned by fft WITHOUT any FFTSHIFT calls
@@ -42,5 +42,5 @@ function xx(i::Int)
 end
 
 function yy(j::Int)
-    xx = ly*(j-1.0-nly/2)/nly 
+    yy = ly*(j-1.0-nly/2)/nly 
 end

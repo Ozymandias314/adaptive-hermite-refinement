@@ -183,6 +183,8 @@ rs_time = const_data["data_sav"]["rs_time"]
 
 
 # Definitions
+lx = 2*pi*lx
+ly = 2*pi*ly
 nkx = div(nlx, 2) + 1
 nky = nly
 #nkz = 2 * div(nlz - 1, 3) + 1
@@ -194,8 +196,8 @@ kperpmax = sqrt(nkx^2 + div(nky, 2)^2)
 #nkx_par = div(nkx - 1, npe) + 1
 #nly_par = div(nly - 1, npe) + 1
 #nlz_par = div(nlz - 1, npez) + 1
-dx = lx / nkx
-dy = ly / nky
+dx = lx / nlx
+dy = ly / nly
 #dz = lz / nlz
 #etaz = 0
 #etaz_g = 0

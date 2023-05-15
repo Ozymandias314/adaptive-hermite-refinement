@@ -290,7 +290,6 @@ while t <= tmax
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
 
-    
     # Start Predictor ("star") step
 
     if debugging
@@ -514,7 +513,6 @@ while t <= tmax
             repeat= true
             break # exit p loop
         end
-
         guess = deepcopy(akpar_new)
     end # end of p loop
 
@@ -528,7 +526,7 @@ while t <= tmax
     end
     
     if repeat
-        noinc = true
+        noinc = true # Tells the timestep update if the timestep is allowed to increase
         t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
@@ -547,14 +545,13 @@ while t <= tmax
     if g_inc 
         gk = deepcopy(gk_new)
     end
-    savetime = savetime + dti # update the simulation timestep
+    savetime += dti # update the simulation timestep
 
     # Now re-evaluate the flows to evaluate CFL condition
     
     vex,vey,vrhosx,vrhosy = flows(dxphi,dyphi,dxne,dyne)
     vxmax = max(maximum(abs.(vex)),maximum(abs.(vrhosx)))
     vymax = max(maximum(abs.(vey)),maximum(abs.(vrhosy)))
-
     bx,by = bfield(dxapar,dyapar)
     bxmax = maximum(abs.(bx))
     bymax = maximum(abs.(by))
@@ -567,23 +564,15 @@ while t <= tmax
     # uxavg = (uxavg+ vex)/(p+1.0)
     # uyavg = (uyave + vey)/(p+1.0)
 
-    # Calculate CFL fraction/timestep. Not sure why so simple here...
-    #CFL_flow=min(dx/vxmax,dy/vymax)
-
-    if g_inc
-        CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
-        (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
-    else 
-        CFL_flow=min(dx/vxmax,dy/vymax,dy/bymax,dx/bxmax,2.0/omega_kaw)
-    end
+    # Calculate CFL fraction/timestep. Not sure why so simple here, but this is how its done for the not "turb" case in Viriato
+    CFL_flow=min(dx/vxmax,dy/vymax)
 
     dti_temp = CFL_frac*CFL_flow # TIMESTEP!
-
+    
     # Here can call diagnostics if necessary, do I/O stuff
     
     # Calculate new timestep!
     dti,noinc = dtnext(relative_error,dti_temp,noinc,dti) 
-
     # Calc new hyper coeffs
     if hyper_fixed
         ν_g = hyper_ν_g
@@ -625,16 +614,18 @@ while t <= tmax
     #ne = FFT2d_inv(nek)
     save_object(file_string_apar,apar)
     #save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t, "savetime= ",savetime)
-
+    println("Saved data for timestep = ",t, " savetime= ",savetime)
+    # println("relative_error ", relative_error) 
+    # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
+    # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
     end
 
 
     t += 1
 end # END OF TIMELOOP
 
-println("Repeat counts ",count_repeats)
-print("Divergent counts ",count_divergent)
+# println("Repeat counts ",count_repeats)
+# println("Divergent counts ",count_divergent)
 
 if debugging
     print("End of REGK \n")

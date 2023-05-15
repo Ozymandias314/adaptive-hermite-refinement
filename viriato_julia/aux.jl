@@ -42,16 +42,17 @@ function phi_pot(nek::Array{ComplexF64,2})
                 end
             end
         end
+        phiK[1,1] = 0.0
     end
     return phiK
 end
 
 function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
     SI_oper = Array{ComplexF64}(undef, nkx, nky)
-    if rhoi <= small_rhoi
+    if rhoi < small_rhoi
         for i in 1:nkx
             for j in 1:nky
-                SI_oper[i,j] = aa0^2*(1+kperp(i,j)^2*(3/4*rhoi^2+rhos^2))*kperp(i,j)^2*bperp_max^2*
+                SI_oper[i,j] = aa0^2*(1+kperp(i,j)^2*(3.0/4.0*rhoi^2+rhos^2))*kperp(i,j)^2*bperp_max^2*
                     dti^2/(1.0+kperp(i,j)^2*de^2) 
             end
         end
@@ -64,13 +65,14 @@ function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
             end
         end
     end
+    SI_oper[1,1] = 0.0
     return SI_oper
 end
 
 function dtnext(relative_error::Float64,dti_temp::Float64,noinc::Bool,dti::Float64)
     if noinc
         inc_fac = 1.0
-        noinc = false # need to make noinc global
+        noinc = false
     else
         inc_fac = 1.08
     end

@@ -31,6 +31,7 @@ function flows(dxfi,dyfi,dxne,dyne)
     vrhosy = similar(vex)
 
     if rhoi < small_rhoi
+        
         vex = -dyfi
         vey = dxfi
         vrhosx = 0.0
