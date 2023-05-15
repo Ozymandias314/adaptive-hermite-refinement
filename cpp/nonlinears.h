@@ -27,20 +27,20 @@ namespace ahr {
 
     namespace nonlinear {
 
-        [[nodiscard]] inline Complex phi(Complex ne_K, Real kPerp) {
+        [[nodiscard]] inline Complex phi(Complex ne_K, Real kPerp2) {
             if (rhoI < smallRhoI)
-                return -ne_K * kPerp;
+                return -ne_K / kPerp2;
             else
-                return rhoI * rhoI * 0.5 / (Gamma0(kPerp * rhoI * rhoI * 0.5) - 1.0) * ne_K;
+                return rhoI * rhoI * 0.5 / (Gamma0(kPerp2 * rhoI * rhoI * 0.5) - 1.0) * ne_K;
         }
 
-        [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Real kPerp) {
+        [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Real kPerp2) {
             if (rhoI <= smallRhoI) {
-                return aa0 * aa0 * (1 + kPerp * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
-                       std::pow(kPerp * bPerpMax * dt, 2) / (1 + kPerp * de * de);
+                return aa0 * aa0 * (1 + kPerp2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
+                       std::pow(kPerp2 * bPerpMax * dt, 2) / (1 + kPerp2 * de * de);
             } else {
-                return aa0 * aa0 * (3.0 * rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kPerp * rhoI * rhoI) - 1)) *
-                       std::pow(kPerp * bPerpMax * dt, 2) / (1 + kPerp * de * de);
+                return aa0 * aa0 * (3.0 * rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kPerp2 * rhoI * rhoI) - 1)) *
+                       std::pow(kPerp2 * bPerpMax * dt, 2) / (1 + kPerp2 * de * de);
             }
         }
 
@@ -49,8 +49,8 @@ namespace ahr {
         }
 
         [[nodiscard]] inline Complex A(Complex bracketAParPhiG2Ne_K, Complex bracketPhiDeUEKPar_K,
-                                       Real kPerp) {
-            return (bracketAParPhiG2Ne_K - de * de * bracketPhiDeUEKPar_K) / (1 + de * de * kPerp);
+                                       Real kPerp2) {
+            return (bracketAParPhiG2Ne_K - de * de * bracketPhiDeUEKPar_K) / (1 + de * de * kPerp2);
         }
 
         [[nodiscard]] inline Complex G2(Complex bracketPhiG2_K, Complex bracketAParG3_K,
@@ -68,11 +68,12 @@ namespace ahr {
             return -bracketPhiGLast_K + bracketTotalGLast_K;
         }
 
-        [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Real kPerp, HyperCoefficients hyper) {
-            auto M1 = double(M + 1);
+        [[nodiscard]] inline Complex GLastBracketFactor(Dim M, Real kPerp2, HyperCoefficients hyper) {
+            // Note that this is ngtot + 1 in Viriato. Here, the last moment is M-1, so this should be M.
+            auto M1 = double(M);
             return (rhoS * rhoS / de / de * M1) /
                    (M1 * hyper.nu_ei + std::pow(M1, 2 * hyper_morder) * hyper.nu_ei +
-                    nu * kPerp + hyper.nu_2 * std::pow(kPerp, hyper_order));
+                    nu * kPerp2 + hyper.nu_2 * std::pow(kPerp2, hyper_order));
         }
     }
 }

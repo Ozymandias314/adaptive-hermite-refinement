@@ -3,9 +3,10 @@
 #include "typedefs.h"
 
 namespace ahr {
+    using std::numbers::pi;
     /// Box
-    constexpr Real lx = 1.0;
-    constexpr Real ly = 1.0;
+    constexpr Real lx = 1.0 * 2 * pi;
+    constexpr Real ly = 1.0 * 2 * pi;
 
     /// Time parameters
     constexpr Real InitAA0Fac = 0.1;
