@@ -163,8 +163,8 @@ namespace ahr {
         /// Prepares the δx and δy of viewPH in phase space
         void prepareDXY_PH(ViewXY viewPH, ViewXY viewPH_X, ViewXY viewPH_Y) {
             for_each_xy([&](Dim kx, Dim ky) {
-                viewPH_X(kx, ky) = -double(kx) * 1i * viewPH(kx, ky);
-                viewPH_Y(kx, ky) = -double(ky) * 1i * viewPH(kx, ky);
+                viewPH_X(kx, ky) = -kx_(kx) * 1i * viewPH(kx, ky);
+                viewPH_Y(kx, ky) = -ky_(ky) * 1i * viewPH(kx, ky);
             });
         }
 
@@ -213,25 +213,29 @@ namespace ahr {
         // TODO other file/class
         // =================
 
-        [[nodiscard]] auto ky_(Dim ky) const { return Real(ky <= (KY / 2 + 1) ? ky - 1 : ky - KY - 1) * Real(lx) / Real(ly); };
-        [[nodiscard]] auto kx_(Dim kx) const { return Real(kx <= (KX / 2 + 1) ? kx - 1 : kx - KX - 1); }; // TODO r2c
+        [[nodiscard]] Real ky_(Dim ky) const { return Real(ky <= (KY / 2) ? ky : ky - KY) * Real(lx) / Real(ly); };
+        [[nodiscard]] Real kx_(Dim kx) const { return Real(kx <= (KX / 2) ? kx : kx - KX); }; // TODO r2c
 
-        [[nodiscard]] Real kPerp(Dim kx, Dim ky) const {
+        [[nodiscard]] Real kPerp2(Dim kx, Dim ky) const {
             auto dkx = kx_(kx), dky = ky_(ky);
             return dkx * dkx + dky * dky;
         }
 
+        [[nodiscard]] Real kPerp(Dim kx, Dim ky) const {
+            return std::sqrt(kPerp2(kx, ky));
+        }
+
         [[nodiscard]] Real exp_nu(Dim kx, Dim ky, Real niu2, Real dt) const {
-            return std::exp(-(nu * kPerp(kx, ky) + niu2 * std::pow(kPerp(kx, ky), hyper_order) * dt));
+            return std::exp(-(nu * kPerp2(kx, ky) + niu2 * std::pow(kPerp2(kx, ky), hyper_order)) * dt);
         }
 
         [[nodiscard]] Real exp_gm(Dim m, Real hyper_nuei, Real dt) const {
-            return exp(-(Real(m) * nu_ei + std::pow(m, (2 * hyper_morder)) * hyper_nuei) * dt);
+            return exp(-(Real(m) * nu_ei + std::pow(m, 2 * hyper_morder) * hyper_nuei) * dt);
         }
 
         [[nodiscard]] Real exp_eta(Dim kx, Dim ky, Real res2, Real dt) const {
-            return std::exp(-(res * kPerp(kx, ky) + res2 * std::pow(kPerp(kx, ky), hyper_order)) * dt /
-                            (1.0 + kPerp(kx, ky) * de * de));
+            return std::exp(-(res * kPerp2(kx, ky) + res2 * std::pow(kPerp2(kx, ky), hyper_order)) * dt /
+                            (1.0 + kPerp2(kx, ky) * de * de));
         }
 
         /// getTimestep calculates flows and magnetic fields to determine a dt.
@@ -261,7 +265,7 @@ namespace ahr {
                 }
             });
 
-            Real kperpDum2 = std::pow(ky_(KY / 2 + 1), 2) + std::pow(Real(kx_(KX / 2 + 1)), 2);
+            Real kperpDum2 = std::pow(ky_(KY / 2), 2) + std::pow(Real(kx_(KX / 2)), 2);
             Real omegaKaw;
             if (rhoI < smallRhoI)
                 omegaKaw = std::sqrt(1.0 + kperpDum2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS))
