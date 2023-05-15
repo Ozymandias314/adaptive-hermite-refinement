@@ -116,7 +116,7 @@ namespace ahr {
             auto bracketPhiGLast_K = halfBracket(dPhi, sliceXY(dGM, LAST));
             auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
             for_each_kxky([&](Dim kx, Dim ky) {
-                bracketAParGLast_K(kx, ky) *= nonlinear::GLastBracketFactor(M, kx, ky, hyper);
+                bracketAParGLast_K(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp(kx, ky), hyper);
                 bracketAParGLast_K(kx, ky) += rhoS / de * std::sqrt(LAST) * moments_K(LAST - 1, kx, ky);
                 // TODO Viriato adds this after the derivative
             });
@@ -131,7 +131,7 @@ namespace ahr {
                                          dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(N_E, kx, ky);
 
                 GM_Nonlinear_K(A_PAR, kx, ky) = nonlinear::A(bracketAParPhiG2Ne_K(kx, ky),
-                                                             bracketPhiDeUEKPar_K(kx, ky), kx, ky);
+                                                             bracketPhiDeUEKPar_K(kx, ky), kPerp(kx, ky));
                 GM_K_Star(A_PAR, kx, ky) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(A_PAR, kx, ky) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
                                            GM_Nonlinear_K(A_PAR, kx, ky) +
@@ -175,7 +175,7 @@ namespace ahr {
 
             // Phi, Nabla, and other prep for A bracket
             for_each_kxky([&](Dim ky, Dim kx) {
-                phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(N_E, kx, ky), kx, ky);
+                phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(N_E, kx, ky), kPerp(kx, ky));
                 ueKPar_K_New(kx, ky) = -kPerp(kx, ky) * GM_K_Star(A_PAR, kx, ky);
             });
 
@@ -197,7 +197,7 @@ namespace ahr {
             fftw::mdbuffer<2u> guessAPar_K{X, Y}, semiImplicitOperator{X, Y};
             for_each_kxky([&](Dim kx, Dim ky) {
                 guessAPar_K(kx, ky) = moments_K(A_PAR, kx, ky);
-                semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kx, ky);
+                semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kPerp(kx, ky));
             });
 
             Real old_error = 0, relative_error = 0;
@@ -226,7 +226,7 @@ namespace ahr {
                 Real sumAParRelError = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
                     GM_Nonlinear_K_Loop(A_PAR, kx, ky) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
-                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky), kx, ky);
+                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky), kPerp(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(A_PAR, kx, ky) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *
                                                   (exp_eta(kx, ky, hyper.eta2, dt) * moments_K(A_PAR, kx, ky) +
@@ -263,7 +263,7 @@ namespace ahr {
                                                 dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(N_E, kx, ky) +
                                                 dt / 2.0 * GM_Nonlinear_K_Loop(N_E, kx, ky);
 
-                    phi_K_New(kx, ky) = nonlinear::phi(momentsNew_K(N_E, kx, ky), kx, ky);
+                    phi_K_New(kx, ky) = nonlinear::phi(momentsNew_K(N_E, kx, ky), kPerp(kx, ky));
                 });
 
                 derivatives(phi_K_New, dPhi_Loop);
@@ -315,7 +315,7 @@ namespace ahr {
                 auto bracketPhiGLast_K_Loop = halfBracket(dPhi, sliceXY(dGM, LAST));
                 auto bracketAParGLast_K_Loop = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    bracketAParGLast_K_Loop(kx, ky) *= nonlinear::GLastBracketFactor(M, kx, ky, hyper);
+                    bracketAParGLast_K_Loop(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp(kx, ky), hyper);
                     bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(LAST) * momentsNew_K(LAST - 1, kx, ky);
                     // TODO Viriato adds this after the derivative
                 });
