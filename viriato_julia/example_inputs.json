@@ -16,7 +16,7 @@
         "hou_li_filter": true
     },
         "time_parameters": {
-        "tmax": 2,
+        "tmax": 100,
         "init_aa0_fac": 0.1,
         "cfl_frac": 0.2,
         "epsilon": 1e-10,

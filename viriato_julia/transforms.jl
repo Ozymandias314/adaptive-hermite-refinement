@@ -6,11 +6,11 @@ using LinearAlgebra,FFTW
 array = Array{Float64}(undef,nlx,nly)
 array_k = Array{ComplexF64}(undef,nkx,nky) # 
 rcfft_plan = plan_rfft(array)
-irfft_plan = plan_irfft(array_k,nlx)
+irfft_plan = plan_irfft(array_k,nlx) # Supply the first dimension of the real space array that was shrunk
 
 # 2D FFT
 function FFT2d_direct(array::Array{Float64})
-    array_k = rcfft_plan*array # Must normalize by number of modes! Luka made a comment that we might want to do this in the bracket funciton instead of here, but can change this later. 
+    array_k = rcfft_plan*array 
     # Do Fourier filtering
     if hou_li_filter
         for i in 1:nkx

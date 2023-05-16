@@ -226,13 +226,13 @@ while t <= tmax
     if repeat
         repeat = false
         count_repeats += 1
-        t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
+        #t -= 1 # Want to redo the same timestep, so just reduce the t index by one. 
     else
         if divergent
             #print("Here divergent true")
             divergent = false
             count_divergent += 1
-            t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
+            #t -= 1 # Want to redo the same timestep, so just reduce the t index by one.
         else
 
             #p_count = 0 # Number of loops through corrector step 
@@ -289,7 +289,6 @@ while t <= tmax
 
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
-
     # Start Predictor ("star") step
 
     if debugging
@@ -425,7 +424,7 @@ while t <= tmax
         fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
         for i = 1:nkx
             for j = 1:nky
-                nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j] + dti/2.0*fne_pred[i,j]
+                nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*exp_nu(i,j,ν2,dti)*fne_old[i,j] + dti/2.0*fne_pred[i,j]
 
                 # Error for this p iteration at each location. Note that guess hold the value of akpar_new from previous p_loop iteration so this is akpar,n+1,p+1 - akpar,n+1,p 
                 rel_error_array[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(sum_apar_rel_error/(nkx*nky))
@@ -435,6 +434,14 @@ while t <= tmax
         # Get relative error for this p loop. Should definitely also put loop break statements here--no need to recalc g if we are only doing one p step!
         # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
         relative_error = maximum(abs.(rel_error_array))
+
+        if debugging
+            println("relative error in p loop")
+            println(relative_error)
+            println("dti in ploop")
+            println(dti)
+            println()
+        end
 
         phik_new = phi_pot(nek_new)
 
@@ -624,11 +631,11 @@ while t <= tmax
     t += 1
 end # END OF TIMELOOP
 
-# println("Repeat counts ",count_repeats)
-# println("Divergent counts ",count_divergent)
 
 if debugging
     print("End of REGK \n")
+    println("Repeat counts ",count_repeats)
+    println("Divergent counts ",count_divergent)
 end
 close(log_file)
 end # End of main 

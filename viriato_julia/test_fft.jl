@@ -15,7 +15,8 @@ end
 
 d_testk_inv = irfft(d_testk,nlx)
 println(xx(1))
-plot(test)
+#plot(test)
 plot(d_testk_inv)
-plot(abs.(testk))
-plot(abs.(d_testk))
+#plot(abs.(testk))
+#println("here")
+#plot(abs.(d_testk))
