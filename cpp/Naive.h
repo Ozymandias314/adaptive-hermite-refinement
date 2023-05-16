@@ -39,34 +39,6 @@ namespace ahr {
         static constexpr Dim G_MIN = 2;
         const Dim LAST = M - 1;
 
-        static constexpr Dim N_TEMP_BUFFERS = 4;
-
-        template<class Buffer>
-        struct BracketBuf {
-            using buffer_t = Buffer;
-            Buffer PH, PH_DX, PH_DY, DX, DY;
-
-            template<typename ...Args>
-            requires std::constructible_from<Buffer, Args...>
-            explicit BracketBuf(Args &&...args) :
-                    PH{std::forward<Args>(args)...},
-                    PH_DX{std::forward<Args>(args)...},
-                    PH_DY{std::forward<Args>(args)...},
-                    DX{std::forward<Args>(args)...},
-                    DY{std::forward<Args>(args)...} {}
-
-            BracketBuf(Buffer ph, Buffer phDx, Buffer phDy, Buffer dx, Buffer dy)
-                    : PH(ph), PH_DX(phDx), PH_DY(phDy), DX(dx), DY(dy) {}
-
-            template<class U>
-            requires std::convertible_to<Buffer, U>
-            operator BracketBuf<U>() { // NOLINT(google-explicit-constructor)
-                return {
-                        U(PH), U(PH_DX), U(PH_DY), U(DX), U(DY)
-                };
-            }
-        };
-
         template<class Buffer>
         struct DxDy {
             using buffer_t = Buffer;
@@ -144,17 +116,6 @@ namespace ahr {
             return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
         }
 
-        /// Returns a BracketBuf of 2D mdspans for a specified m.
-        static auto sliceXY(BracketBuf<fftw::mdbuffer<3u>> &moments, Dim m) {
-            return BracketBuf{
-                    sliceXY(moments.PH, m),
-                    sliceXY(moments.PH_DX, m),
-                    sliceXY(moments.PH_DY, m),
-                    sliceXY(moments.DX, m),
-                    sliceXY(moments.DY, m)
-            };
-        }
-
         /// Returns a DxDy of 2D mdspans for a specified m.
         static auto sliceXY(DxDy<fftw::mdbuffer<3u>> &moments, Dim m) {
             return DxDy{sliceXY(moments.DX, m), sliceXY(moments.DY, m)};
@@ -182,22 +143,6 @@ namespace ahr {
         void bracket(const DxDy<ViewXY> &op1, const DxDy<ViewXY> &op2, const ViewXY &output) {
             bracket(op1.DX, op1.DY, op2.DX, op2.DY, output);
         }
-
-        void fullBracket(BracketBuf<ViewXY> op1, BracketBuf<ViewXY> op2, ViewXY brack, ViewXY brackPH) {
-            prepareDXY_PH(op1.PH, op1.PH_DX, op1.PH_DY);
-            fftInv(op1.PH_DX, op1.DX);
-            fftInv(op1.PH_DY, op1.DY);
-            prepareDXY_PH(op2.PH, op2.PH_DX, op2.PH_DY);
-            fftInv(op2.PH_DX, op2.DX);
-            fftInv(op2.PH_DY, op2.DY);
-
-            bracket(op1.DX, op1.DY, op2.DX, op2.DY, brack);
-            fft(brack, brackPH);
-        }
-
-        void fullBracket(BracketBuf<ViewXY> op1, BracketBuf<ViewXY> op2) {
-            fullBracket(op1, op2, op1.DX, op1.PH_DX);
-        };
 
         /// Bracket that only takes inputs and allocates temporaries and output
         [[nodiscard]] fftw::mdbuffer<2u> fullBracket(ViewXY op1, ViewXY op2);
