@@ -49,7 +49,7 @@ namespace ahr {
         Real nu_g, nu_2, eta2, nu_ei;
 
         static constexpr HyperCoefficients calculate(Real dt, Dim KX, Dim KY, Dim M) {
-            Real kPerpMax2 = std::pow(Real(KX) / 2, 2) + std::pow(Real(KY) / 2, 2); // TODO(r2c)
+            Real kPerpMax2 = std::pow(KX, 2) + std::pow(Real(KY) / 2, 2);
 
             HyperCoefficients ret{};
             ret.nu_g = hyper_coef_g / dt / std::pow(kPerpMax2, hyper_order_g);

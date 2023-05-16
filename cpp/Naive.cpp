@@ -28,39 +28,37 @@ namespace ahr {
 
         // Currently assuming X==Y for simplicity, but the code is written generally for the most part.
         assert(X == Y);
+        Buf2D temp{X, Y};
 
         // Plan FFTs both ways
-        fft = fftw::plan<2u>::dft(phi_K, phi_K_New, fftw::FORWARD, fftw::MEASURE);
-        fftInv = fftw::plan<2u>::dft(phi_K_New, phi_K, fftw::BACKWARD, fftw::MEASURE);
+        fft = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
+        fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
 
         // Initialize equilibrium values
         auto [aParEq, phi] = equilibriumOT01(X, Y);
-        fft(phi, phi_K);
-        fft(aParEq, aParEq_K);
 
-        // DEBUG
-        print(aParEq);
-        print(aParEq_K);
+        fft(phi.to_mdspan(), phi_K.to_mdspan());
+        fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());
+
         // Transform moments into phase space
         for (int m = G_MIN; m < M; ++m) {
-            for_each_xy([&](Dim x, Dim y) {
-                moments_K(m, x, y) = 0;
+            for_each_kxky([&](Dim kx, Dim ky) {
+                moments_K(kx, ky, m) = 0;
             });
         }
 
         // aPar, uekPar, ne
-        for_each_kxky([&](Dim ky, Dim kx) {
-            moments_K(N_E, kx, ky) = nonlinear::phiInv(phi_K(kx, ky), kPerp2(kx, ky));
-            moments_K(A_PAR, kx, ky) = aParEq_K(kx, ky);
-            ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(A_PAR, kx, ky);
+        for_each_kxky([&](Dim kx, Dim ky) {
+            moments_K(kx, ky, N_E) = nonlinear::phiInv(phi_K(kx, ky), kPerp2(kx, ky));
+            moments_K(kx, ky, A_PAR) = aParEq_K(kx, ky);
+            ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
-        print(aParEq_K);
     }
 
     void Naive::run() {
         // store all derivatives
-        DxDy<fftw::mdbuffer<3u>> dGM{M, X, Y};
-        DxDy<fftw::mdbuffer<2u>> dPhi{X, Y}, dUEKPar{X, Y};
+        DxDy<Buf3D> dGM{X, Y, M};
+        DxDy<Buf2D> dPhi{X, Y}, dUEKPar{X, Y};
 
         bool divergent = false, repeat = false, noInc = false;
         int divergentCount = 0, repeatCount = 0;
@@ -70,13 +68,13 @@ namespace ahr {
         for (int t = 0; t < N; ++t) {
             // predictor step
             derivatives(phi_K, dPhi);
-            derivatives(ueKPar_K, dPhi);
+            derivatives(ueKPar_K, dUEKPar);
             for (int m = 0; m < M; ++m) {
                 derivatives(sliceXY(moments_K, m), sliceXY(dGM, m));
             }
 
             // DEBUG
-            print(sliceXY(moments_K, A_PAR));
+            print("aPar_K", sliceXY(moments_K, A_PAR));
 
             if (repeat or divergent) {
                 t--; // repeat previous timestep
@@ -89,19 +87,19 @@ namespace ahr {
             std::cout << "dt: " << dt << std::endl;
 
             // store results of nonlinear operators, as well as results of predictor step
-            fftw::mdbuffer<3u> GM_K_Star{M, X, Y}, GM_Nonlinear_K{M, X, Y};
+            Buf3D_K GM_K_Star{KX, KY, M}, GM_Nonlinear_K{KX, KY, M};
 
             // Compute N
             auto bracketPhiNE_K = halfBracket(dPhi, sliceXY(dGM, N_E));
             auto bracketAParUEKPar_K = halfBracket(sliceXY(dGM, A_PAR), dUEKPar);
 
             // Compute A
-            DxDy<fftw::mdbuffer<2u>> dPhiNeG2{X, Y};
+            DxDy<Buf2D> dPhiNeG2{X, Y};
             for_each_xy([&](Dim x, Dim y) {
                 dPhiNeG2.DX(x, y) =
-                        dPhi.DX(x, y) - rhoS * rhoS * (std::sqrt(2) * dGM.DX(G_MIN, x, y) + dGM.DX(N_E, x, y));
+                        dPhi.DX(x, y) - rhoS * rhoS * (std::sqrt(2) * dGM.DX(x, y, G_MIN) + dGM.DX(x, y, N_E));
                 dPhiNeG2.DY(x, y) =
-                        dPhi.DY(x, y) - rhoS * rhoS * (std::sqrt(2) * dGM.DY(G_MIN, x, y) + dGM.DY(N_E, x, y));
+                        dPhi.DY(x, y) - rhoS * rhoS * (std::sqrt(2) * dGM.DY(x, y, G_MIN) + dGM.DY(x, y, N_E));
             });
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
@@ -116,71 +114,71 @@ namespace ahr {
             auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
             for_each_kxky([&](Dim kx, Dim ky) {
                 bracketAParGLast_K(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
-                bracketAParGLast_K(kx, ky) += rhoS / de * std::sqrt(LAST) * moments_K(LAST - 1, kx, ky);
+                bracketAParGLast_K(kx, ky) += rhoS / de * std::sqrt(LAST) * moments_K(kx, ky, LAST - 1);
                 // TODO Viriato adds this after the derivative
             });
 
-            DxDy<fftw::mdbuffer<2u>> dBrLast{X, Y};
+            DxDy<Buf2D> dBrLast{X, Y};
             derivatives(bracketAParGLast_K, dBrLast);
             auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
 
             for_each_kxky([&](Dim kx, Dim ky) {
-                GM_Nonlinear_K(N_E, kx, ky) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
-                GM_K_Star(N_E, kx, ky) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(N_E, kx, ky) +
-                                         dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(N_E, kx, ky);
+                GM_Nonlinear_K(kx, ky, N_E) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
+                GM_K_Star(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
+                                         dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(kx, ky, N_E);
 
-                GM_Nonlinear_K(A_PAR, kx, ky) = nonlinear::A(bracketAParPhiG2Ne_K(kx, ky),
+                GM_Nonlinear_K(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K(kx, ky),
                                                              bracketPhiDeUEKPar_K(kx, ky), kPerp2(kx, ky));
-                GM_K_Star(A_PAR, kx, ky) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(A_PAR, kx, ky) +
+                GM_K_Star(kx, ky, A_PAR) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(kx, ky, A_PAR) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
-                                           GM_Nonlinear_K(A_PAR, kx, ky) +
+                                           GM_Nonlinear_K(kx, ky, A_PAR) +
                                            (1.0 - exp_eta(kx, ky, hyper.eta2, dt)) * aParEq_K(kx, ky);
 
-                GM_Nonlinear_K(G_MIN, kx, ky) = nonlinear::G2(bracketPhiG2_K(kx, ky), bracketAParG3_K(kx, ky),
+                GM_Nonlinear_K(kx, ky, G_MIN) = nonlinear::G2(bracketPhiG2_K(kx, ky), bracketAParG3_K(kx, ky),
                                                               bracketAParUEKPar_K(kx, ky));
-                GM_K_Star(G_MIN, kx, ky) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(G_MIN, kx, ky) +
+                GM_K_Star(kx, ky, G_MIN) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
                                            dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
-                                           GM_Nonlinear_K(G_MIN, kx, ky);
+                                           GM_Nonlinear_K(kx, ky, G_MIN);
 
 
-                GM_Nonlinear_K(LAST, kx, ky) = nonlinear::GLast(bracketPhiGLast_K(kx, ky), bracketTotalGLast_K(kx, ky));
-                GM_K_Star(LAST, kx, ky) =
-                        exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(LAST, kx, ky) +
+                GM_Nonlinear_K(kx, ky, LAST) = nonlinear::GLast(bracketPhiGLast_K(kx, ky), bracketTotalGLast_K(kx, ky));
+                GM_K_Star(kx, ky, LAST) =
+                        exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(kx, ky, LAST) +
                         dt / 2.0 * (1 + exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt)) *
-                        GM_Nonlinear_K(LAST, kx, ky);
+                        GM_Nonlinear_K(kx, ky, LAST);
             });
 
-            DxDy<fftw::mdbuffer<2u>> dGMinusPlus{X, Y};
+            DxDy<Buf2D> dGMinusPlus{X, Y};
             for (Dim m = 3; m < LAST; ++m) {
                 for_each_xy([&](Dim x, Dim y) {
-                    dGMinusPlus.DX(x, y) = std::sqrt(m) * dGM.DX(m - 1, x, y) + std::sqrt(m + 1) * dGM.DX(m + 1, x, y);
-                    dGMinusPlus.DY(x, y) = std::sqrt(m) * dGM.DY(m - 1, x, y) + std::sqrt(m + 1) * dGM.DY(m + 1, x, y);
+                    dGMinusPlus.DX(x, y) = std::sqrt(m) * dGM.DX(x, y, m - 1) + std::sqrt(m + 1) * dGM.DX(x, y, m + 1);
+                    dGMinusPlus.DY(x, y) = std::sqrt(m) * dGM.DY(x, y, m - 1) + std::sqrt(m + 1) * dGM.DY(x, y, m + 1);
                 });
 
                 auto bracketAParGMMinusPlus_K = halfBracket(sliceXY(dGM, A_PAR), dGMinusPlus);
                 auto bracketPhiGM_K = halfBracket(dPhi, sliceXY(dGM, m));
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    GM_Nonlinear_K(m, kx, ky) = nonlinear::GM(m, bracketPhiGM_K(kx, ky),
+                    GM_Nonlinear_K(kx, ky, m) = nonlinear::GM(m, bracketPhiGM_K(kx, ky),
                                                               bracketAParGMMinusPlus_K(kx, ky));
-                    GM_K_Star(m, kx, ky) =
-                            exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(m, kx, ky) +
+                    GM_K_Star(kx, ky, m) =
+                            exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(kx, ky, m) +
                             dt / 2.0 * (1 + exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt)) *
-                            GM_Nonlinear_K(m, kx, ky);
+                            GM_Nonlinear_K(kx, ky, m);
                 });
             }
 
             // corrector step
 
             // Phi, Nabla, and other prep for A bracket
-            for_each_kxky([&](Dim ky, Dim kx) {
-                phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(N_E, kx, ky), kPerp2(kx, ky));
-                ueKPar_K_New(kx, ky) = -kPerp2(kx, ky) * GM_K_Star(A_PAR, kx, ky);
+            for_each_kxky([&](Dim kx, Dim ky) {
+                phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(kx, ky, N_E), kPerp2(kx, ky));
+                ueKPar_K_New(kx, ky) = -kPerp2(kx, ky) * GM_K_Star(kx, ky, A_PAR);
             });
 
 
-            DxDy<fftw::mdbuffer<2u>> dPhi_Loop{X, Y}, dUEKPar_Loop{X, Y};
-            DxDy<fftw::mdbuffer<3u>> dGM_Loop{M, X, Y};
+            DxDy<Buf2D> dPhi_Loop{X, Y}, dUEKPar_Loop{X, Y};
+            DxDy<Buf3D> dGM_Loop{X, Y, M};
             derivatives(phi_K_New, dPhi_Loop);
             derivatives(ueKPar_K_New, dUEKPar_Loop);
 
@@ -193,11 +191,12 @@ namespace ahr {
             // TODO confirm that only m derivatives are needed at a time
             //  (if not, can always store one in a temporary buffer)
 
-            fftw::mdbuffer<2u> guessAPar_K{X, Y}, semiImplicitOperator{X, Y};
+            Buf2D_K guessAPar_K{KX, KY}, semiImplicitOperator{KX, KY};
             for_each_kxky([&](Dim kx, Dim ky) {
-                guessAPar_K(kx, ky) = moments_K(A_PAR, kx, ky);
+                guessAPar_K(kx, ky) = moments_K(kx, A_PAR, ky);
                 semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kPerp2(kx, ky));
             });
+            semiImplicitOperator(0, 0) = 0;
 
             Real old_error = 0, relative_error = 0;
 
@@ -207,43 +206,44 @@ namespace ahr {
                 };
 
                 // First, compute A_par
-                DxDy<fftw::mdbuffer<2u>> dPhiNeG2_Loop{X, Y};
+                DxDy<Buf2D> dPhiNeG2_Loop{X, Y};
                 for_each_xy([&](Dim x, Dim y) {
                     dPhiNeG2_Loop.DX(x, y) = dPhi_Loop.DX(x, y) -
                                              rhoS * rhoS *
-                                             (std::sqrt(2) * dGM_Loop.DX(G_MIN, x, y) + dGM_Loop.DX(N_E, x, y));
+                                             (std::sqrt(2) * dGM_Loop.DX(x, y, G_MIN) + dGM_Loop.DX(x, y, N_E));
                     dPhiNeG2_Loop.DY(x, y) = dPhi_Loop.DY(x, y) -
                                              rhoS * rhoS *
-                                             (std::sqrt(2) * dGM_Loop.DY(G_MIN, x, y) + dGM_Loop.DY(N_E, x, y));
+                                             (std::sqrt(2) * dGM_Loop.DY(x, y, G_MIN) + dGM_Loop.DY(x, y, N_E));
                 });
 
                 auto bracketAParPhiG2Ne_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dPhiNeG2_Loop);
                 auto bracketPhiDeUEKPar_K_Loop = halfBracket(dPhi_Loop, dUEKPar_Loop);
 
                 /// f_pred from Viriato
-                fftw::mdbuffer<3u> GM_Nonlinear_K_Loop{M, X, Y};
+                Buf3D_K GM_Nonlinear_K_Loop{KX, KY, M};
                 Real sumAParRelError = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    GM_Nonlinear_K_Loop(A_PAR, kx, ky) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
-                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky), kPerp2(kx, ky));
+                    GM_Nonlinear_K_Loop(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
+                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky),
+                                                                      kPerp2(kx, ky));
                     // TODO(OPT) reuse star
-                    momentsNew_K(A_PAR, kx, ky) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *
-                                                  (exp_eta(kx, ky, hyper.eta2, dt) * moments_K(A_PAR, kx, ky) +
+                    momentsNew_K(kx, ky, A_PAR) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *
+                                                  (exp_eta(kx, ky, hyper.eta2, dt) * moments_K(kx, ky, A_PAR) +
                                                    dt / 2.0 * exp_eta(kx, ky, hyper.eta2, dt) *
-                                                   GM_Nonlinear_K(A_PAR, kx, ky) +
-                                                   dt / 2.0 * GM_Nonlinear_K_Loop(A_PAR, kx, ky) +
+                                                   GM_Nonlinear_K(kx, ky, A_PAR) +
+                                                   dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, A_PAR) +
                                                    (1.0 - exp_eta(kx, ky, hyper.eta2, dt)) * aParEq_K(kx, ky) +
                                                    semiImplicitOperator(kx, ky) / 4.0 * guessAPar_K(kx, ky));
-                    ueKPar_K_New(kx, ky) = -kPerp2(kx, ky) * momentsNew_K(A_PAR, kx, ky);
+                    ueKPar_K_New(kx, ky) = -kPerp2(kx, ky) * momentsNew_K(kx, ky, A_PAR);
 
-                    sumAParRelError += std::norm(momentsNew_K(A_PAR, kx, ky) - moments_K(A_PAR, kx, ky));
+                    sumAParRelError += std::norm(momentsNew_K(kx, ky, A_PAR) - moments_K(kx, ky, A_PAR));
                 });
 
                 old_error = relative_error;
                 relative_error = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
                     relative_error = std::max(relative_error, std::abs(
-                            semiImplicitOperator(kx, ky) / 4.0 * (momentsNew_K(A_PAR, kx, ky) - guessAPar_K(kx, ky))) /
+                            semiImplicitOperator(kx, ky) / 4.0 * (momentsNew_K(kx, ky, A_PAR) - guessAPar_K(kx, ky))) /
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
 
@@ -255,14 +255,15 @@ namespace ahr {
                 auto bracketAParUEKPar_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dUEKPar_Loop);
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    GM_Nonlinear_K_Loop(N_E, kx, ky) = nonlinear::N(bracketPhiNE_K_Loop(kx, ky),
+                    GM_Nonlinear_K_Loop(kx, ky, N_E) = nonlinear::N(bracketPhiNE_K_Loop(kx, ky),
                                                                     bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
-                    momentsNew_K(N_E, kx, ky) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(N_E, kx, ky) +
-                                                dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(N_E, kx, ky) +
-                                                dt / 2.0 * GM_Nonlinear_K_Loop(N_E, kx, ky);
+                    momentsNew_K(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
+                                                dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                GM_Nonlinear_K(kx, ky, N_E) +
+                                                dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, N_E);
 
-                    phi_K_New(kx, ky) = nonlinear::phi(momentsNew_K(N_E, kx, ky), kPerp2(kx, ky));
+                    phi_K_New(kx, ky) = nonlinear::phi(momentsNew_K(kx, ky, N_E), kPerp2(kx, ky));
                 });
 
                 derivatives(phi_K_New, dPhi_Loop);
@@ -273,38 +274,38 @@ namespace ahr {
                 auto bracketAParG3_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), sliceXY(dGM_Loop, G_MIN + 1));
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    GM_Nonlinear_K_Loop(G_MIN, kx, ky) = nonlinear::G2(bracketPhiG2_K_Loop(kx, ky),
+                    GM_Nonlinear_K_Loop(kx, ky, G_MIN) = nonlinear::G2(bracketPhiG2_K_Loop(kx, ky),
                                                                        bracketAParG3_K_Loop(kx, ky),
                                                                        bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
-                    momentsNew_K(G_MIN, kx, ky) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(G_MIN, kx, ky) +
+                    momentsNew_K(kx, ky, G_MIN) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
                                                   dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
-                                                  GM_Nonlinear_K(G_MIN, kx, ky) +
-                                                  dt / 2.0 * GM_Nonlinear_K_Loop(G_MIN, kx, ky);
+                                                  GM_Nonlinear_K(kx, ky, G_MIN) +
+                                                  dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, G_MIN);
                 });
                 DerivateNewMoment(G_MIN);
 
-                DxDy<fftw::mdbuffer<2u>> dGMinusPlus_Loop{X, Y};
+                DxDy<Buf2D> dGMinusPlus_Loop{X, Y};
                 for (int m = G_MIN + 1; m < LAST; ++m) {
                     for_each_xy([&](Dim x, Dim y) {
                         dGMinusPlus_Loop.DX(x, y) =
-                                std::sqrt(m) * dGM_Loop.DX(m - 1, x, y) + std::sqrt(m + 1) * dGM_Loop.DX(m + 1, x, y);
+                                std::sqrt(m) * dGM_Loop.DX(x, y, m - 1) + std::sqrt(m + 1) * dGM_Loop.DX(x, y, m + 1);
                         dGMinusPlus_Loop.DY(x, y) =
-                                std::sqrt(m) * dGM_Loop.DY(m - 1, x, y) + std::sqrt(m + 1) * dGM_Loop.DY(m + 1, x, y);
+                                std::sqrt(m) * dGM_Loop.DY(x, y, m - 1) + std::sqrt(m + 1) * dGM_Loop.DY(x, y, m + 1);
                     });
 
                     auto bracketAParGMMinusPlus_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dGMinusPlus_Loop);
                     auto bracketPhiGM_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, m));
 
                     for_each_kxky([&](Dim kx, Dim ky) {
-                        GM_Nonlinear_K_Loop(m, kx, ky) = nonlinear::GM(m, bracketPhiGM_K_Loop(kx, ky),
+                        GM_Nonlinear_K_Loop(kx, ky, m) = nonlinear::GM(m, bracketPhiGM_K_Loop(kx, ky),
                                                                        bracketAParGMMinusPlus_K_Loop(kx, ky));
                         // TODO(OPT) reuse star
-                        momentsNew_K(m, kx, ky) =
-                                exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(m, kx, ky) +
+                        momentsNew_K(kx, ky, m) =
+                                exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(kx, ky, m) +
                                 dt / 2.0 * exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) *
-                                GM_Nonlinear_K(m, kx, ky) +
-                                dt / 2.0 * GM_Nonlinear_K_Loop(m, kx, ky);
+                                GM_Nonlinear_K(kx, ky, m) +
+                                dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, m);
                     });
 
                     DerivateNewMoment(m);
@@ -315,23 +316,23 @@ namespace ahr {
                 auto bracketAParGLast_K_Loop = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
                 for_each_kxky([&](Dim kx, Dim ky) {
                     bracketAParGLast_K_Loop(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
-                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(LAST) * momentsNew_K(LAST - 1, kx, ky);
+                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(LAST) * momentsNew_K(kx, ky, LAST - 1);
                     // TODO Viriato adds this after the derivative
                 });
 
-                DxDy<fftw::mdbuffer<2u>> dBrLast_Loop{X, Y};
+                DxDy<Buf2D> dBrLast_Loop{X, Y};
                 derivatives(bracketAParGLast_K_Loop, dBrLast_Loop);
                 auto bracketTotalGLast_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dBrLast_Loop);
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    GM_Nonlinear_K_Loop(LAST, kx, ky) = nonlinear::GLast(bracketPhiGLast_K_Loop(kx, ky),
+                    GM_Nonlinear_K_Loop(kx, ky, LAST) = nonlinear::GLast(bracketPhiGLast_K_Loop(kx, ky),
                                                                          bracketTotalGLast_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
-                    momentsNew_K(LAST, kx, ky) =
-                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(LAST, kx, ky) +
+                    momentsNew_K(kx, ky, LAST) =
+                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, LAST) +
                             dt / 2.0 * exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) *
-                            GM_Nonlinear_K(LAST, kx, ky) +
-                            dt / 2.0 * GM_Nonlinear_K_Loop(LAST, kx, ky);
+                            GM_Nonlinear_K(kx, ky, LAST) +
+                            dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, LAST);
                 });
                 DerivateNewMoment(LAST);
 
@@ -352,7 +353,7 @@ namespace ahr {
                 }
 
                 for_each_kxky([&](Dim kx, Dim ky) {
-                    guessAPar_K(kx, ky) = momentsNew_K(A_PAR, kx, ky);
+                    guessAPar_K(kx, ky) = momentsNew_K(kx, ky, A_PAR);
                 });
             }
             if (divergent) continue;
@@ -384,36 +385,37 @@ namespace ahr {
     }
 
     mdarray<Real, dextents<Dim, 2u>> Naive::getFinalAPar() {
-        fftw::mdbuffer<2u> buf{X, Y};
+        Buf2D buf{X, Y};
         fftInv(sliceXY(moments_K, A_PAR), buf.to_mdspan());
 
         mdarray<Real, dextents<Dim, 2u>> result{X, Y};
         for_each_xy([&](Dim x, Dim y) {
-            result(x, y) = buf(x, y).real();
+            result(x, y) = buf(x, y) / double(X) / double(Y);
         });
 
         return result;
     }
 
-    [[nodiscard]] fftw::mdbuffer<2u> Naive::fullBracket(Naive::ViewXY op1, Naive::ViewXY op2) {
-        DxDy<fftw::mdbuffer<2u>> derOp1{X, Y}, derOp2{X, Y};
+    [[nodiscard]] Naive::Buf2D_K Naive::fullBracket(Naive::CViewXY op1, Naive::CViewXY op2) {
+        DxDy<Buf2D> derOp1{X, Y}, derOp2{X, Y};
         derivatives(op1, derOp1);
         derivatives(op2, derOp2);
 
         return halfBracket(derOp1, derOp2);
     }
 
-    void Naive::derivatives(const Naive::ViewXY &op, Naive::DxDy<Naive::ViewXY> output) {
-        DxDy<fftw::mdbuffer<2u>> Der_K{X, Y};
+    void Naive::derivatives(const Naive::CViewXY &op, Naive::DxDy<Naive::ViewXY> output) {
+        DxDy<Buf2D_K> Der_K{KX, KY};
         prepareDXY_PH(op, Der_K.DX, Der_K.DY);
-        fftInv(Der_K.DX.to_mdspan(), output.DY);
+        fftInv(Der_K.DX.to_mdspan(), output.DX);
         fftInv(Der_K.DY.to_mdspan(), output.DY);
     }
 
-    fftw::mdbuffer<2u> Naive::halfBracket(Naive::DxDy<Naive::ViewXY> derOp1, Naive::DxDy<Naive::ViewXY> derOp2) {
-        fftw::mdbuffer<2u> br{X, Y}, br_K{X, Y};
+    Naive::Buf2D_K Naive::halfBracket(Naive::DxDy<Naive::ViewXY> derOp1, Naive::DxDy<Naive::ViewXY> derOp2) {
+        Buf2D br{X, Y};
+        Buf2D_K br_K{KX, KY};
         bracket(derOp1, derOp2, br);
-        fft(br, br_K);
+        fft(br.to_mdspan(), br_K.to_mdspan());
 
         for_each_kxky([&](Dim kx, Dim ky) {
             if (kx_(kx) > double(KX) * 2.0 / 3.0 or ky_(ky) > double(KY) * 2.0 / 3.0) {
