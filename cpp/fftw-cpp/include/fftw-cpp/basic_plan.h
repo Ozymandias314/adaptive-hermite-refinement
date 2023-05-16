@@ -139,7 +139,7 @@ namespace fftw {
             return reinterpret_cast<typename basic_buffer<Real, Complex, IsReal>::underlying_element_type *>(buf.data());
         }
 
-        template<bool IsReal, typename Real, typename Complex, typename Extents, appropriate_layout Layout>
+        template<bool IsReal, typename Real, typename Complex, typename Extents, typename Layout>
         auto *
         unwrap(MDSPAN::mdspan<std::conditional_t<IsReal, Real, Complex>, Extents, Layout, MDSPAN::default_accessor<std::conditional_t<IsReal, Real, Complex>>> view) {
             // for now, this is what FFT expects
@@ -374,11 +374,49 @@ namespace fftw {
 
         }
 
+        template<size_t ...I>
+        auto extents_impl(auto src, std::index_sequence<I...> indices) {
+            return std::array<int, sizeof...(I)>{int(src.extent(I))...};
+        }
+
+        template<size_t D>
+        std::array<int, D> extents(auto src) {
+            return extents_impl(src, std::make_index_sequence<D>());
+        }
+
+        template<size_t D>
+        std::array<int, D> dims_r2c(auto r, auto c) {
+            static_assert(D == 2u && "Currently only supporting 2D");
+            using layout_r = typename std::decay_t<decltype(r)>::layout_type;
+            using layout_c = typename std::decay_t<decltype(c)>::layout_type;
+
+            // TODO layouts other than right and left
+            constexpr bool r_right = std::same_as<MDSPAN::layout_right, layout_r>;
+            constexpr bool c_right = std::same_as<MDSPAN::layout_right, layout_c>;
+
+            auto Validate = [&](bool condition) {
+                if (!condition) throw std::invalid_argument("Extents don't match");
+            };
+
+            std::array<int, D> r_extents{extents<D>(r)}, c_extents{extents<D>(c)};
+            auto Swap = [&](std::array<int, D> &a) { std::swap(a[0], a[1]); };
+
+            if (!r_right) Swap(r_extents);
+            if (!c_right) Swap(c_extents);
+            // extent
+
+            Validate(r_extents[0] == c_extents[0]);
+            Validate(r_extents[1] / 2 + 1 == c_extents[1]);
+
+            return r_extents;
+        }
+
+
         template<size_t D, class Real, class Complex>
         requires std::same_as<Real, double>
 
         auto plan_dft_r2c(auto in, auto out, Flags flags) {
-            return fftw_plan_dft_r2c(D, dims<D>(in, out).data(), unwrap<true, Real, Complex>(in),
+            return fftw_plan_dft_r2c(D, dims_r2c<D>(in, out).data(), unwrap<true, Real, Complex>(in),
                                      unwrap<false, Real, Complex>(out),
                                      flags);
         }
@@ -387,7 +425,7 @@ namespace fftw {
         requires std::same_as<Real, double>
 
         auto plan_dft_c2r(auto in, auto out, Flags flags) {
-            return fftw_plan_dft_c2r(D, dims<D>(in, out).data(), unwrap<false, Real, Complex>(in),
+            return fftw_plan_dft_c2r(D, dims_r2c<D>(out, in).data(), unwrap<false, Real, Complex>(in),
                                      unwrap<true, Real, Complex>(out),
                                      flags);
         }
