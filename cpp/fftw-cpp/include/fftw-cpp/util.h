@@ -22,7 +22,6 @@ namespace fftw {
 
     using std::size_t;
 
-
     namespace detail {
         // TODO specialize for float, long double, __float128
         template<std::floating_point Real>
@@ -42,5 +41,8 @@ namespace fftw {
 
 
     } // fftw::detail
+
+    template<bool IsReal, class Real, class Complex>
+    using underlying_element_type = std::conditional_t<IsReal, Real, detail::fftw_complex_t<Real>>;
 
 }
