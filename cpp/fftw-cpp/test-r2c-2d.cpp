@@ -15,9 +15,13 @@ void print(const auto &arr) {
 };
 
 int main() {
-    std::size_t N = 4, M = 6;
-    fftw::rmdbuffer<2u> in{N, M}, out2{N, M};
-    fftw::mdbuffer<2u> out{N, M};
+    namespace stdex = std::experimental;
+
+    std::size_t N = 4, M = 6, MK = 4;
+    fftw::rmdbuffer<2u> in{N, M};
+    fftw::mdbuffer<2u> out{N, MK};
+    fftw::basic_mdbuffer<double, stdex::dextents<std::size_t, 2u>, std::complex<double>, stdex::layout_left, true> out2{
+            M, N};
 
     auto p = fftw::plan_r2c<2u>::dft(in.to_mdspan(), out.to_mdspan(), fftw::Flags::ESTIMATE);
     auto pInv = fftw::plan_c2r<2u>::dft(out.to_mdspan(), out2.to_mdspan(), fftw::Flags::ESTIMATE);
