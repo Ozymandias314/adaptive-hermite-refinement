@@ -27,11 +27,22 @@ namespace ahr {
 
         mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 
-        using ViewXY = stdex::mdspan<Complex, stdex::dextents<Dim, 2u>>;
     private:
-        Dim const M, X, Y, KX{X}, KY{Y};
+        template<size_t D, bool IsReal>
+        using buf_left = fftw::basic_mdbuffer<double, stdex::dextents<std::size_t, D>, std::complex<double>, stdex::layout_left, IsReal>;
+    public:
+        using Buf3D_K = buf_left<3u, false>;
+        using Buf2D_K = buf_left<2u, false>;
+        using Buf3D = buf_left<3u, true>;
+        using Buf2D = buf_left<2u, true>;
+
+        using CViewXY = stdex::mdspan<Complex, stdex::dextents<Dim, 2u>, stdex::layout_left>;
+        using ViewXY = stdex::mdspan<Real, stdex::dextents<Dim, 2u>, stdex::layout_left>;
+    private:
+        Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
         Dim N{};
-        fftw::plan<2u> fft{}, fftInv{};
+        fftw::plan_r2c<2u> fft{};
+        fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};
 
         static constexpr Dim N_E = 0;
@@ -72,16 +83,16 @@ namespace ahr {
         /// Additionally, moments is used only at the start and end.
         /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
-        fftw::mdbuffer<3u> moments_K{M, X, Y}, momentsNew_K{M, X, Y};
+        Buf3D_K moments_K{KX, KY, M}, momentsNew_K{KX, KY, M};
 
         /// A|| equilibrium value, used in corrector step
-        fftw::mdbuffer<2u> aParEq_K{X, Y};
+        Buf2D_K aParEq_K{KX, KY};
 
         /// Φ: the electrostatic potential.
-        fftw::mdbuffer<2u> phi_K{X, Y}, phi_K_New{X, Y};
+        Buf2D_K phi_K{KX, KY}, phi_K_New{KX, KY};
 
         /// sq(∇⊥) A∥, also parallel electron velocity
-        fftw::mdbuffer<2u> ueKPar_K{X, Y}, ueKPar_K_New{X, Y};
+        Buf2D_K ueKPar_K{KX, KY}, ueKPar_K_New{KX, KY};
         /// @}
 
         void for_each_xy(std::invocable<Dim, Dim> auto fun) {
@@ -94,8 +105,8 @@ namespace ahr {
 
         /// Iterate in phase space, will later be changed to account for phase space dims
         void for_each_kxky(std::invocable<Dim, Dim> auto fun) {
-            for (Dim kx = 0; kx < X; ++kx) {
-                for (Dim ky = 0; ky < Y; ++ky) {
+            for (Dim kx = 0; kx < KX; ++kx) {
+                for (Dim ky = 0; ky < KY; ++ky) {
                     fun(kx, ky);
                 }
             }
@@ -112,30 +123,34 @@ namespace ahr {
         }
 
         /// Returns a 2D mdspan of values in the XY space for a specified m.
-        static auto sliceXY(fftw::mdbuffer<3u> &moments, Dim m) {
-            return stdex::submdspan(moments.to_mdspan(), m, stdex::full_extent, stdex::full_extent);
+        template<class Buf>
+        requires std::same_as<Buf, Buf3D> or std::same_as<Buf, Buf3D_K>
+        static auto sliceXY(Buf &moments, Dim m) {
+            return stdex::submdspan(moments.to_mdspan(), stdex::full_extent, stdex::full_extent, m);
         }
 
         /// Returns a DxDy of 2D mdspans for a specified m.
-        static auto sliceXY(DxDy<fftw::mdbuffer<3u>> &moments, Dim m) {
+        template<class Buf>
+        requires std::same_as<Buf, Buf3D> // or std::same_as<Buf, Buf3D_K> // TODO likely no need for DxDy in K space?
+        static auto sliceXY(DxDy<Buf> &moments, Dim m) {
             return DxDy{sliceXY(moments.DX, m), sliceXY(moments.DY, m)};
         }
 
-        /// Prepares the δx and δy of viewPH in phase space
-        void prepareDXY_PH(ViewXY viewPH, ViewXY viewPH_X, ViewXY viewPH_Y) {
-            for_each_xy([&](Dim kx, Dim ky) {
-                viewPH_X(kx, ky) = -kx_(kx) * 1i * viewPH(kx, ky);
-                viewPH_Y(kx, ky) = -ky_(ky) * 1i * viewPH(kx, ky);
+        /// Prepares the δx and δy of viewPH in phase space, as well as over-normalizes
+        /// (after inverse FFT, values will be properly normalized)
+        void prepareDXY_PH(CViewXY view_K, CViewXY viewDX_K, CViewXY viewDY_K) {
+            for_each_kxky([&](Dim kx, Dim ky) {
+                viewDX_K(kx, ky) = kx_(kx) * 1i * view_K(kx, ky) / double(X) / double(Y);
+                viewDY_K(kx, ky) = ky_(ky) * 1i * view_K(kx, ky) / double(X) / double(Y);
             });
         }
 
 
-        /// computes bracket [view, other], also normalizing in the process
+        /// computes bracket [view, other], expects normalized values
         void bracket(const ViewXY &dxOp1, const ViewXY &dyOp1, const ViewXY &dxOp2, const ViewXY &dyOp2,
                      const ViewXY &output) {
             for_each_xy([&](Dim x, Dim y) {
                 output(x, y) = dxOp1(x, y) * dyOp2(x, y) - dyOp1(x, y) * dxOp2(x, y);
-                output(x, y) /= double(X) * double(Y);
             });
         }
 
@@ -145,21 +160,21 @@ namespace ahr {
         }
 
         /// Bracket that only takes inputs and allocates temporaries and output
-        [[nodiscard]] fftw::mdbuffer<2u> fullBracket(ViewXY op1, ViewXY op2);
+        [[nodiscard]] Buf2D_K fullBracket(CViewXY op1, CViewXY op2);
 
         /// Compute derivatives in real space and store them in output
-        void derivatives(const ViewXY &value, DxDy<ViewXY> output);
+        void derivatives(const CViewXY &value, DxDy<ViewXY> output);
 
         /// Bracket that takes in derivatives that were already computed
-        [[nodiscard]] fftw::mdbuffer<2u> halfBracket(DxDy<ViewXY> op1, DxDy<ViewXY> op2);
+        [[nodiscard]] Buf2D_K halfBracket(DxDy<ViewXY> op1, DxDy<ViewXY> op2);
 
         // =================
         // Math helpers
         // TODO other file/class
         // =================
 
-        [[nodiscard]] Real ky_(Dim ky) const { return Real(ky <= (KY / 2) ? ky : ky - KY) * Real(lx) / Real(ly); };
-        [[nodiscard]] Real kx_(Dim kx) const { return Real(kx <= (KX / 2) ? kx : kx - KX); }; // TODO r2c
+        [[nodiscard]] Real ky_(Dim ky) const { return (ky <= (KY / 2) ? Real(ky) : Real(ky) - Real(KY)) * Real(lx) / Real(ly); };
+        [[nodiscard]] Real kx_(Dim kx) const { return Real(kx); };
 
         [[nodiscard]] Real kPerp2(Dim kx, Dim ky) const {
             auto dkx = kx_(kx), dky = ky_(ky);
@@ -200,8 +215,8 @@ namespace ahr {
             for_each_xy([&](Dim x, Dim y) {
                 bxMax = std::max(bxMax, std::abs(b.DX(x, y)));
                 byMax = std::max(byMax, std::abs(b.DY(x, y)));
-                bPerpMax = std::max(bPerpMax, std::sqrt(b.DX(x, y).real() * b.DX(x, y).real() +
-                                                        b.DY(x, y).real() * b.DY(x, y).real()));
+                bPerpMax = std::max(bPerpMax, std::sqrt(b.DX(x, y) * b.DX(x, y) +
+                                                        b.DY(x, y) * b.DY(x, y)));
                 vxMax = std::max(vxMax, std::abs(ve.DX(x, y)));
                 vyMax = std::max(vyMax, std::abs(ve.DY(x, y)));
                 if (rhoI >= smallRhoI) {
@@ -210,11 +225,11 @@ namespace ahr {
                 }
             });
 
-            Real kperpDum2 = std::pow(ky_(KY / 2), 2) + std::pow(Real(kx_(KX / 2)), 2);
+            Real kperpDum2 = std::pow(ky_(KY / 2), 2) + std::pow(Real(KX), 2);
             Real omegaKaw;
             if (rhoI < smallRhoI)
                 omegaKaw = std::sqrt(1.0 + kperpDum2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS))
-                           * ky_(KY / 2 + 1) * bPerpMax / (1.0 + kperpDum2 * de * de);
+                           * ky_(KY / 2) * bPerpMax / (1.0 + kperpDum2 * de * de);
             else
                 omegaKaw = std::sqrt(kperpDum2 * (rhoS*rhoS - rhoI*rhoI / (Gamma0(0.5*kperpDum2*rhoI*rhoI)-1.0))) *
                     ky_(KY/2+1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
@@ -229,7 +244,11 @@ namespace ahr {
             return CFLFrac * CFLFlow;
         }
 
-        [[maybe_unused]] void print(ViewXY view) const {
+        // TODO this is a terrible hack
+        template<typename View> requires (not std::same_as<View, Buf2D>) and (not std::same_as<View, Buf2D_K>)
+
+        [[maybe_unused]] void print(std::string_view name, View view) const {
+            std::cout << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
                     std::cout << view(x, y) << " ";
@@ -237,6 +256,12 @@ namespace ahr {
                 std::cout << std::endl;
             }
             std::cout << "===========================================" << std::endl;
+        }
+
+        template<typename Buf>
+        requires std::same_as<Buf, Buf2D> or std::same_as<Buf, Buf2D_K>
+        [[maybe_unused]] void print(std::string_view name, Buf &view) const {
+            print(name, view.to_mdspan());
         }
 
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
