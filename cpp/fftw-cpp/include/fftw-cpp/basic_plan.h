@@ -94,7 +94,6 @@ namespace fftw {
         detail::fftw_plan_t<Real> plan{nullptr};
     };
 
-
     template<size_t D, class Real, class Complex>
     basic_plan<D, Real, Complex>::~basic_plan() {
         if (plan != nullptr) fftw_destroy_plan(plan);
@@ -127,38 +126,39 @@ namespace fftw {
 
     namespace detail {
 
-        template<class Real, class Complex>
-        detail::fftw_complex_t<Real> *unwrap(basic_buffer<Real, Complex> &buf) {
+        template<bool IsReal, class Real, class Complex>
+        auto unwrap(basic_buffer<Real, Complex, IsReal> &buf) {
             return buf.unwrap();
         }
 
         // TODO this is just a fix until we get a proper mdbuffer
-        template<typename Real, typename Extents,
-                typename Complex, appropriate_layout Layout>
-        detail::fftw_complex_t<Real> *unwrap(basic_mdbuffer<Real, Extents, Complex, Layout> &buf) {
+        template<bool IsReal, typename Real, typename Complex, typename Extents, appropriate_layout Layout>
+        auto unwrap(basic_mdbuffer<Real, Extents, Complex, Layout, IsReal> &buf) {
             // for now, this is what FFT expects
-            return reinterpret_cast<detail::fftw_complex_t<Real> *>(buf.data());
+            // TODO proper underlying element type
+            return reinterpret_cast<typename basic_buffer<Real, Complex, IsReal>::underlying_element_type *>(buf.data());
         }
 
-        template<typename Real, typename Extents,
-                typename Complex, appropriate_layout Layout>
-        detail::fftw_complex_t<Real> *
-        unwrap(MDSPAN::mdspan <Complex, Extents, Layout, MDSPAN::default_accessor<Complex>> view) {
+        template<bool IsReal, typename Real, typename Complex, typename Extents, appropriate_layout Layout>
+        auto *
+        unwrap(MDSPAN::mdspan<std::conditional_t<IsReal, Real, Complex>, Extents, Layout, MDSPAN::default_accessor<std::conditional_t<IsReal, Real, Complex>>> view) {
             // for now, this is what FFT expects
-            return reinterpret_cast<detail::fftw_complex_t<Real> *>(view.data_handle());
+            // TODO proper underlying element type
+            return reinterpret_cast<underlying_element_type<IsReal, Real, Complex> *>(view.data_handle());
         }
 
         template<size_t D, class Real> requires (D == 1u) &&std::same_as<Real, double>
 
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            return fftw_plan_dft_1d(in.size(), unwrap(in), unwrap(out), direction, flags);
+            return fftw_plan_dft_1d(in.size(), unwrap<false>(in), unwrap<false>(out), direction, flags);
         }
 
         template<size_t D, class Real> requires (D == 2u) &&std::same_as<Real, double>
 
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
             // TODO for layout left this is different
-            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<Real>(in), unwrap<Real>(out), direction, flags);
+            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<false, Real>(in), unwrap<false, Real>(out),
+                                    direction, flags);
         }
     }
 
@@ -166,14 +166,14 @@ namespace fftw {
     template<typename BufferIn, typename BufferOut>
     requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
     void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) {
-        fftw_execute_dft(plan, detail::unwrap(in), detail::unwrap(out));
+        fftw_execute_dft(plan, detail::unwrap<false>(in), detail::unwrap<false>(out));
     }
 
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
     requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
     void basic_plan<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
-        fftw_execute_dft(plan, detail::unwrap<Real>(in), detail::unwrap<Real>(out));
+        fftw_execute_dft(plan, detail::unwrap<false, Real>(in), detail::unwrap<false, Real>(out));
     }
 
     template<size_t D, class Real, class Complex>
@@ -203,5 +203,214 @@ namespace fftw {
         plan1.plan = detail::template plan_dft<D, Real>(in, out, direction, flags);
         return plan1;
     }
+
+    template<size_t D, class Real, class Complex>
+    class base_plan {
+
+    };
+
+    template<size_t D, class Real, class Complex = std::complex<Real>>
+    class basic_plan_r2c : public base_plan<D, Real, Complex> {
+    public:
+        using real_t = Real;
+        using complex_t = Complex;
+
+        basic_plan_r2c() noexcept = default;
+
+        ~basic_plan_r2c();
+
+        /// Deleted copy constructor to disable copying
+        basic_plan_r2c(const basic_plan_r2c &) = delete;
+
+        basic_plan_r2c(basic_plan_r2c &&other) noexcept; ///< Move constructor
+        basic_plan_r2c &operator=(basic_plan_r2c &&other) noexcept; ///< Move assignment
+        void swap(basic_plan_r2c &other) noexcept;
+
+        /// Executes the plan with the buffers provided initially.
+        void operator()();
+
+        template<typename ViewIn, typename ViewOut>
+        void operator()(ViewIn view1, ViewOut out);
+
+        /// Returns the underlying FFTW plan.
+        detail::fftw_plan_t<Real> unwrap() { return plan; }
+
+        /// \defgroup{planning utilities}
+        template<typename ViewIn, typename ViewOut>
+        static auto dft(ViewIn in, ViewOut out, Flags flags) -> basic_plan_r2c;
+
+    private:
+        detail::fftw_plan_t<Real> plan{nullptr};
+    };
+
+    template<size_t D, class Real, class Complex = std::complex<Real>>
+    class basic_plan_c2r : public base_plan<D, Real, Complex> {
+    public:
+        using real_t = Real;
+        using complex_t = Complex;
+
+        basic_plan_c2r() noexcept = default;
+
+        ~basic_plan_c2r();
+
+        /// Deleted copy constructor to disable copying
+        basic_plan_c2r(const basic_plan_c2r &) = delete;
+
+        basic_plan_c2r(basic_plan_c2r &&other) noexcept; ///< Move constructor
+        basic_plan_c2r &operator=(basic_plan_c2r &&other) noexcept; ///< Move assignment
+        void swap(basic_plan_c2r &other) noexcept;
+
+        /// Executes the plan with the buffers provided initially.
+        void operator()();
+
+        template<typename ViewIn, typename ViewOut>
+        void operator()(ViewIn view1, ViewOut out);
+
+        /// Returns the underlying FFTW plan.
+        detail::fftw_plan_t<Real> unwrap() { return plan; }
+
+        /// \defgroup{planning utilities}
+        template<typename ViewIn, typename ViewOut>
+        static auto dft(ViewIn in, ViewOut out, Flags flags) -> basic_plan_c2r;
+
+    private:
+        detail::fftw_plan_t<Real> plan{nullptr};
+    };
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_r2c<D, Real, Complex>::~basic_plan_r2c() {
+        if (plan != nullptr) fftw_destroy_plan(plan);
+        plan = nullptr;
+    }
+
+    template<size_t D, class Real, class Complex>
+    void basic_plan_r2c<D, Real, Complex>::swap(basic_plan_r2c &other) noexcept {
+        std::swap(plan, other.plan);
+    }
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_r2c<D, Real, Complex>::basic_plan_r2c(basic_plan_r2c &&other) noexcept {
+        other.swap(*this);
+    }
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_r2c<D, Real, Complex> &basic_plan_r2c<D, Real, Complex>::operator=(basic_plan_r2c &&other) noexcept {
+        basic_plan_r2c(std::move(other)).swap(*this);
+        return *this;
+    }
+
+    template<size_t D, class Real, class Complex>
+    void basic_plan_r2c<D, Real, Complex>::operator()() {
+        fftw_execute(plan);
+    }
+
+    template<size_t D, class Real, class Complex>
+    template<typename ViewIn, typename ViewOut>
+    void basic_plan_r2c<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
+        fftw_execute_dft_r2c(plan, unwrap(in), unwrap(out));
+    }
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_c2r<D, Real, Complex>::~basic_plan_c2r() {
+        if (plan != nullptr) fftw_destroy_plan(plan);
+        plan = nullptr;
+    }
+
+    template<size_t D, class Real, class Complex>
+    void basic_plan_c2r<D, Real, Complex>::swap(basic_plan_c2r &other) noexcept {
+        std::swap(plan, other.plan);
+    }
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_c2r<D, Real, Complex>::basic_plan_c2r(basic_plan_c2r &&other) noexcept {
+        other.swap(*this);
+    }
+
+    template<size_t D, class Real, class Complex>
+    basic_plan_c2r<D, Real, Complex> &basic_plan_c2r<D, Real, Complex>::operator=(basic_plan_c2r &&other) noexcept {
+        basic_plan_c2r(std::move(other)).swap(*this);
+        return *this;
+    }
+
+    template<size_t D, class Real, class Complex>
+    void basic_plan_c2r<D, Real, Complex>::operator()() {
+        fftw_execute(plan);
+    }
+
+    template<size_t D, class Real, class Complex>
+    template<typename ViewIn, typename ViewOut>
+    void basic_plan_c2r<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
+        fftw_execute_dft_c2r(plan, unwrap(in), unwrap(out));
+    }
+
+    namespace detail {
+        template<size_t D>
+        std::array<int, D> dims(auto in, auto out) {
+            static_assert(D == 2u && "Currently only supporting 2D");
+            using layout_in = typename std::decay_t<decltype(in)>::layout_type;
+            using layout_out = typename std::decay_t<decltype(out)>::layout_type;
+
+            // TODO layouts other than right and left
+            constexpr bool in_right = std::same_as<MDSPAN::layout_right, layout_in>;
+            constexpr bool out_right = std::same_as<MDSPAN::layout_right, layout_out>;
+
+            auto Validate = [&](bool condition) {
+                if (!condition) throw std::invalid_argument("Extents don't match");
+            };
+
+            if (in_right == out_right) {
+                Validate(in.extent(0) == out.extent(0));
+                Validate(in.extent(1) == out.extent(1));
+            } else {
+                Validate(in.extent(0) == out.extent(1));
+                Validate(in.extent(1) == out.extent(0));
+            }
+
+            if constexpr (in_right) {
+                return {int(in.extent(0)), int(in.extent(1))};
+            } else {
+                return {int(in.extent(1)), int(in.extent(0))};
+            }
+
+        }
+
+        template<size_t D, class Real, class Complex>
+        requires std::same_as<Real, double>
+
+        auto plan_dft_r2c(auto in, auto out, Flags flags) {
+            return fftw_plan_dft_r2c(D, dims<D>(in, out).data(), unwrap<true, Real, Complex>(in),
+                                     unwrap<false, Real, Complex>(out),
+                                     flags);
+        }
+
+        template<size_t D, class Real, class Complex>
+        requires std::same_as<Real, double>
+
+        auto plan_dft_c2r(auto in, auto out, Flags flags) {
+            return fftw_plan_dft_c2r(D, dims<D>(in, out).data(), unwrap<false, Real, Complex>(in),
+                                     unwrap<true, Real, Complex>(out),
+                                     flags);
+        }
+    }
+
+
+    template<size_t D, class Real, class Complex>
+    template<typename ViewIn, typename ViewOut>
+    auto basic_plan_r2c<D, Real, Complex>::dft(ViewIn in, ViewOut out, fftw::Flags flags)
+    -> basic_plan_r2c<D, Real, Complex> {
+        basic_plan_r2c plan1;
+        plan1.plan = detail::template plan_dft_r2c<D, Real, Complex>(in, out, flags);
+        return plan1;
+    }
+
+    template<size_t D, class Real, class Complex>
+    template<typename ViewIn, typename ViewOut>
+    auto basic_plan_c2r<D, Real, Complex>::dft(ViewIn in, ViewOut out, fftw::Flags flags)
+    -> basic_plan_c2r<D, Real, Complex> {
+        basic_plan_c2r plan1;
+        plan1.plan = detail::template plan_dft_c2r<D, Real, Complex>(in, out, flags);
+        return plan1;
+    }
+
 
 } // namespace fftw
