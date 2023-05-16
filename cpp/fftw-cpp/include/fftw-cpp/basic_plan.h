@@ -307,7 +307,7 @@ namespace fftw {
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
     void basic_plan_r2c<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
-        fftw_execute_dft_r2c(plan, unwrap(in), unwrap(out));
+        fftw_execute_dft_r2c(plan, detail::unwrap<true, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
     template<size_t D, class Real, class Complex>
@@ -340,7 +340,7 @@ namespace fftw {
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
     void basic_plan_c2r<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
-        fftw_execute_dft_c2r(plan, unwrap(in), unwrap(out));
+        fftw_execute_dft_c2r(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<true, Real, Complex>(out));
     }
 
     namespace detail {
