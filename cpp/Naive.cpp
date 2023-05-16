@@ -421,6 +421,7 @@ namespace ahr {
             }
         });
 
+        br_K(0, 0) = 0;
         return br_K;
     }
 }
