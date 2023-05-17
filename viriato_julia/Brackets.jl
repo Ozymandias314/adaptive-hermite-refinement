@@ -48,8 +48,8 @@ function func_Akpar(DxApar,DyApar,Dxphi,Dyphi,Dxne,Dyne,Dxuepar,Dyuepar,Dxg2,Dyg
 
     # these lines have like some random constants that are never defined? or commente dout? idk whats going on there 
     # also braakparuekpar never used in this subroutine (yes should be brauekparphi FIXED). For our purposes, notanj = 1.0 and rhoe_LTe = 0.0
-    for i = 1:nkx
-        for j = 1:nky
+    for j = 1:nky
+        for i = 1:nkx
             # fapar[j, i, k] = 1.0/(1.0+kperp[j, i]^2*de^2)*
             #     (braakparphik[j, i, k] - de^2*brauekparphik[j, i, k] -
             #      notanj*1.0/sqrt(2.0)*rhos_de*rhoe_LTe*(0.0,1.0)*ky[j]*akpar[j, i, k])
@@ -72,7 +72,7 @@ function func_g2(Dxg2, Dyg2, Dxphi, Dyphi, Dxapar, Dyapar, Dxg3, Dyg3, bracket_a
     bracket_g2_phik = Bracket_3(Dxg2, Dyg2, Dxphi, Dyphi)
     bracket_akpar_g3 = Bracket_3(Dxapar, Dyapar, Dxg3, Dyg3)
 
-    for i in 1:nkx, j in 1:nky
+    for j in 1:nky, i in 1:nkx
         fg2[i,j] = bracket_g2_phik[i,j] + sqrt(gmin+1.0) * rhos_de * bracket_akpar_g3[i,j] +
                      notanj * sqrt(2.0) * bracket_akpar_uekpar[i,j] #-
                      #notanj * 1.0/(2.0*rhos_de) * rhoe_LTe*(0.0,1.0) * ky[j] * phik[j,i,k]
@@ -109,8 +109,8 @@ function func_gm(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyap
         sqrt((m+1)*1.0) .* Dxgp .+ sqrt(m*1.0) .*  Dxgm, 
         sqrt((m+1)*1.0) .* Dygp .+ sqrt(m*1.0) .*  Dygm)
 
-    for i = 1:nkx
-        for j = 1:nky
+    for j = 1:nky
+        for i = 1:nkx
             fgm[i, j] = -bracket_phik_g[i, j] + rhos_de * bracket_akpar_gpm[i, j]
         end
     end
@@ -149,8 +149,8 @@ function func_lastg(hyper_nuei, niu2, Dxgm, Dygm, Dxg, Dyg, Dxphi, Dyphi, Dxapar
     bracket_akpar_gk = Bracket_3(Dxapar, Dyapar, Dxg, Dyg)
 
     
-    for i = 1:nkx
-        for j = 1:nky
+    for j = 1:nky
+        for i = 1:nkx
             bracket_akpar_gk[i,j] = (rhos_de^2 * (ngtot+1)) / ((ngtot+1) * nu_ei +
                 (ngtot+1)^(2*hyper_morder) * hyper_nuei +
                 niu * kperp(i,j)^2 + niu2*kperp(i,j)^(2*hyper_order)) * bracket_akpar_gk[i,j]

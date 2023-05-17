@@ -30,14 +30,14 @@ function phi_pot(nek::Array{ComplexF64,2})
         phiK = zeros(ComplexF64,nkx,nky)
 
         if (rhoi < small_rhoi)
-            for i in 1:nkx
-                for j in 1:nky
+            for j in 1:nky
+                for i in 1:nkx
                     phiK[i,j] = -nek[i,j]/(kperp(i,j)^2)
                 end
             end
         else
-            for i in 1:nkx
-                for j in 1:nky
+            for j in 1:nky
+                for i in 1:nkx
                     phiK[i,j] = rhoi^2*0.5/(Γ₀(kperp(i,j)^2*rhoi^2*0.5)-1.0)*nek[i,j]
                 end
             end
@@ -50,15 +50,15 @@ end
 function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
     SI_oper = Array{ComplexF64}(undef, nkx, nky)
     if rhoi < small_rhoi
-        for i in 1:nkx
-            for j in 1:nky
+        for j in 1:nky
+            for i in 1:nkx
                 SI_oper[i,j] = aa0^2*(1+kperp(i,j)^2*(3.0/4.0*rhoi^2+rhos^2))*kperp(i,j)^2*bperp_max^2*
                     dti^2/(1.0+kperp(i,j)^2*de^2) 
             end
         end
     else
-        for i in 1:nkx
-            for j in 1:nky
+        for j in 1:nky
+            for i in 1:nkx
                 SI_oper[i,j] = aa0^2*(3*rhos^2-rhoi^2/(Γ₀(0.5*kperp(i,j)^2*rhoi^2)-1))*
                                 kperp(i,j)^4*bperp_max^2*
                                 dti^2/(1.0+kperp(i,j)^2*de^2) 

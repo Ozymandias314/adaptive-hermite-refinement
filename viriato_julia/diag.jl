@@ -10,8 +10,8 @@ function convol(Fk)
     Fk_ikx = similar(Fk)
     Fk_iky = similar(Fk)
 
-    for i in 1:nkx
-        for j in 1:nky
+    for j in 1:nky
+        for i in 1:nkx
             Fk_ikx[i,j] = im*kx(i)*Fk[i,j]
             Fk_iky[i,j] = im*ky(j)*Fk[i,j]
         end

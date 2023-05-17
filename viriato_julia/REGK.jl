@@ -1,4 +1,4 @@
-using LinearAlgebra, FFTW, Logging, JLD2
+using LinearAlgebra, FFTW, Logging, JLD2, BenchmarkTools, FlameGraphs
 
 include("constants.jl")
 include("transforms.jl")
@@ -108,22 +108,22 @@ phik = FFT2d_direct(phi)
 
 
 if rhoi < small_rhoi
-    for i = 1:nkx
-        for j = 1:nky
+    for j = 1:nky
+        for i = 1:nkx 
             nek_perturb[i,j] = -kperp(i,j)^2*phik[i,j]
         end
     end
 else
-    for i = 1:nkx
-        for j = 1:nky
+    for j = 1:nky
+        for i = 1:nkx
             nek_perturb[i,j] = 2.0/rhoi^2*(Γ₀(kperp(i,j)^2*rhoi^2/2.0)-1)*phik[i,j]
         end
     end
 end
 nek = nek_perturb
 
-for i = 1:nkx
-    for j = 1:nky
+for j = 1:nky
+    for i = 1:nkx
         uekpar[i,j] = -kperp(i,j)^2*akpar[i,j]
     end
 end
@@ -297,21 +297,24 @@ while t <= tmax
 
     guess = deepcopy(akpar)
     
-    for i = 1:nkx
-        for j = 1:nky
-            nek_star[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j]
-
-            akpar_star[i,j] = exp_eta(i,j,η2,dti)*akpar[i,j] + dti/2.0*(1.0+exp_eta(i,j,η2,dti))*fApar_old[i,j] + 
-                (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]
-
-            uekpar_star[i,j] = -kperp(i,j)^2*akpar_star[i,j]
+    for j = 1:nky
+        for i = 1:nkx
+            exp_nu_val = exp_nu(i, j, ν2, dti)
+            exp_eta_val = exp_eta(i, j, η2, dti)
+            
+            nek_star[i, j] = exp_nu_val * nek[i, j] + dti / 2.0 * (1.0 + exp_nu_val) * fne_old[i, j]
+            
+            akpar_star[i, j] = exp_eta_val * akpar[i, j] + dti / 2.0 * (1.0 + exp_eta_val) * fApar_old[i, j] +
+                (1.0 - exp_eta_val) * akpar_eq[i, j]
+            
+            uekpar_star[i, j] = -kperp(i, j)^2 * akpar_star[i, j]
         end
     end
     
     if g_inc
         # Get first and last g
-        for i = 1:nkx
-            for j = 1:nky
+        for j = 1:nky
+            for i = 1:nkx
                 gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
                 
                 gk_star[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
@@ -320,8 +323,8 @@ while t <= tmax
         end
         # get the rest of the gs
         for ng = gmin+1:ngtot-1
-            for i = 1:nkx
-                for j = 1:nky
+            for j = 1:nky
+                for i = 1:nkx
                     gk_star[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
                         dti/2.0*(1.0+exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fgm_old[i,j,ng]
                 end
@@ -398,12 +401,13 @@ while t <= tmax
         end
 
         relative_error = 0.0 # reset value of relative error
-        for i = 1:nkx
-            for j = 1:nky
-                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta(i,j,η2,dti)*akpar[i,j]+
-                    dti/2.0*exp_eta(i,j,η2,dti)*fApar_old[i,j]+ 
+        for j = 1:nky
+            for i = 1:nkx
+                exp_eta_val = exp_eta(i,j,η2,dti)
+                akpar_new[i,j] = 1.0/(1.0+semi_implicit_operator[i,j]/4.0)*(exp_eta_val*akpar[i,j]+
+                    dti/2.0*exp_eta_val*fApar_old[i,j]+ 
                     dti/2.0*fapar_pred[i,j]+
-                    (1.0-exp_eta(i,j,η2,dti))*akpar_eq[i,j]+
+                    (1.0-exp_eta_val)*akpar_eq[i,j]+
                     semi_implicit_operator[i,j]/4.0*guess[i,j])
                 
                 uekpar_new[i,j] = -kperp(i,j)^2*akpar_new[i,j]
@@ -422,8 +426,8 @@ while t <= tmax
 
         # to get next ne, use the last timetep values of everything except the new apar
         fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
-        for i = 1:nkx
-            for j = 1:nky
+        for j = 1:nky
+            for i = 1:nkx
                 nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*exp_nu(i,j,ν2,dti)*fne_old[i,j] + dti/2.0*fne_pred[i,j]
 
                 # Error for this p iteration at each location. Note that guess hold the value of akpar_new from previous p_loop iteration so this is akpar,n+1,p+1 - akpar,n+1,p 
@@ -456,8 +460,8 @@ while t <= tmax
             #get g2 p+1
             fgm_pred[:,:,gmin] = func_g2(value_gx[:,:,gmin],value_gy[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
             value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],phik_new)
-            for i = 1:nkx
-                for j = 1:nky
+            for j = 1:nky
+                for i = 1:nkx
                     gk_new[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] +
                         dti/2.0*exp_nu(i,j,ν2,dti)*fgm_old[i,j,gmin] + 
                         +dti/2.0*fgm_pred[i,j,gmin]
@@ -473,8 +477,8 @@ while t <= tmax
                 fgm_pred[:,:,ng] .= func_gm(ng,dxgm,dygm,value_gx[:,:,ng],value_gy[:,:,ng],value_gx[:,:,ng+1],value_gy[:,:,ng+1],
                 dxphi,dyphi,dxapar,dyapar)
 
-                for i = 1:nkx
-                    for j = 1:nky 
+                for j = 1:nky 
+                    for i = 1:nkx
                         gk_new[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
                             dti/2.0*exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fgm_old[i,j,ng]+
                             dti/2.0*fgm_pred[i,j,ng]
@@ -487,8 +491,8 @@ while t <= tmax
             # get glast p+1
             f_lastg = func_lastg(hyper_νei,η2,dxg[:,:,ngtot-1],dyg[:,:,ngtot-1],value_gx[:,:,ngtot],value_gy[:,:,ngtot],
                 dxphi,dyphi,dxapar,dyapar)
-            for i = 1:nkx
-                for j = 1:nky
+            for j = 1:nky
+                for i = 1:nkx
                     gk_new[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
                         dti/2.0*exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fglast_old[i,j]+
                             dti/2.0*f_lastg[i,j]
@@ -621,7 +625,7 @@ while t <= tmax
     #ne = FFT2d_inv(nek)
     save_object(file_string_apar,apar)
     #save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t, " savetime= ",savetime)
+    #println("Saved data for timestep = ",t, " savetime= ",savetime)
     # println("relative_error ", relative_error) 
     # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
     # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
@@ -640,4 +644,5 @@ end
 close(log_file)
 end # End of main 
 
-main()
+@benchmark main()
+
