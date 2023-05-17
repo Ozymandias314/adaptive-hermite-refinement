@@ -1,6 +1,4 @@
 #  use Brackets,   only: funcne_i, funcAkpar_i, funcg2, funcgm, func_lastg, bracket_3
-include("constants.jl")
-include("transforms.jl")
 #print(lambda)
 
 # Only need bracket 3. Also, dont need the nlz stuff, as we are only

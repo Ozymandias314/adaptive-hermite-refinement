@@ -1,4 +1,4 @@
-include("constants.jl") # Need to include constants everywhere?
+ # Need to include constants everywhere?
 
 function kperp(i::Int,j::Int)
     kperp = sqrt(ky(j)^2+kx(i)^2)

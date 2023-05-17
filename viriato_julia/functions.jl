@@ -1,5 +1,3 @@
-include("constants.jl")
-include("grid.jl") #assuming this will exist
 
 # Need to resolve kperp array from grids
 

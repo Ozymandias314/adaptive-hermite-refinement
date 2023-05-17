@@ -1,5 +1,3 @@
-include("constants.jl")
-include("grid.jl")
 
 function omegakaw(bperp_max::Real)
     kperp_dum::Real = 0.0

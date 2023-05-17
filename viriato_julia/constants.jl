@@ -120,10 +120,10 @@ using JSON
 const_data = JSON.parsefile("viriato_julia/example_inputs.json")
 
 # Extract values from the "box_parameters" object
-lx = const_data["box_parameters"]["lx"]
-ly = const_data["box_parameters"]["ly"]
+const lx = 2*pi*const_data["box_parameters"]["lx"]
+const ly = 2*pi*const_data["box_parameters"]["ly"]
 lz = const_data["box_parameters"]["lz"]
-nlx = const_data["box_parameters"]["nlx"]
+const nlx = const_data["box_parameters"]["nlx"]
 nly = const_data["box_parameters"]["nly"]
 nlz = const_data["box_parameters"]["nlz"]
 g_inc = const_data["box_parameters"]["g_inc"]
@@ -183,10 +183,10 @@ rs_time = const_data["data_sav"]["rs_time"]
 
 
 # Definitions
-lx = 2*pi*lx
-ly = 2*pi*ly
-nkx = div(nlx, 2) + 1
-nky = nly
+#lx = 2*pi*lx
+#ly = 2*pi*ly
+const nkx = div(nlx, 2) + 1
+const nky = nly
 #nkz = 2 * div(nlz - 1, 3) + 1
 #x_loc = div(nlx, 2) + 1
 #y_loc = div(nly, 2) + 1

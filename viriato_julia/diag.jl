@@ -1,5 +1,3 @@
-include("constants.jl")
-include("grid.jl")
 using FFTW
 
 function convol(Fk)

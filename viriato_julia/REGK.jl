@@ -1,6 +1,7 @@
 using LinearAlgebra, FFTW, Logging, JLD2, BenchmarkTools, FlameGraphs
 
 include("constants.jl")
+include("grid.jl")
 include("transforms.jl")
 include("Brackets.jl")
 include("aux.jl")
@@ -548,13 +549,17 @@ while t <= tmax
         print("Data at new timestep","\n")
         print(phik_new[32,32],nek_new[32,32],akpar_new[32,32],'\n')
     end
-
-    nek = deepcopy(nek_new)
-    akpar = deepcopy(akpar_new)
-    phik = deepcopy(phik_new)
-    uekpar = deepcopy(uekpar_new)
+    nek, nek_new = nek_new, nek
+    #nek = deepcopy(nek_new)
+    akpar, akpar_new = akpar_new, akpar
+    #akpar = deepcopy(akpar_new)
+    phik, phik_new = phik_new, phik
+    #phik = deepcopy(phik_new)
+    uekpar, uekpar_new = uekpar_new, uekpar
+    #uekpar = deepcopy(uekpar_new)
     if g_inc 
-        gk = deepcopy(gk_new)
+        gk, gk_new = gk_new, gk
+        #gk = deepcopy(gk_new)
     end
     savetime += dti # update the simulation timestep
 
@@ -644,5 +649,5 @@ end
 close(log_file)
 end # End of main 
 
-@benchmark main()
+main()
 
