@@ -38,5 +38,5 @@ end
 
 # 2D IFFT
 function FFT2d_inv(array_k::Array{ComplexF64})
-    array = irfft_plan*array_k
+    return irfft_plan*array_k
 end
