@@ -91,10 +91,10 @@ using ..Functions: anj_kron
 =#
 function func_gm(m, Dxgm, Dygm, Dxg, Dyg, Dxgp, Dygp, Dxphi, Dyphi, Dxapar, Dyapar)
 
-    fgm = zeros(ComplexF64, nkx, nky)
+    fgm = Array{ComplexF64}(undef, nkx, nky)
     #... Local vars
-    bracket_akpar_gpm = zeros(ComplexF64, nkx, nky)
-    bracket_phik_g = zeros(ComplexF64, nkx, nky)
+    #bracket_akpar_gpm = zeros(ComplexF64, nkx, nky)
+    #bracket_phik_g = zeros(ComplexF64, nkx, nky)
     
 
     #feel like this part might be wrong....

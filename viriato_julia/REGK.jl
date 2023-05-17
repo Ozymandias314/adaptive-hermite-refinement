@@ -316,18 +316,22 @@ while t <= tmax
         # Get first and last g
         for j = 1:nky
             for i = 1:nkx
-                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
+                exp_nu_val = exp_nu(i, j, ν2, dti)
+                exp_ng_val = exp_ng(ngtot,hyper_νei,dti)
+                gk_star[i,j,gmin] = exp_nu_val*gk[i,j,gmin] + dti/2.0*(1+exp_nu_val)*fgm_old[i,j,gmin]
                 
-                gk_star[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
-                    dti/2.0*(1.0+exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
+                gk_star[i,j,ngtot] = exp_ng_val*exp_nu_val*gk[i,j,ngtot]+
+                    dti/2.0*(1.0+exp_ng_val*exp_nu_val)*fglast_old[i,j]
             end 
         end
         # get the rest of the gs
         for ng = gmin+1:ngtot-1
             for j = 1:nky
                 for i = 1:nkx
-                    gk_star[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
-                        dti/2.0*(1.0+exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fgm_old[i,j,ng]
+                    exp_nu_val = exp_nu(i, j, ν2, dti)
+                    exp_ng_val = exp_ng(ng,hyper_νei,dti)
+                    gk_star[i,j,ng] = exp_ng_val*exp_nu_val*gk[i,j,ng]+
+                        dti/2.0*(1.0+exp_ng_val*exp_nu_val)*fgm_old[i,j,ng]
                 end
             end
         end
@@ -429,7 +433,8 @@ while t <= tmax
         fne_pred, bracket_akpar_uekpar = func_ne(value_phix,value_phiy,value_nex,value_ney,dxapar,dyapar,dxuepar,dyuepar)
         for j = 1:nky
             for i = 1:nkx
-                nek_new[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*exp_nu(i,j,ν2,dti)*fne_old[i,j] + dti/2.0*fne_pred[i,j]
+                exp_nu_val = exp_nu(i,j,ν2,dti)
+                nek_new[i,j] = exp_nu_val*nek[i,j]+ dti/2.0*exp_nu_val*fne_old[i,j] + dti/2.0*fne_pred[i,j]
 
                 # Error for this p iteration at each location. Note that guess hold the value of akpar_new from previous p_loop iteration so this is akpar,n+1,p+1 - akpar,n+1,p 
                 rel_error_array[i,j] = abs(semi_implicit_operator[i,j]/4.0*(akpar_new[i,j]-guess[i,j]))/sqrt(sum_apar_rel_error/(nkx*nky))
@@ -463,8 +468,9 @@ while t <= tmax
             value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],phik_new)
             for j = 1:nky
                 for i = 1:nkx
-                    gk_new[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] +
-                        dti/2.0*exp_nu(i,j,ν2,dti)*fgm_old[i,j,gmin] + 
+                    exp_nu_val = exp_nu(i,j,ν2,dti)
+                    gk_new[i,j,gmin] = exp_nu_val*gk[i,j,gmin] +
+                        dti/2.0*exp_nu_val*fgm_old[i,j,gmin] + 
                         +dti/2.0*fgm_pred[i,j,gmin]
                 end
             end
@@ -480,9 +486,13 @@ while t <= tmax
 
                 for j = 1:nky 
                     for i = 1:nkx
-                        gk_new[i,j,ng] = exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ng]+
-                            dti/2.0*exp_ng(ng,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fgm_old[i,j,ng]+
-                            dti/2.0*fgm_pred[i,j,ng]
+                        #exp_nu_val = exp_nu(i,j,ν2,dti)
+                        #exp_ng_val = exp_ng(ng,hyper_νei,dti)
+                        #gk_star
+                        gk_new[i,j,ng] = gk_star[i,j,ng] - dti/2.0*fgm_old[i,j,ng] + dti/2.0*fgm_pred[i,j,ng]
+                        #gk_new[i,j,ng] = exp_ng_val*exp_nu_val*gk[i,j,ng]+
+                            #dti/2.0*exp_ng_val*exp_nu_val*fgm_old[i,j,ng]+
+                            #dti/2.0*fgm_pred[i,j,ng]
                     end
                 end
 
@@ -494,8 +504,10 @@ while t <= tmax
                 dxphi,dyphi,dxapar,dyapar)
             for j = 1:nky
                 for i = 1:nkx
-                    gk_new[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
-                        dti/2.0*exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*fglast_old[i,j]+
+                    exp_nu_val = exp_nu(i,j,ν2,dti)
+                    exp_ng_val = exp_ng(ngtot,hyper_νei,dti)
+                    gk_new[i,j,ngtot] = exp_ng_val*exp_nu_val*gk[i,j,ngtot]+
+                        dti/2.0*exp_ng_val*exp_nu_val*fglast_old[i,j]+
                             dti/2.0*f_lastg[i,j]
                 end
             end
