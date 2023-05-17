@@ -649,5 +649,5 @@ end
 close(log_file)
 end # End of main 
 
-main()
+@benchmark main()
 
