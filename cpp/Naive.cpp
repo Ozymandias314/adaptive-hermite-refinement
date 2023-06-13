@@ -172,10 +172,10 @@ namespace ahr {
 
             // Phi, Nabla, and other prep for A bracket
             for_each_kxky([&](Dim kx, Dim ky) {
-                phi_K_New(kx, ky) = nonlinear::phi(GM_K_Star(kx, ky, N_E), kPerp2(kx, ky));
+                // set to 0 for (kx, ky)=(0,0)
+                phi_K_New(kx, ky) = ((kx | ky) == 0) ? 0 : nonlinear::phi(GM_K_Star(kx, ky, N_E), kPerp2(kx, ky));
                 ueKPar_K_New(kx, ky) = -kPerp2(kx, ky) * GM_K_Star(kx, ky, A_PAR);
             });
-
 
             DxDy<Buf2D> dPhi_Loop{X, Y}, dUEKPar_Loop{X, Y};
             DxDy<Buf3D> dGM_Loop{X, Y, M};
@@ -193,7 +193,7 @@ namespace ahr {
 
             Buf2D_K guessAPar_K{KX, KY}, semiImplicitOperator{KX, KY};
             for_each_kxky([&](Dim kx, Dim ky) {
-                guessAPar_K(kx, ky) = moments_K(kx, A_PAR, ky);
+                guessAPar_K(kx, ky) = moments_K(kx, ky, A_PAR);
                 semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kPerp2(kx, ky));
             });
             semiImplicitOperator(0, 0) = 0;
@@ -263,7 +263,7 @@ namespace ahr {
                                                 GM_Nonlinear_K(kx, ky, N_E) +
                                                 dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, N_E);
 
-                    phi_K_New(kx, ky) = nonlinear::phi(momentsNew_K(kx, ky, N_E), kPerp2(kx, ky));
+                    phi_K_New(kx, ky) = (kx | ky) == 0 ? 0 : nonlinear::phi(momentsNew_K(kx, ky, N_E), kPerp2(kx, ky));
                 });
 
                 derivatives(phi_K_New, dPhi_Loop);
