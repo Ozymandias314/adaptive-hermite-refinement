@@ -344,6 +344,12 @@ namespace fftw {
     }
 
     namespace detail {
+        // TODO currently we support one layout left and one layout right,
+        //  but that actually changes which dimension is which.
+        //  E. g. if input is 4x6 col-major and output is 6x4 row-major, now
+        //  the dimensions in the output are reversed, kind of defeating the purpose of layouts
+        //  If people really want to switch layouts they'll have to reverse it themselves.
+
         template<size_t D>
         std::array<int, D> dims(auto in, auto out) {
             static_assert(D == 2u && "Currently only supporting 2D");
