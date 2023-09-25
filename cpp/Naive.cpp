@@ -37,8 +37,14 @@ namespace ahr {
         // Initialize equilibrium values
         auto [aParEq, phi] = equilibriumOT01(X, Y);
 
+        debug2(aParEq.to_mdspan());
+        debug2(phi.to_mdspan());
+
         fft(phi.to_mdspan(), phi_K.to_mdspan());
         fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());
+
+        debug2(aParEq_K);
+        debug2(phi_K);
 
         // Transform moments into phase space
         for (int m = G_MIN; m < M; ++m) {
@@ -53,6 +59,9 @@ namespace ahr {
             moments_K(kx, ky, A_PAR) = aParEq_K(kx, ky);
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
+
+        debug2(sliceXY(moments_K, N_E));
+        debug2(sliceXY(moments_K, A_PAR));
     }
 
     void Naive::run() {
@@ -73,12 +82,11 @@ namespace ahr {
                 derivatives(sliceXY(moments_K, m), sliceXY(dGM, m));
             }
 
-            // DEBUG
-            print("aPar_K", sliceXY(moments_K, A_PAR));
-
             if (repeat or divergent) {
-                t--; // repeat previous timestep
+                //t--; // repeat previous timestep
+                // TODO once not diverging excessively
             } else {
+                // TODO only necessary the first time through. We already get dt at the end of the loop.
                 dt = getTimestep(dPhi, sliceXY(dGM, N_E), sliceXY(dGM, A_PAR));
                 hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             }
@@ -168,6 +176,7 @@ namespace ahr {
                 });
             }
 
+            debug2(sliceXY(GM_K_Star, A_PAR));
             // corrector step
 
             // Phi, Nabla, and other prep for A bracket
@@ -239,6 +248,10 @@ namespace ahr {
                     sumAParRelError += std::norm(momentsNew_K(kx, ky, A_PAR) - moments_K(kx, ky, A_PAR));
                 });
 
+                debug2(sliceXY(momentsNew_K, A_PAR));
+                debug2(guessAPar_K);
+                debug2(semiImplicitOperator);
+
                 old_error = relative_error;
                 relative_error = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
@@ -247,7 +260,7 @@ namespace ahr {
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
 
-                std::cout << "rel err:" << relative_error << std::endl;
+                std::cout << "relative_error:" << relative_error << std::endl;
                 // TODO bail if relative error is large
 
                 DerivateNewMoment(A_PAR);
@@ -356,6 +369,9 @@ namespace ahr {
                     guessAPar_K(kx, ky) = momentsNew_K(kx, ky, A_PAR);
                 });
             }
+            debug2(sliceXY(momentsNew_K, A_PAR));
+            std::cout << "relative_error: " << relative_error << std:: endl;
+            std::cout << "old_error: " << old_error << std:: endl;
             if (divergent) continue;
             if (repeat) {
                 noInc = true;

@@ -218,6 +218,8 @@ namespace ahr {
             b.DX = dAPar.DY;
             b.DY = dAPar.DX;
 
+            debug("dxapar", dAPar.DX);
+            debug("dyapar", dAPar.DY);
             for_each_xy([&](Dim x, Dim y) {
                 bxMax = std::max(bxMax, std::abs(b.DX(x, y)));
                 byMax = std::max(byMax, std::abs(b.DY(x, y)));
@@ -246,7 +248,12 @@ namespace ahr {
                                      std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
 
             // DEBUG
+            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            std::cout << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
+            std::cout << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
             std::cout << "CFLFlow: " << CFLFlow << std::endl;
+            std::cout << "dt: " << CFLFlow * CFLFrac << std::endl;
 
             return CFLFrac * CFLFlow;
         }
@@ -254,7 +261,7 @@ namespace ahr {
         // TODO this is a terrible hack
         template<typename View> requires (not std::same_as<View, Buf2D>) and (not std::same_as<View, Buf2D_K>)
 
-        [[maybe_unused]] void print(std::string_view name, View view) const {
+        void print(std::string_view name, View view) const {
             std::cout << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
