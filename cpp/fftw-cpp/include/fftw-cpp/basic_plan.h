@@ -147,17 +147,19 @@ namespace fftw {
             return reinterpret_cast<underlying_element_type<IsReal, Real, Complex> *>(view.data_handle());
         }
 
-        template<size_t D, class Real> requires (D == 1u) &&std::same_as<Real, double>
+        template<size_t D, class Real, class Complex> requires (D == 1u) &&std::same_as<Real, double>
 
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            return fftw_plan_dft_1d(in.size(), unwrap<false>(in), unwrap<false>(out), direction, flags);
+            return fftw_plan_dft_1d(in.size(), unwrap<false, Real, Complex>(in), unwrap<false, Real, Complex>(out),
+                                    direction, flags);
         }
 
-        template<size_t D, class Real> requires (D == 2u) &&std::same_as<Real, double>
+        template<size_t D, class Real, class Complex> requires (D == 2u) &&std::same_as<Real, double>
 
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
             // TODO for layout left this is different
-            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<false, Real>(in), unwrap<false, Real>(out),
+            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<false, Real, Complex>(in),
+                                    unwrap<false, Real, Complex>(out),
                                     direction, flags);
         }
     }
@@ -166,14 +168,14 @@ namespace fftw {
     template<typename BufferIn, typename BufferOut>
     requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
     void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) {
-        fftw_execute_dft(plan, detail::unwrap<false>(in), detail::unwrap<false>(out));
+        fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
     requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
     void basic_plan<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
-        fftw_execute_dft(plan, detail::unwrap<false, Real>(in), detail::unwrap<false, Real>(out));
+        fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
     template<size_t D, class Real, class Complex>
@@ -186,7 +188,7 @@ namespace fftw {
             throw std::invalid_argument("invalid direction");
 
         basic_plan plan1;
-        plan1.plan = detail::template plan_dft<D, Real>(in, out, direction, flags);
+        plan1.plan = detail::template plan_dft<D, Real, Complex>(in, out, direction, flags);
         return plan1;
     }
 
@@ -200,7 +202,7 @@ namespace fftw {
             throw std::invalid_argument("invalid direction");
 
         basic_plan plan1;
-        plan1.plan = detail::template plan_dft<D, Real>(in, out, direction, flags);
+        plan1.plan = detail::template plan_dft<D, Real, Complex>(in, out, direction, flags);
         return plan1;
     }
 
