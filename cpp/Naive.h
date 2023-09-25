@@ -7,6 +7,12 @@
 #include <fftw-cpp/fftw-cpp.h>
 #include <type_traits>
 
+#define _ln1(x) #x
+#define _ln2(x) _ln1(x)
+#define debug(name, var) print(__FILE__ ":" _ln2(__LINE__) " " name, var)
+#define debug2(var) debug(#var, (var))
+#define debugXY(var) debug2((var).DX); debug2((var).DY)
+
 namespace ahr {
     namespace stdex = std::experimental;
 
@@ -29,7 +35,7 @@ namespace ahr {
 
     private:
         template<size_t D, bool IsReal>
-        using buf_left = fftw::basic_mdbuffer<double, stdex::dextents<std::size_t, D>, std::complex<double>, stdex::layout_left, IsReal>;
+        using buf_left = fftw::basic_mdbuffer<Real, stdex::dextents<std::size_t, D>, Complex, stdex::layout_left, IsReal>;
     public:
         using Buf3D_K = buf_left<3u, false>;
         using Buf2D_K = buf_left<2u, false>;
@@ -48,7 +54,7 @@ namespace ahr {
         static constexpr Dim N_E = 0;
         static constexpr Dim A_PAR = 1;
         static constexpr Dim G_MIN = 2;
-        const Dim LAST = M - 1;
+        const Dim LAST = M - 1; ///< This is equivalent to ngtot in Viriato
 
         template<class Buffer>
         struct DxDy {
@@ -231,12 +237,13 @@ namespace ahr {
                 omegaKaw = std::sqrt(1.0 + kperpDum2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS))
                            * ky_(KY / 2) * bPerpMax / (1.0 + kperpDum2 * de * de);
             else
-                omegaKaw = std::sqrt(kperpDum2 * (rhoS*rhoS - rhoI*rhoI / (Gamma0(0.5*kperpDum2*rhoI*rhoI)-1.0))) *
-                    ky_(KY/2+1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
+                omegaKaw = std::sqrt(
+                        kperpDum2 * (rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kperpDum2 * rhoI * rhoI) - 1.0))) *
+                           ky_(KY / 2 + 1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
 
-            Real dx = lx / Real(KX), dy = ly / Real(KY);
+            Real dx = lx / Real(X), dy = ly / Real(Y);
             Real CFLFlow = std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
-                                     std::min(dx / bxMax, dy / byMax) / rhoS / de / std::sqrt(M - 1)});
+                                     std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
 
             // DEBUG
             std::cout << "CFLFlow: " << CFLFlow << std::endl;

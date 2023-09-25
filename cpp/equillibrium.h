@@ -1,6 +1,7 @@
 #pragma once
 
 #include "constants.h"
+#include "Naive.h"
 #include <experimental/mdarray>
 #include <utility>
 
@@ -18,7 +19,7 @@ namespace ahr {
 
 
     auto equilibriumGauss(Dim X, Dim Y) {
-        fftw::rmdbuffer<2u> aParEq{X, Y}, phiEq{X, Y};
+        Naive::Buf2D aParEq{X, Y}, phiEq{X, Y};
 
         for (int x = 0; x < X; ++x) {
             for (int y = 0; y < Y; ++y) {
@@ -33,7 +34,7 @@ namespace ahr {
     }
 
     auto equilibriumOT01(Dim X, Dim Y) {
-        fftw::rmdbuffer<2u> aParEq{X, Y}, phiEq{X, Y};
+        Naive::Buf2D aParEq{X, Y}, phiEq{X, Y};
 
         for (int x = 0; x < X; ++x) {
             for (int y = 0; y < Y; ++y) {
