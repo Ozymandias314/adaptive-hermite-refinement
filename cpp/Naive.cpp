@@ -37,14 +37,8 @@ namespace ahr {
         // Initialize equilibrium values
         auto [aParEq, phi] = equilibriumOT01(X, Y);
 
-        debug2(aParEq.to_mdspan());
-        debug2(phi.to_mdspan());
-
         fft(phi.to_mdspan(), phi_K.to_mdspan());
         fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());
-
-        debug2(aParEq_K);
-        debug2(phi_K);
 
         // Transform moments into phase space
         for (int m = G_MIN; m < M; ++m) {
@@ -60,8 +54,6 @@ namespace ahr {
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
 
-        debug2(sliceXY(moments_K, N_E));
-        debug2(sliceXY(moments_K, A_PAR));
     }
 
     void Naive::run() {
@@ -119,7 +111,7 @@ namespace ahr {
 
             // Compute G_{M-1}
             auto bracketPhiGLast_K = halfBracket(dPhi, sliceXY(dGM, LAST));
-            auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));           
+            auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
             for_each_kxky([&](Dim kx, Dim ky) {
                 bracketAParGLast_K(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
                 bracketAParGLast_K(kx, ky) += rhoS / de * std::sqrt(LAST) * moments_K(kx, ky, LAST - 1);
@@ -129,7 +121,7 @@ namespace ahr {
             DxDy<Buf2D> dBrLast{X, Y};
             derivatives(bracketAParGLast_K, dBrLast);
             auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
-            
+
             for_each_kxky([&](Dim kx, Dim ky) {
                 GM_Nonlinear_K(kx, ky, N_E) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
                 GM_K_Star(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
@@ -246,7 +238,6 @@ namespace ahr {
 
                     sumAParRelError += std::norm(momentsNew_K(kx, ky, A_PAR) - moments_K(kx, ky, A_PAR));
                 });
-
 
                 old_error = relative_error;
                 relative_error = 0;
@@ -367,7 +358,7 @@ namespace ahr {
                     guessAPar_K(kx, ky) = momentsNew_K(kx, ky, A_PAR);
                 });
             }
-            debug2(sliceXY(momentsNew_K, A_PAR));
+            // debug2(sliceXY(momentsNew_K, A_PAR));
             std::cout << "relative_error: " << relative_error << std:: endl;
             std::cout << "old_error: " << old_error << std:: endl;
             if (divergent) continue;
