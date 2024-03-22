@@ -119,7 +119,7 @@ namespace ahr {
 
             // Compute G_{M-1}
             auto bracketPhiGLast_K = halfBracket(dPhi, sliceXY(dGM, LAST));
-            auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
+            auto bracketAParGLast_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));           
             for_each_kxky([&](Dim kx, Dim ky) {
                 bracketAParGLast_K(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
                 bracketAParGLast_K(kx, ky) += rhoS / de * std::sqrt(LAST) * moments_K(kx, ky, LAST - 1);
@@ -129,7 +129,7 @@ namespace ahr {
             DxDy<Buf2D> dBrLast{X, Y};
             derivatives(bracketAParGLast_K, dBrLast);
             auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
-
+            
             for_each_kxky([&](Dim kx, Dim ky) {
                 GM_Nonlinear_K(kx, ky, N_E) = nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
                 GM_K_Star(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
@@ -157,7 +157,7 @@ namespace ahr {
             });
 
             DxDy<Buf2D> dGMinusPlus{X, Y};
-            for (Dim m = 3; m < LAST; ++m) {
+            for (Dim m = G_MIN+1; m < LAST; ++m) {
                 for_each_xy([&](Dim x, Dim y) {
                     dGMinusPlus.DX(x, y) = std::sqrt(m) * dGM.DX(x, y, m - 1) + std::sqrt(m + 1) * dGM.DX(x, y, m + 1);
                     dGMinusPlus.DY(x, y) = std::sqrt(m) * dGM.DY(x, y, m - 1) + std::sqrt(m + 1) * dGM.DY(x, y, m + 1);
@@ -176,7 +176,6 @@ namespace ahr {
                 });
             }
 
-            debug2(sliceXY(GM_K_Star, A_PAR));
             // corrector step
 
             // Phi, Nabla, and other prep for A bracket
@@ -248,9 +247,6 @@ namespace ahr {
                     sumAParRelError += std::norm(momentsNew_K(kx, ky, A_PAR) - moments_K(kx, ky, A_PAR));
                 });
 
-                debug2(sliceXY(momentsNew_K, A_PAR));
-                debug2(guessAPar_K);
-                debug2(semiImplicitOperator);
 
                 old_error = relative_error;
                 relative_error = 0;
@@ -349,8 +345,10 @@ namespace ahr {
                 });
                 DerivateNewMoment(LAST);
 
-                if (relative_error <= epsilon) break;
-
+                if (relative_error <= epsilon){
+                    std::cout << "relative error small:" << relative_error << std::endl;
+                    break;
+                }
                 if (p != 0 and relative_error / old_error > 1.0) {
                     divergent = true;
                     divergentCount++;
