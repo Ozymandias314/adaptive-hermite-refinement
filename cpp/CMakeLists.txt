@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-set(CMAKE_SYSTEM_PROCESSOR arm64-apple-darwin)
+set(CMAKE_SYSTEM_PROCESSOR arm64-apple-darwin) # TODO: not for everything
 project(adaptive_hermite_refinement)
 
 set(CMAKE_CXX_STANDARD 20)
