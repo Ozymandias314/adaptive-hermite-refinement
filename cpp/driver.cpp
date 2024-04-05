@@ -32,6 +32,11 @@ int main(int argc, const char *argv[]) {
             .scan<'i', Dim>()
             .default_value(Dim{20});
 
+    arguments.add_argument("save-interval")
+            .help("How often the code should write out the results")
+            .scan<'i', Dim>()
+            .default_value(Dim{1000});
+
     try {
         arguments.parse_args(argc, argv);
         if (arguments.get<Dim>("M") < 4) throw std::invalid_argument("At least 4 moments required");
@@ -44,13 +49,14 @@ int main(int argc, const char *argv[]) {
 
     auto X = arguments.get<Dim>("X"),
             M = arguments.get<Dim>("M"),
-            nr = arguments.get<Dim>("nr");
+            nr = arguments.get<Dim>("nr"),
+            saveInterval = arguments.get<Dim>("save-interval");
 
     Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
     runner.init(nr);
-    runner.run();
+    runner.run(saveInterval);
     auto aPar = runner.getFinalAPar();
 
     for (int x = 0; x < X; ++x) {
