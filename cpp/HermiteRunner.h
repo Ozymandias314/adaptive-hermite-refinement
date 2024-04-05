@@ -17,12 +17,10 @@ namespace ahr {
 
         /**
          * init prepares the hermite simulation.
-         * @param initialMoments the initial values of the moments. The dimensions of this value also encode the
-         * dimensions (M, X, Y, in this order) of the simulation.
          * @param N the number of timesteps.
-         * @param initialDT The starting integration timestep.
          */
-        virtual void init(mdspan<Real, dextents<Dim, 3u>> initialMoments, Dim N, Real initialDT) = 0;
+        virtual void
+        init(Dim N) = 0;
 
         /**
          * run() will simulate Hermite moments for N timesteps.
@@ -32,9 +30,9 @@ namespace ahr {
 
         /**
          *
-         * @return Final values of the moments.
+         * @return Final values of APar.
          */
-        virtual mdarray<Real, dextents<Dim, 3u>> getFinalValues() = 0;
+        virtual mdarray<Real, dextents<Dim, 2u>> getFinalAPar() = 0;
 
 
     protected:

@@ -6,6 +6,8 @@
 #include <argparse/argparse.hpp>
 #include <experimental/mdspan>
 #include <iostream>
+#include <fstream>
+#include <optional>
 
 // TODO
 using namespace ahr;
@@ -15,13 +17,13 @@ int main(int argc, const char *argv[]) {
 
     argparse::ArgumentParser arguments("ahr");
 
-    arguments.add_argument("K")
-            .help("Size of Ky, Kx for domain")
+    arguments.add_argument("X")
+            .help("Size of X, Y for domain")
             .scan<'i', Dim>()
             .default_value(Dim{256});
 
     arguments.add_argument("M")
-            .help("Number of moments")
+            .help("Total number of moments")
             .scan<'i', Dim>()
             .default_value(Dim{100});
 
@@ -30,9 +32,9 @@ int main(int argc, const char *argv[]) {
             .scan<'i', Dim>()
             .default_value(Dim{20});
 
-
     try {
         arguments.parse_args(argc, argv);
+        if (arguments.get<Dim>("M") < 4) throw std::invalid_argument("At least 4 moments required");
     }
     catch (const std::runtime_error &err) {
         std::cerr << err.what() << std::endl;
@@ -40,16 +42,21 @@ int main(int argc, const char *argv[]) {
         return 1;
     }
 
-    auto K = arguments.get<Dim>("K"),
+    auto X = arguments.get<Dim>("X"),
             M = arguments.get<Dim>("M"),
             nr = arguments.get<Dim>("nr");
 
-
-    Naive naive{std::cout};
+    Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
-    // TODO
-    naive.init({}, nr, 0.01);
-    naive.run();
-    auto moments = naive.getFinalValues();
+    runner.init(nr);
+    runner.run();
+    auto aPar = runner.getFinalAPar();
+
+    for (int x = 0; x < X; ++x) {
+        for (int y = 0; y < X; ++y) {
+            std::cout << aPar(x, y) << " ";
+        }
+        std::cout << std::endl;
+    }
 }

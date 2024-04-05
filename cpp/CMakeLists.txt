@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
+set(CMAKE_SYSTEM_PROCESSOR arm64-apple-darwin) # TODO: not for everything
 project(adaptive_hermite_refinement)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -16,23 +17,28 @@ FetchContent_MakeAvailable(argparse)
 FetchContent_Declare(
         mdspan
         GIT_REPOSITORY https://github.com/kokkos/mdspan.git
-        GIT_TAG        9ceface91483775a6c74d06ebf717bbb2768452f
+        GIT_TAG 9ceface91483775a6c74d06ebf717bbb2768452f
 )
 FetchContent_MakeAvailable(mdspan)
 
 # ==========================
 # Project code
 # ==========================
+enable_testing()
 add_subdirectory(fftw-cpp)
 target_link_libraries(fftw-cpp INTERFACE mdspan)
 
-add_compile_options("-mavx512f" "-march=native" "-fopencilk" "-ffast-math")
+option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off for the sake of Valgrind)" ON)
+if (ENABLE_AVX512)
+    add_compile_options("-mavx512f" "-march=native" "-ffast-math")
+endif ()
+add_compile_options("-fopencilk")
 add_link_options("-fopencilk")
 
 option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
-if(CILK_STUB)
+if (CILK_STUB)
     add_compile_definitions(CILK_STUB)
-endif()
+endif ()
 
 add_executable(adaptive_hermite_refinement test-triangle.cpp)
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)

@@ -1,2 +1,6 @@
 **/*.jld2
 **/*.log
+*.jld2
+build
+.vscode
+.DS_Store
