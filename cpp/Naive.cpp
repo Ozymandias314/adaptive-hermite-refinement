@@ -248,7 +248,7 @@ namespace ahr {
                 });
 
                 std::cout << "relative_error:" << relative_error << std::endl;
-                // TODO bail if relative error is large
+                // TODO(OPT) bail if relative error is large
 
                 DerivateNewMoment(A_PAR);
                 auto bracketPhiNE_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, N_E));
@@ -316,8 +316,8 @@ namespace ahr {
                 auto bracketAParGLast_K_Loop = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
                 for_each_kxky([&](Dim kx, Dim ky) {
                     bracketAParGLast_K_Loop(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
-                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(LAST) * momentsNew_K(kx, ky, LAST - 1);
-                    // TODO Viriato adds this after the derivative
+                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(M) * momentsNew_K(kx, ky, LAST - 1);
+                    // Note: Viriato adds this after derivative, but can be distributed
                 });
 
                 DxDy<Buf2D> dBrLast_Loop{X, Y};
