@@ -29,7 +29,7 @@ namespace ahr {
 
         void init(Dim N_) override;
 
-        void run() override;
+        void run(Dim saveInterval) override;
 
         mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 

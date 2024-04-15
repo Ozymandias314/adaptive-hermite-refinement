@@ -56,7 +56,7 @@ namespace ahr {
 
     }
 
-    void Naive::run() {
+    void Naive::run(Dim saveInterval) {
         // store all derivatives
         DxDy<Buf3D> dGM{X, Y, M};
         DxDy<Buf2D> dPhi{X, Y}, dUEKPar{X, Y};
