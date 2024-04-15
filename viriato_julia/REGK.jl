@@ -7,6 +7,7 @@ include("aux.jl")
 include("diag.jl")
 include("functions.jl")
 include("initialize.jl")
+include("diagnostics.jl") # Right now this just calculates energy
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
@@ -90,7 +91,7 @@ phi = phi_eq
 file_string_apar = "apar_initial.jld2"
 file_string_ne = "ne_initial.jld2"
 # Save Apar, ne in real space
-save_object(file_string_apar,apar)
+#save_object(file_string_apar,apar)
 
 
 if debugging
@@ -613,18 +614,23 @@ while t <= tmax
     end
     #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
+    if t%save_energyfiles == 0
+        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+        println("Magnetic energy ",b_energy_tot)
+        println("Kinetic energy ",phine_energy_tot)
+    end
     if t%save_datafiles == 0
-    file_string_apar = "apar_"*string(t)*".jld2"
-    #file_string_ne = "ne_"*string(t)*".jld2"
-    # Save Apar, ne in real space
-    apar = FFT2d_inv(akpar)
-    #ne = FFT2d_inv(nek)
-    save_object(file_string_apar,apar)
-    #save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t, " savetime= ",savetime)
-    # println("relative_error ", relative_error) 
-    # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
-    # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
+        file_string_apar = "apar_"*string(t)*".jld2"
+        #file_string_ne = "ne_"*string(t)*".jld2"
+        # Save Apar, ne in real space
+        apar = FFT2d_inv(akpar)
+        #ne = FFT2d_inv(nek)
+        save_object(file_string_apar,apar)
+        #save_object(file_string_ne,ne)
+        println("Saved data for timestep = ",t, " savetime= ",savetime)
+        # println("relative_error ", relative_error) 
+        # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
+        # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
     end
 
 
