@@ -68,15 +68,15 @@ namespace fftw {
         void swap(basic_plan &other) noexcept;
 
         /// Executes the plan with the buffers provided initially.
-        void operator()();
+        void operator()() const;
 
         template<typename BufferIn, typename BufferOut>
         requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
-        void operator()(BufferIn &in, BufferOut &out);
+        void operator()(BufferIn &in, BufferOut &out) const;
 
         template<typename ViewIn, typename ViewOut>
         requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
-        void operator()(ViewIn in, ViewOut out);
+        void operator()(ViewIn in, ViewOut out) const;
 
         /// Returns the underlying FFTW plan.
         detail::fftw_plan_t<Real> unwrap() { return plan; }
@@ -117,7 +117,7 @@ namespace fftw {
     }
 
     template<size_t D, class Real, class Complex>
-    void basic_plan<D, Real, Complex>::operator()() {
+    void basic_plan<D, Real, Complex>::operator()() const {
         fftw_execute(plan);
     }
 
@@ -167,14 +167,14 @@ namespace fftw {
     template<size_t D, class Real, class Complex>
     template<typename BufferIn, typename BufferOut>
     requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
-    void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) {
+    void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) const {
         fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
     requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
-    void basic_plan<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
+    void basic_plan<D, Real, Complex>::operator()(ViewIn in, ViewOut out) const {
         fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
@@ -229,10 +229,10 @@ namespace fftw {
         void swap(basic_plan_r2c &other) noexcept;
 
         /// Executes the plan with the buffers provided initially.
-        void operator()();
+        void operator()() const;
 
         template<typename ViewIn, typename ViewOut>
-        void operator()(ViewIn view1, ViewOut out);
+        void operator()(ViewIn in, ViewOut out) const;
 
         /// Returns the underlying FFTW plan.
         detail::fftw_plan_t<Real> unwrap() { return plan; }
@@ -263,10 +263,10 @@ namespace fftw {
         void swap(basic_plan_c2r &other) noexcept;
 
         /// Executes the plan with the buffers provided initially.
-        void operator()();
+        void operator()() const;
 
         template<typename ViewIn, typename ViewOut>
-        void operator()(ViewIn view1, ViewOut out);
+        void operator()(ViewIn in, ViewOut out) const;
 
         /// Returns the underlying FFTW plan.
         detail::fftw_plan_t<Real> unwrap() { return plan; }
@@ -302,13 +302,13 @@ namespace fftw {
     }
 
     template<size_t D, class Real, class Complex>
-    void basic_plan_r2c<D, Real, Complex>::operator()() {
+    void basic_plan_r2c<D, Real, Complex>::operator()() const {
         fftw_execute(plan);
     }
 
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
-    void basic_plan_r2c<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
+    void basic_plan_r2c<D, Real, Complex>::operator()(ViewIn in, ViewOut out) const {
         fftw_execute_dft_r2c(plan, detail::unwrap<true, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
 
@@ -335,13 +335,13 @@ namespace fftw {
     }
 
     template<size_t D, class Real, class Complex>
-    void basic_plan_c2r<D, Real, Complex>::operator()() {
+    void basic_plan_c2r<D, Real, Complex>::operator()() const {
         fftw_execute(plan);
     }
 
     template<size_t D, class Real, class Complex>
     template<typename ViewIn, typename ViewOut>
-    void basic_plan_c2r<D, Real, Complex>::operator()(ViewIn in, ViewOut out) {
+    void basic_plan_c2r<D, Real, Complex>::operator()(ViewIn in, ViewOut out) const {
         fftw_execute_dft_c2r(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<true, Real, Complex>(out));
     }
 
