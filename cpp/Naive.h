@@ -101,7 +101,7 @@ namespace ahr {
         Buf2D_K ueKPar_K{KX, KY}, ueKPar_K_New{KX, KY};
         /// @}
 
-        void for_each_xy(std::invocable<Dim, Dim> auto fun) {
+        void for_each_xy(std::invocable<Dim, Dim> auto fun) const {
             for (Dim x = 0; x < X; ++x) {
                 for (Dim y = 0; y < Y; ++y) {
                     fun(x, y);
@@ -110,7 +110,7 @@ namespace ahr {
         }
 
         /// Iterate in phase space, will later be changed to account for phase space dims
-        void for_each_kxky(std::invocable<Dim, Dim> auto fun) {
+        void for_each_kxky(std::invocable<Dim, Dim> auto fun) const {
             for (Dim kx = 0; kx < KX; ++kx) {
                 for (Dim ky = 0; ky < KY; ++ky) {
                     fun(kx, ky);
