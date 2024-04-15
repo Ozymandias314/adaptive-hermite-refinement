@@ -1,6 +1,8 @@
 #include "Naive.h"
 #include "equillibrium.h"
 
+#include <cnpy.h>
+#include <cstdlib>
 #include <utility>
 
 namespace {
@@ -67,6 +69,22 @@ namespace ahr {
         HyperCoefficients hyper{};
 
         for (int t = 0; t < N; ++t) {
+            if (t % saveInterval == 0) {
+                std::cout << "Saving for timestep: " << t << std::endl;
+
+                std::ostringstream oss;
+                oss << "a_par_t" << t << ".npy";
+                exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
+
+                oss.str("");
+                oss << "phi_t" << t << ".npy";
+                exportToNpy(oss.str(), phi_K);
+
+                oss.str("");
+                oss << "uekpar_t" << t << ".npy";
+                exportToNpy(oss.str(), ueKPar_K);
+            }
+
             // predictor step
             derivatives(phi_K, dPhi);
             derivatives(ueKPar_K, dUEKPar);
@@ -430,5 +448,25 @@ namespace ahr {
 
         br_K(0, 0) = 0;
         return br_K;
+    }
+
+    void Naive::exportToNpy(std::string path, ahr::Naive::ViewXY view) const {
+        // Coordinates are flipped because we use layout_left
+        cnpy::npy_save(std::move(path), view.data_handle(), {Y, X}, "w");
+    }
+
+    void Naive::exportToNpy(std::string path, ahr::Naive::CViewXY view) const {
+        Buf2D temp{X, Y};
+        fftInv(view, temp.to_mdspan());
+        normalize(temp.to_mdspan(), temp.to_mdspan());
+
+        exportToNpy(std::move(path), temp.to_mdspan());
+    }
+
+    void Naive::normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const {
+        for_each_xy([&](Dim x, Dim y) {
+            viewOut(x, y) = view(x, y) / double(X) / double(Y);
+        });
+
     }
 }

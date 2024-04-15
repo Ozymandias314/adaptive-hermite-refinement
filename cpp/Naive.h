@@ -279,5 +279,13 @@ namespace ahr {
         }
 
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
+
+        void exportToNpy(std::string path, ViewXY view) const;
+
+        // Will also normalize and inverseFFT
+        void exportToNpy(std::string path, CViewXY view) const;
+
+        // If view = viewOut, then we're normalizing in place.
+        void normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const;
     };
 };
