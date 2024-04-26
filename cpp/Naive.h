@@ -218,8 +218,6 @@ namespace ahr {
             b.DX = dAPar.DY;
             b.DY = dAPar.DX;
 
-            debug("dxapar", dAPar.DX);
-            debug("dyapar", dAPar.DY);
             for_each_xy([&](Dim x, Dim y) {
                 bxMax = std::max(bxMax, std::abs(b.DX(x, y)));
                 byMax = std::max(byMax, std::abs(b.DY(x, y)));

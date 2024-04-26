@@ -65,24 +65,29 @@ namespace ahr {
 
         bool divergent = false, repeat = false, noInc = false;
         int divergentCount = 0, repeatCount = 0;
-        Real dt{0};
+        Real dt{-1};
         HyperCoefficients hyper{};
 
-        for (int t = 0; t < N; ++t) {
+        bool saved = false;
+        // Manually increment t only if not diverging
+        for (int t = 0; t < N;) {
             if (t % saveInterval == 0) {
-                std::cout << "Saving for timestep: " << t << std::endl;
+                if (!saved) {
+                    std::cout << "Saving for timestep: " << t << std::endl;
+                    saved = true;
 
-                std::ostringstream oss;
-                oss << "a_par_t" << t << ".npy";
-                exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
+                    std::ostringstream oss;
+                    oss << "a_par_t" << t << ".npy";
+                    exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
 
-                oss.str("");
-                oss << "phi_t" << t << ".npy";
-                exportToNpy(oss.str(), phi_K);
+                    oss.str("");
+                    oss << "phi_t" << t << ".npy";
+                    exportToNpy(oss.str(), phi_K);
 
-                oss.str("");
-                oss << "uekpar_t" << t << ".npy";
-                exportToNpy(oss.str(), ueKPar_K);
+                    oss.str("");
+                    oss << "uekpar_t" << t << ".npy";
+                    exportToNpy(oss.str(), ueKPar_K);
+                }
             }
 
             // predictor step
@@ -93,10 +98,10 @@ namespace ahr {
             }
 
             if (repeat or divergent) {
-                //t--; // repeat previous timestep
-                // TODO once not diverging excessively
-            } else {
-                // TODO only necessary the first time through. We already get dt at the end of the loop.
+                std::cout << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
+                repeat = false;
+                divergent = false;
+            } else if(dt == -1) {
                 dt = getTimestep(dPhi, sliceXY(dGM, N_E), sliceXY(dGM, A_PAR));
                 hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             }
@@ -359,6 +364,7 @@ namespace ahr {
                     break;
                 }
                 if (p != 0 and relative_error / old_error > 1.0) {
+                    std::cout << "diverging!" << std::endl;
                     divergent = true;
                     divergentCount++;
                     dt = low * dt;
@@ -366,6 +372,7 @@ namespace ahr {
                 }
                 if (p == MaxP) {
                     // did not converge well enough
+                    std::cout << "repeating!" << std::endl;
                     repeat = true;
                     repeatCount++;
                     dt = low * dt;
@@ -376,18 +383,21 @@ namespace ahr {
                     guessAPar_K(kx, ky) = momentsNew_K(kx, ky, A_PAR);
                 });
             }
-            // debug2(sliceXY(momentsNew_K, A_PAR));
-            std::cout << "relative_error: " << relative_error << std:: endl;
-            std::cout << "old_error: " << old_error << std:: endl;
+
             if (divergent) continue;
             if (repeat) {
                 noInc = true;
                 continue;
             }
 
+            // Update timestep
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
+            hyper = HyperCoefficients::calculate(dt, KX, KY, M);
+            t++;
+            std::cout << "Moving on to next timestep: " << t << std::endl;
             noInc = false;
+            saved = false;
 
             // New values are now old. Old values will be overwritten in the next timestep.
             std::swap(moments_K, momentsNew_K);
@@ -395,8 +405,8 @@ namespace ahr {
             std::swap(ueKPar_K, ueKPar_K_New);
         }
 
-        std::cout << "repeat: " << repeatCount << std::endl <<
-                  "divergent: " << divergentCount << std::endl;
+        std::cout << "repeat count: " << repeatCount << std::endl <<
+                  "divergent count: " << divergentCount << std::endl;
     }
 
     Real Naive::updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const {
