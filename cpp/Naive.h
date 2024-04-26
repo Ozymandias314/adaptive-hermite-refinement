@@ -285,5 +285,7 @@ namespace ahr {
 
         // If view = viewOut, then we're normalizing in place.
         void normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const;
+
+        void exportTimestep(Dim t);
     };
 };

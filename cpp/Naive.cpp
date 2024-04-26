@@ -70,23 +70,12 @@ namespace ahr {
 
         bool saved = false;
         // Manually increment t only if not diverging
-        for (int t = 0; t < N;) {
+        for (Dim t = 0; t < N;) {
             if (t % saveInterval == 0) {
                 if (!saved) {
                     std::cout << "Saving for timestep: " << t << std::endl;
                     saved = true;
-
-                    std::ostringstream oss;
-                    oss << "a_par_t" << t << ".npy";
-                    exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
-
-                    oss.str("");
-                    oss << "phi_t" << t << ".npy";
-                    exportToNpy(oss.str(), phi_K);
-
-                    oss.str("");
-                    oss << "uekpar_t" << t << ".npy";
-                    exportToNpy(oss.str(), ueKPar_K);
+                    exportTimestep(t);
                 }
             }
 
@@ -407,6 +396,21 @@ namespace ahr {
 
         std::cout << "repeat count: " << repeatCount << std::endl <<
                   "divergent count: " << divergentCount << std::endl;
+        exportTimestep(N);
+    }
+
+    void Naive::exportTimestep(Dim t) {
+        std::ostringstream oss;
+        oss << "a_par_t" << t << ".npy";
+        exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
+
+        oss.str("");
+        oss << "phi_t" << t << ".npy";
+        exportToNpy(oss.str(), phi_K);
+
+        oss.str("");
+        oss << "uekpar_t" << t << ".npy";
+        exportToNpy(oss.str(), ueKPar_K);
     }
 
     Real Naive::updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const {
