@@ -385,6 +385,8 @@ namespace ahr {
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             t++;
             std::cout << "Moving on to next timestep: " << t << std::endl;
+            auto [magnetic, kinetic] = calculateEnergies();
+            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
             noInc = false;
             saved = false;
 
@@ -482,5 +484,20 @@ namespace ahr {
             viewOut(x, y) = view(x, y) / double(X) / double(Y);
         });
 
+    }
+
+    std::pair<Real, Real> Naive::calculateEnergies() const {
+        Real magnetic = 0, kinetic = 0;
+        for_each_kxky([&](Dim kx, Dim ky) {
+            magnetic += kPerp2(kx, ky) * std::norm(momentsNew_K(kx, ky, A_PAR));
+            if (rhoI < smallRhoI) {
+                kinetic += kPerp2(kx, ky) * std::norm(phi_K_New(kx, ky));
+            } else {
+                kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
+                           std::norm(phi_K(kx, ky));
+            }
+        });
+
+        return {magnetic, kinetic};
     }
 }

@@ -276,6 +276,9 @@ namespace ahr {
             print(name, view.to_mdspan());
         }
 
+        // Returns magnetic, kinetic energies
+        std::pair<Real, Real> calculateEnergies() const;
+
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
 
         void exportToNpy(std::string path, ViewXY view) const;
