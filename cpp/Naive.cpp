@@ -425,8 +425,10 @@ namespace ahr {
 
     mdarray<Real, dextents<Dim, 2u>> Naive::getFinalAPar() {
         Buf2D buf{X, Y};
+        // This actually wrecks A_PAR, but we don't need it anymore
         fftInv(sliceXY(moments_K, A_PAR), buf.to_mdspan());
 
+        // Write to a layout_right array and normalize
         mdarray<Real, dextents<Dim, 2u>> result{X, Y};
         for_each_xy([&](Dim x, Dim y) {
             result(x, y) = buf(x, y) / double(X) / double(Y);
@@ -472,8 +474,15 @@ namespace ahr {
     }
 
     void Naive::exportToNpy(std::string path, ahr::Naive::CViewXY view) const {
+        // fft overwrites the input, so we need to copy it to a temporary buffer
+        Buf2D_K tempK{KX, KY};
         Buf2D temp{X, Y};
-        fftInv(view, temp.to_mdspan());
+
+        for_each_kxky([&](Dim kx, Dim ky) {
+            tempK(kx, ky) = view(kx, ky);
+        });
+
+        fftInv(tempK.to_mdspan(), temp.to_mdspan());
         normalize(temp.to_mdspan(), temp.to_mdspan());
 
         exportToNpy(std::move(path), temp.to_mdspan());
