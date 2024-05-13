@@ -379,14 +379,15 @@ namespace ahr {
                 continue;
             }
 
+            auto [magnetic, kinetic] = calculateEnergies();
+            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
+
             // Update timestep
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             t++;
             std::cout << "Moving on to next timestep: " << t << std::endl;
-            auto [magnetic, kinetic] = calculateEnergies();
-            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
             noInc = false;
             saved = false;
 

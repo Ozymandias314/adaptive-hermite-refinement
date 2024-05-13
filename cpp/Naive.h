@@ -79,15 +79,13 @@ namespace ahr {
 
 
         /// \defgroup Buffers for all the physical quantities used.
-        /// Names ending in PH mean the values are in phase space.
+        /// Names ending in K mean the values are in phase space.
         /// @{
 
         /// g_m: moment values for moments $m \in [0,M-1]$.
         /// The following values are special moments:
         /// - m=0: n_e (charge density)
         /// - m=1: A∥ (or Apar, parallel velocity)
-        /// Additionally, moments is used only at the start and end.
-        /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
         Buf3D_K moments_K{KX, KY, M}, momentsNew_K{KX, KY, M};
 
@@ -251,7 +249,7 @@ namespace ahr {
             std::cout << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
             std::cout << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
             std::cout << "CFLFlow: " << CFLFlow << std::endl;
-            std::cout << "dt: " << CFLFlow * CFLFrac << std::endl;
+            std::cout << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
 
             return CFLFrac * CFLFlow;
         }
