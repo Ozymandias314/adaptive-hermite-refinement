@@ -170,6 +170,7 @@ bperp_max = maximum(bperp)
 omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
 # Calculate CFL fraction/timestep
+# TODO Viriato has terms with dz here, which I'm not sure are actually zero. Make sure!
 if g_inc
     CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
     (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
@@ -258,7 +259,8 @@ while t <= tmax
             
             #\mathcal{N}
             fne_old, bracket_akpar_uekpar = func_ne(dxphi,dyphi,dxne,dyne,dxapar,dyapar,dxuepar,dyuepar)
-            
+            # "old" values are calculated from the previous timestep. These values, dxphi,dyphi, etc are only updated after succesful timestep
+
             if g_inc
                 # \mathcal{A}
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
@@ -290,14 +292,14 @@ while t <= tmax
 
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
-    # Start Predictor ("star") step
+    # Start Predictor ("star") step. Star values are the update from the predictor step, calculated based on the previous timestep. 
 
     if debugging
         print("Starting predictor step \n")
     end
 
     guess = deepcopy(akpar)
-    
+
     for i = 1:nkx
         for j = 1:nky
             nek_star[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j]
@@ -308,7 +310,6 @@ while t <= tmax
             uekpar_star[i,j] = -kperp(i,j)^2*akpar_star[i,j]
         end
     end
-    
     if g_inc
         # Get first and last g
         for i = 1:nkx
@@ -521,7 +522,7 @@ while t <= tmax
             repeat= true
             break # exit p loop
         end
-        guess = deepcopy(akpar_new)
+        guess = deepcopy(akpar_new) # guess only updated if error is low enough from this iteration. 
     end # end of p loop
 
     if debugging
@@ -529,13 +530,13 @@ while t <= tmax
     end
 
     if divergent
-        t += 1
+        #t += 1
         continue # go to next time loop iteration with divergent = true
     end
     
     if repeat
         noinc = true # Tells the timestep update if the timestep is allowed to increase
-        t += 1
+        #t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
 
@@ -606,6 +607,11 @@ while t <= tmax
         print("End of timeloop, moving to next iteration \n")
         print("Timestep ", t, "\n")
     end
+
+    println("")
+    println("dti is ",dti)
+    println("savetime is ", savetime)
+    println("")
 
 
     if debugging
