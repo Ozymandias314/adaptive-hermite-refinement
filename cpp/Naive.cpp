@@ -504,7 +504,7 @@ namespace ahr {
                 kinetic += kPerp2(kx, ky) * std::norm(phi_K_New(kx, ky));
             } else {
                 kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
-                           std::norm(phi_K(kx, ky));
+                           std::norm(phi_K_New(kx, ky));
             }
         });
 
