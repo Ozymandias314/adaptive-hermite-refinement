@@ -29,7 +29,7 @@ namespace ahr {
 
         void init(Dim N_) override;
 
-        void run() override;
+        void run(Dim saveInterval) override;
 
         mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 
@@ -79,15 +79,13 @@ namespace ahr {
 
 
         /// \defgroup Buffers for all the physical quantities used.
-        /// Names ending in PH mean the values are in phase space.
+        /// Names ending in K mean the values are in phase space.
         /// @{
 
         /// g_m: moment values for moments $m \in [0,M-1]$.
         /// The following values are special moments:
         /// - m=0: n_e (charge density)
         /// - m=1: A∥ (or Apar, parallel velocity)
-        /// Additionally, moments is used only at the start and end.
-        /// During the simulation, we use moments
         /// TODO maybe instead of these enormous amounts of memory, we could reuse (parallelism might suffer)
         Buf3D_K moments_K{KX, KY, M}, momentsNew_K{KX, KY, M};
 
@@ -101,7 +99,7 @@ namespace ahr {
         Buf2D_K ueKPar_K{KX, KY}, ueKPar_K_New{KX, KY};
         /// @}
 
-        void for_each_xy(std::invocable<Dim, Dim> auto fun) {
+        void for_each_xy(std::invocable<Dim, Dim> auto fun) const {
             for (Dim x = 0; x < X; ++x) {
                 for (Dim y = 0; y < Y; ++y) {
                     fun(x, y);
@@ -110,7 +108,7 @@ namespace ahr {
         }
 
         /// Iterate in phase space, will later be changed to account for phase space dims
-        void for_each_kxky(std::invocable<Dim, Dim> auto fun) {
+        void for_each_kxky(std::invocable<Dim, Dim> auto fun) const {
             for (Dim kx = 0; kx < KX; ++kx) {
                 for (Dim ky = 0; ky < KY; ++ky) {
                     fun(kx, ky);
@@ -218,8 +216,6 @@ namespace ahr {
             b.DX = dAPar.DY;
             b.DY = dAPar.DX;
 
-            debug("dxapar", dAPar.DX);
-            debug("dyapar", dAPar.DY);
             for_each_xy([&](Dim x, Dim y) {
                 bxMax = std::max(bxMax, std::abs(b.DX(x, y)));
                 byMax = std::max(byMax, std::abs(b.DY(x, y)));
@@ -253,7 +249,7 @@ namespace ahr {
             std::cout << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
             std::cout << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
             std::cout << "CFLFlow: " << CFLFlow << std::endl;
-            std::cout << "dt: " << CFLFlow * CFLFrac << std::endl;
+            std::cout << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
 
             return CFLFrac * CFLFlow;
         }
@@ -278,6 +274,19 @@ namespace ahr {
             print(name, view.to_mdspan());
         }
 
+        // Returns magnetic, kinetic energies
+        std::pair<Real, Real> calculateEnergies() const;
+
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
+
+        void exportToNpy(std::string path, ViewXY view) const;
+
+        // Will also normalize and inverseFFT
+        void exportToNpy(std::string path, CViewXY view) const;
+
+        // If view = viewOut, then we're normalizing in place.
+        void normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const;
+
+        void exportTimestep(Dim t);
     };
 };

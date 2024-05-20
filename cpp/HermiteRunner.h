@@ -26,7 +26,7 @@ namespace ahr {
          * run() will simulate Hermite moments for N timesteps.
          * init() must have been called before this call.
          */
-        virtual void run() = 0;
+        virtual void run(Dim saveInterval) = 0;
 
         /**
          *
