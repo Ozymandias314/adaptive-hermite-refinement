@@ -21,6 +21,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mdspan)
 
+add_subdirectory(cnpy)
+target_include_directories(cnpy PUBLIC cnpy)
+
 # ==========================
 # Project code
 # ==========================
@@ -50,4 +53,4 @@ add_executable(bench-fft-multi bench-fft-multi.cpp)
 target_link_libraries(bench-fft-multi argparse fftw-cpp)
 
 add_executable(naive driver.cpp Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)
-target_link_libraries(naive argparse fftw-cpp)
+target_link_libraries(naive argparse fftw-cpp cnpy)

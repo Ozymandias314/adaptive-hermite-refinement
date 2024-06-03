@@ -1,6 +1,8 @@
 #include "Naive.h"
 #include "equillibrium.h"
 
+#include <cnpy.h>
+#include <cstdlib>
 #include <utility>
 
 namespace {
@@ -56,17 +58,27 @@ namespace ahr {
 
     }
 
-    void Naive::run() {
+    void Naive::run(Dim saveInterval) {
         // store all derivatives
         DxDy<Buf3D> dGM{X, Y, M};
         DxDy<Buf2D> dPhi{X, Y}, dUEKPar{X, Y};
 
         bool divergent = false, repeat = false, noInc = false;
         int divergentCount = 0, repeatCount = 0;
-        Real dt{0};
+        Real dt{-1};
         HyperCoefficients hyper{};
 
-        for (int t = 0; t < N; ++t) {
+        bool saved = false;
+        // Manually increment t only if not diverging
+        for (Dim t = 0; t < N;) {
+            if (t % saveInterval == 0) {
+                if (!saved) {
+                    std::cout << "Saving for timestep: " << t << std::endl;
+                    saved = true;
+                    exportTimestep(t);
+                }
+            }
+
             // predictor step
             derivatives(phi_K, dPhi);
             derivatives(ueKPar_K, dUEKPar);
@@ -75,10 +87,10 @@ namespace ahr {
             }
 
             if (repeat or divergent) {
-                //t--; // repeat previous timestep
-                // TODO once not diverging excessively
-            } else {
-                // TODO only necessary the first time through. We already get dt at the end of the loop.
+                std::cout << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
+                repeat = false;
+                divergent = false;
+            } else if(dt == -1) {
                 dt = getTimestep(dPhi, sliceXY(dGM, N_E), sliceXY(dGM, A_PAR));
                 hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             }
@@ -341,6 +353,7 @@ namespace ahr {
                     break;
                 }
                 if (p != 0 and relative_error / old_error > 1.0) {
+                    std::cout << "diverging!" << std::endl;
                     divergent = true;
                     divergentCount++;
                     dt = low * dt;
@@ -348,6 +361,7 @@ namespace ahr {
                 }
                 if (p == MaxP) {
                     // did not converge well enough
+                    std::cout << "repeating!" << std::endl;
                     repeat = true;
                     repeatCount++;
                     dt = low * dt;
@@ -358,18 +372,24 @@ namespace ahr {
                     guessAPar_K(kx, ky) = momentsNew_K(kx, ky, A_PAR);
                 });
             }
-            // debug2(sliceXY(momentsNew_K, A_PAR));
-            std::cout << "relative_error: " << relative_error << std:: endl;
-            std::cout << "old_error: " << old_error << std:: endl;
+
             if (divergent) continue;
             if (repeat) {
                 noInc = true;
                 continue;
             }
 
+            auto [magnetic, kinetic] = calculateEnergies();
+            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
+
+            // Update timestep
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
+            hyper = HyperCoefficients::calculate(dt, KX, KY, M);
+            t++;
+            std::cout << "Moving on to next timestep: " << t << std::endl;
             noInc = false;
+            saved = false;
 
             // New values are now old. Old values will be overwritten in the next timestep.
             std::swap(moments_K, momentsNew_K);
@@ -377,8 +397,23 @@ namespace ahr {
             std::swap(ueKPar_K, ueKPar_K_New);
         }
 
-        std::cout << "repeat: " << repeatCount << std::endl <<
-                  "divergent: " << divergentCount << std::endl;
+        std::cout << "repeat count: " << repeatCount << std::endl <<
+                  "divergent count: " << divergentCount << std::endl;
+        exportTimestep(N);
+    }
+
+    void Naive::exportTimestep(Dim t) {
+        std::ostringstream oss;
+        oss << "a_par_t" << t << ".npy";
+        exportToNpy(oss.str(), sliceXY(moments_K, A_PAR));
+
+        oss.str("");
+        oss << "phi_t" << t << ".npy";
+        exportToNpy(oss.str(), phi_K);
+
+        oss.str("");
+        oss << "uekpar_t" << t << ".npy";
+        exportToNpy(oss.str(), ueKPar_K);
     }
 
     Real Naive::updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const {
@@ -391,8 +426,10 @@ namespace ahr {
 
     mdarray<Real, dextents<Dim, 2u>> Naive::getFinalAPar() {
         Buf2D buf{X, Y};
+        // This actually wrecks A_PAR, but we don't need it anymore
         fftInv(sliceXY(moments_K, A_PAR), buf.to_mdspan());
 
+        // Write to a layout_right array and normalize
         mdarray<Real, dextents<Dim, 2u>> result{X, Y};
         for_each_xy([&](Dim x, Dim y) {
             result(x, y) = buf(x, y) / double(X) / double(Y);
@@ -430,5 +467,47 @@ namespace ahr {
 
         br_K(0, 0) = 0;
         return br_K;
+    }
+
+    void Naive::exportToNpy(std::string path, ahr::Naive::ViewXY view) const {
+        // Coordinates are flipped because we use layout_left
+        cnpy::npy_save(std::move(path), view.data_handle(), {Y, X}, "w");
+    }
+
+    void Naive::exportToNpy(std::string path, ahr::Naive::CViewXY view) const {
+        // fft overwrites the input, so we need to copy it to a temporary buffer
+        Buf2D_K tempK{KX, KY};
+        Buf2D temp{X, Y};
+
+        for_each_kxky([&](Dim kx, Dim ky) {
+            tempK(kx, ky) = view(kx, ky);
+        });
+
+        fftInv(tempK.to_mdspan(), temp.to_mdspan());
+        normalize(temp.to_mdspan(), temp.to_mdspan());
+
+        exportToNpy(std::move(path), temp.to_mdspan());
+    }
+
+    void Naive::normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const {
+        for_each_xy([&](Dim x, Dim y) {
+            viewOut(x, y) = view(x, y) / double(X) / double(Y);
+        });
+
+    }
+
+    std::pair<Real, Real> Naive::calculateEnergies() const {
+        Real magnetic = 0, kinetic = 0;
+        for_each_kxky([&](Dim kx, Dim ky) {
+            magnetic += kPerp2(kx, ky) * std::norm(momentsNew_K(kx, ky, A_PAR));
+            if (rhoI < smallRhoI) {
+                kinetic += kPerp2(kx, ky) * std::norm(phi_K_New(kx, ky));
+            } else {
+                kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
+                           std::norm(phi_K_New(kx, ky));
+            }
+        });
+
+        return {magnetic, kinetic};
     }
 }
