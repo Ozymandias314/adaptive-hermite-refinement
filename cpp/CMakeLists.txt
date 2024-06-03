@@ -21,8 +21,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mdspan)
 
-add_subdirectory(cnpy)
-target_include_directories(cnpy PUBLIC cnpy)
+FetchContent_Declare(
+        cnpy
+        GIT_REPOSITORY https://github.com/rogersce/cnpy.git
+        GIT_TAG 4e8810b1a8637695171ed346ce68f6984e585ef4
+)
+FetchContent_MakeAvailable(cnpy)
+
+target_include_directories(cnpy PUBLIC ${CNPY_SOURCE_DIR})
 
 # ==========================
 # Project code
