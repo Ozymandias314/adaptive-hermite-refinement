@@ -1,3 +1,0 @@
-[submodule "cpp/cnpy"]
-	path = cpp/cnpy
-	url = git@github.com:rogersce/cnpy.git
