@@ -117,7 +117,7 @@ const kc0 = 0.0
 using JSON
 
 # Load the JSON file
-const_data = JSON.parsefile("viriato_julia/example_inputs.json")
+const_data = JSON.parsefile("example_inputs.json")
 
 # Extract values from the "box_parameters" object
 lx = const_data["box_parameters"]["lx"]
@@ -174,7 +174,7 @@ equilib_type = const_data["equil"]["equilib_type"]
 perturb_type = const_data["equil"]["perturb_type"]
 
 # Extract values from the "data_sav" object
-save_energyfiles = const_data["data_sav"]["save_energyfiles"]
+save_energyfiles = const_data["data_sav"]["save_energyfiles"] # includes invariants
 save_checkpoints = const_data["data_sav"]["save_checkpoints"]
 save_datafiles = const_data["data_sav"]["save_datafiles"]
 restart = const_data["data_sav"]["restart"]

@@ -7,6 +7,7 @@ include("aux.jl")
 include("diag.jl")
 include("functions.jl")
 include("initialize.jl")
+include("diagnostics.jl") # Right now this just calculates energy
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
@@ -90,7 +91,7 @@ phi = phi_eq
 file_string_apar = "apar_initial.jld2"
 file_string_ne = "ne_initial.jld2"
 # Save Apar, ne in real space
-save_object(file_string_apar,apar)
+#save_object(file_string_apar,apar)
 
 
 if debugging
@@ -169,6 +170,7 @@ bperp_max = maximum(bperp)
 omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
 # Calculate CFL fraction/timestep
+# TODO Viriato has terms with dz here, which I'm not sure are actually zero. Make sure!
 if g_inc
     CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
     (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
@@ -257,7 +259,8 @@ while t <= tmax
             
             #\mathcal{N}
             fne_old, bracket_akpar_uekpar = func_ne(dxphi,dyphi,dxne,dyne,dxapar,dyapar,dxuepar,dyuepar)
-            
+            # "old" values are calculated from the previous timestep. These values, dxphi,dyphi, etc are only updated after succesful timestep
+
             if g_inc
                 # \mathcal{A}
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
@@ -289,14 +292,14 @@ while t <= tmax
 
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
-    # Start Predictor ("star") step
+    # Start Predictor ("star") step. Star values are the update from the predictor step, calculated based on the previous timestep. 
 
     if debugging
         print("Starting predictor step \n")
     end
 
     guess = deepcopy(akpar)
-    
+
     for i = 1:nkx
         for j = 1:nky
             nek_star[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j]
@@ -307,7 +310,6 @@ while t <= tmax
             uekpar_star[i,j] = -kperp(i,j)^2*akpar_star[i,j]
         end
     end
-    
     if g_inc
         # Get first and last g
         for i = 1:nkx
@@ -520,7 +522,7 @@ while t <= tmax
             repeat= true
             break # exit p loop
         end
-        guess = deepcopy(akpar_new)
+        guess = deepcopy(akpar_new) # guess only updated if error is low enough from this iteration. 
     end # end of p loop
 
     if debugging
@@ -528,13 +530,13 @@ while t <= tmax
     end
 
     if divergent
-        t += 1
+        #t += 1
         continue # go to next time loop iteration with divergent = true
     end
     
     if repeat
         noinc = true # Tells the timestep update if the timestep is allowed to increase
-        t += 1
+        #t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
 
@@ -606,6 +608,11 @@ while t <= tmax
         print("Timestep ", t, "\n")
     end
 
+    println("")
+    println("dti is ",dti)
+    println("savetime is ", savetime)
+    println("")
+
 
     if debugging
         print("Final Data","\n")
@@ -613,18 +620,23 @@ while t <= tmax
     end
     #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
+    if t%save_energyfiles == 0
+        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+        println("Magnetic energy ",b_energy_tot)
+        println("Kinetic energy ",phine_energy_tot)
+    end
     if t%save_datafiles == 0
-    file_string_apar = "apar_"*string(t)*".jld2"
-    #file_string_ne = "ne_"*string(t)*".jld2"
-    # Save Apar, ne in real space
-    apar = FFT2d_inv(akpar)
-    #ne = FFT2d_inv(nek)
-    save_object(file_string_apar,apar)
-    #save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t, " savetime= ",savetime)
-    # println("relative_error ", relative_error) 
-    # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
-    # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
+        file_string_apar = "apar_"*string(t)*".jld2"
+        #file_string_ne = "ne_"*string(t)*".jld2"
+        # Save Apar, ne in real space
+        apar = FFT2d_inv(akpar)
+        #ne = FFT2d_inv(nek)
+        save_object(file_string_apar,apar)
+        #save_object(file_string_ne,ne)
+        println("Saved data for timestep = ",t, " savetime= ",savetime)
+        # println("relative_error ", relative_error) 
+        # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
+        # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
     end
 
 

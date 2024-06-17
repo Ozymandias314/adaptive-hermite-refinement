@@ -12,5 +12,5 @@ function exp_ng(ng,hyper_nuei,dti)
 end
 
 function exp_eta(i, j, res2,dti)
-    exp(-(res*kperp(i, j)^2+res2*kperp(i, j)^(2*hyper_order))*dti/(1.0+kperp(i, j)^2*de^2))
+    exp(-(res*kperp(i, j)^2 + res2*kperp(i, j)^(2*hyper_order))*dti/(1.0+kperp(i, j)^2*de^2))
 end
