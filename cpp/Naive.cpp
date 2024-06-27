@@ -23,7 +23,12 @@ namespace {
 }
 
 namespace ahr {
-    Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y) {}
+    Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y) {
+        assert(M >= 4);
+        // X and Y must be powers of 2
+        assert((X & (X - 1)) == 0);
+        assert((Y & (Y - 1)) == 0);
+    }
 
     void Naive::init(Dim N_) {
         N = N_;
@@ -71,7 +76,7 @@ namespace ahr {
         bool saved = false;
         // Manually increment t only if not diverging
         for (Dim t = 0; t < N;) {
-            if (t % saveInterval == 0) {
+            if (saveInterval != 0 and t % saveInterval == 0) {
                 if (!saved) {
                     std::cout << "Saving for timestep: " << t << std::endl;
                     saved = true;
@@ -379,9 +384,6 @@ namespace ahr {
                 continue;
             }
 
-            auto [magnetic, kinetic] = calculateEnergies();
-            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
-
             // Update timestep
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
@@ -395,6 +397,10 @@ namespace ahr {
             std::swap(moments_K, momentsNew_K);
             std::swap(phi_K, phi_K_New);
             std::swap(ueKPar_K, ueKPar_K_New);
+
+            // Must be after swap for now, it looks at current, not new values
+            auto [magnetic, kinetic] = calculateEnergies();
+            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
         }
 
         std::cout << "repeat count: " << repeatCount << std::endl <<
@@ -499,12 +505,12 @@ namespace ahr {
     std::pair<Real, Real> Naive::calculateEnergies() const {
         Real magnetic = 0, kinetic = 0;
         for_each_kxky([&](Dim kx, Dim ky) {
-            magnetic += kPerp2(kx, ky) * std::norm(momentsNew_K(kx, ky, A_PAR));
+            magnetic += kPerp2(kx, ky) * std::norm(moments_K(kx, ky, A_PAR));
             if (rhoI < smallRhoI) {
-                kinetic += kPerp2(kx, ky) * std::norm(phi_K_New(kx, ky));
+                kinetic += kPerp2(kx, ky) * std::norm(phi_K(kx, ky));
             } else {
                 kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
-                           std::norm(phi_K_New(kx, ky));
+                           std::norm(phi_K(kx, ky));
             }
         });
 
