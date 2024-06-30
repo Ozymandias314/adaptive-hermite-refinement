@@ -30,9 +30,7 @@ namespace ahr {
         assert((Y & (Y - 1)) == 0);
     }
 
-    void Naive::init(Dim N_) {
-        N = N_;
-
+    void Naive::init() {
         // Currently assuming X==Y for simplicity, but the code is written generally for the most part.
         assert(X == Y);
         Buf2D temp{X, Y};
@@ -60,10 +58,9 @@ namespace ahr {
             moments_K(kx, ky, A_PAR) = aParEq_K(kx, ky);
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
-
     }
 
-    void Naive::run(Dim saveInterval) {
+    void Naive::run(Dim N, Dim saveInterval) {
         // store all derivatives
         DxDy<Buf3D> dGM{X, Y, M};
         DxDy<Buf2D> dPhi{X, Y}, dUEKPar{X, Y};

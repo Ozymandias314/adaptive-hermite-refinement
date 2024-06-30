@@ -27,9 +27,9 @@ namespace ahr {
          */
         Naive(std::ostream &out, Dim M, Dim X, Dim Y);
 
-        void init(Dim N_) override;
+        void init() override;
 
-        void run(Dim saveInterval) override;
+        void run(Dim N, Dim saveInterval) override;
 
         mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 
@@ -46,7 +46,6 @@ namespace ahr {
         using ViewXY = stdex::mdspan<Real, stdex::dextents<Dim, 2u>, stdex::layout_left>;
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
-        Dim N{};
         fftw::plan_r2c<2u> fft{};
         fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};

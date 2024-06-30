@@ -17,16 +17,16 @@ namespace ahr {
 
         /**
          * init prepares the hermite simulation.
-         * @param N the number of timesteps.
          */
         virtual void
-        init(Dim N) = 0;
+        init() = 0;
 
         /**
          * run() will simulate Hermite moments for N timesteps.
          * init() must have been called before this call.
+         * @param N the number of timesteps.
          */
-        virtual void run(Dim saveInterval) = 0;
+        virtual void run(Dim N, Dim saveInterval) = 0;
 
         /**
          *

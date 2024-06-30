@@ -4,10 +4,10 @@
 
 TEST(BasicNaive, Energies) {
     ahr::Naive naive{std::cout, 10, 16, 16};
-    naive.init(10);
+    naive.init();
     auto [mag_init, kin_init] = naive.calculateEnergies();
 
-    naive.run(0); // no saving
+    naive.run(10, 0); // no saving
     auto [mag_final, kin_final] = naive.calculateEnergies();
     EXPECT_THAT(mag_final, LeTolerant(mag_init, 1e-7));
     EXPECT_THAT(kin_final, LeTolerant(kin_init, 1e-7));
@@ -18,4 +18,3 @@ TEST(BasicNaive, Energies) {
     EXPECT_THAT(kin_final, AllClose(mag_final, 1e-5));
     EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, 1e-5));
 }
-

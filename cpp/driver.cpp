@@ -55,8 +55,8 @@ int main(int argc, const char *argv[]) {
     Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
-    runner.init(nr);
-    runner.run(saveInterval);
+    runner.init();
+    runner.run(nr, saveInterval);
     auto aPar = runner.getFinalAPar();
 
     for (int x = 0; x < X; ++x) {
