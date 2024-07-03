@@ -19,7 +19,7 @@ namespace ahr {
          * init prepares the hermite simulation.
          */
         virtual void
-        init() = 0;
+        init(std::string_view equilibriumName) = 0;
 
         /**
          * run() will simulate Hermite moments for N timesteps.

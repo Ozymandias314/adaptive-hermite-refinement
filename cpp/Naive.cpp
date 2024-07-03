@@ -30,7 +30,7 @@ namespace ahr {
         assert((Y & (Y - 1)) == 0);
     }
 
-    void Naive::init() {
+    void Naive::init(std::string_view equilibriumName) {
         // Currently assuming X==Y for simplicity, but the code is written generally for the most part.
         assert(X == Y);
         Buf2D temp{X, Y};
@@ -40,7 +40,7 @@ namespace ahr {
         fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
 
         // Initialize equilibrium values
-        auto [aParEq, phi] = equilibriumOT01(X, Y);
+        auto [aParEq, phi] = equilibrium(equilibriumName, X, Y);
 
         fft(phi.to_mdspan(), phi_K.to_mdspan());
         fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());

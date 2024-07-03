@@ -4,7 +4,7 @@
 
 TEST(BasicNaive, Energies) {
     ahr::Naive naive{std::cout, 10, 16, 16};
-    naive.init();
+    naive.init("OT01");
     auto [mag_init, kin_init] = naive.calculateEnergies();
 
     naive.run(10, 0); // no saving

@@ -27,7 +27,7 @@ namespace ahr {
          */
         Naive(std::ostream &out, Dim M, Dim X, Dim Y);
 
-        void init() override;
+        void init(std::string_view equilibriumName) override;
 
         void run(Dim N, Dim saveInterval) override;
 
