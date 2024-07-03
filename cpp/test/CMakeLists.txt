@@ -9,3 +9,5 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(unit-tests naive.cpp)
 target_link_libraries(unit-tests src-lib GTest::gmock_main)
+
+add_test(UnitTests unit-tests)
