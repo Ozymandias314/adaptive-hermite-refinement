@@ -1,9 +1,20 @@
-#include "util.hpp"
 #include "Naive.h"
+#include "util.hpp"
 #include <gtest/gtest.h>
+#include <sstream>
 
-TEST(NaiveEnergy, OT01) {
-    ahr::Naive naive{std::cout, 10, 16, 16};
+class NaiveEnergy : public ::testing::Test {
+  protected:
+    // Ignore output
+    std::ostringstream out;
+
+    void TearDown() override {
+        if (HasFailure()) { std::cout << "Full output:" << out.str() << std::endl; }
+    }
+};
+
+TEST_F(NaiveEnergy, OT01) {
+    ahr::Naive naive{out, 10, 16, 16};
     naive.init("OT01");
     auto [mag_init, kin_init] = naive.calculateEnergies();
 
@@ -16,12 +27,12 @@ TEST(NaiveEnergy, OT01) {
     // TODO find a good lower bound for energies here
 }
 
-TEST(NaiveEnergy, OT01NoDiffusion) {
+TEST_F(NaiveEnergy, OT01NoDiffusion) {
     // turn off diffusion
     ahr::nu = 0;
     ahr::res = 0;
 
-    ahr::Naive naive{std::cout, 10, 16, 16};
+    ahr::Naive naive{out, 10, 16, 16};
     naive.init("OT01");
     auto [mag_init, kin_init] = naive.calculateEnergies();
 
@@ -36,8 +47,8 @@ TEST(NaiveEnergy, OT01NoDiffusion) {
     EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, 1e-5));
 }
 
-TEST(NaiveEnergy, Gauss) {
-    ahr::Naive naive{std::cout, 10, 16, 16};
+TEST_F(NaiveEnergy, Gauss) {
+    ahr::Naive naive{out, 10, 16, 16};
     naive.init("gauss");
     auto [mag_init, kin_init] = naive.calculateEnergies();
     // Kinetic energy should be zero (absolute tolerance hence needed)
@@ -52,12 +63,12 @@ TEST(NaiveEnergy, Gauss) {
     // TODO find a good lower bound for energies here
 }
 
-TEST(NaiveEnergy, GaussNoDiffusion) {
+TEST_F(NaiveEnergy, GaussNoDiffusion) {
     // turn off diffusion
     ahr::nu = 0;
     ahr::res = 0;
 
-    ahr::Naive naive{std::cout, 10, 16, 16};
+    ahr::Naive naive{out, 10, 16, 16};
     naive.init("gauss");
     auto [mag_init, kin_init] = naive.calculateEnergies();
 
@@ -71,12 +82,12 @@ TEST(NaiveEnergy, GaussNoDiffusion) {
     EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, 1e-5));
 }
 
-TEST(NaiveEnergy, GaussMagDiffusion) {
+TEST_F(NaiveEnergy, GaussMagDiffusion) {
     // turn off kinetic diffusion
     ahr::nu = 0;
     ahr::res = 1.0;
 
-    ahr::Naive naive{std::cout, 10, 16, 16};
+    ahr::Naive naive{out, 10, 16, 16};
     naive.init("gauss");
     auto [mag_init, kin_init] = naive.calculateEnergies();
     // Kinetic energy should be zero (absolute tolerance hence needed)

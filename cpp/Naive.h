@@ -75,8 +75,6 @@ namespace ahr {
             }
         };
 
-
-
         /// \defgroup Buffers for all the physical quantities used.
         /// Names ending in K mean the values are in phase space.
         /// @{
@@ -243,12 +241,12 @@ namespace ahr {
                                      std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
 
             // DEBUG
-            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
-            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
-            std::cout << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
-            std::cout << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
-            std::cout << "CFLFlow: " << CFLFlow << std::endl;
-            std::cout << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
+            out << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            out << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            out << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
+            out << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
+            out << "CFLFlow: " << CFLFlow << std::endl;
+            out << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
 
             return CFLFrac * CFLFlow;
         }
@@ -257,14 +255,14 @@ namespace ahr {
         template<typename View> requires (not std::same_as<View, Buf2D>) and (not std::same_as<View, Buf2D_K>)
 
         void print(std::string_view name, View view) const {
-            std::cout << name << ":\n";
+            out << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
-                    std::cout << view(x, y) << " ";
+                    out << view(x, y) << " ";
                 }
-                std::cout << std::endl;
+                out << std::endl;
             }
-            std::cout << "===========================================" << std::endl;
+            out << "===========================================" << std::endl;
         }
 
         template<typename Buf>

@@ -75,7 +75,7 @@ namespace ahr {
         for (Dim t = 0; t < N;) {
             if (saveInterval != 0 and t % saveInterval == 0) {
                 if (!saved) {
-                    std::cout << "Saving for timestep: " << t << std::endl;
+                    out << "Saving for timestep: " << t << std::endl;
                     saved = true;
                     exportTimestep(t);
                 }
@@ -89,7 +89,7 @@ namespace ahr {
             }
 
             if (repeat or divergent) {
-                std::cout << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
+                out << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
                 repeat = false;
                 divergent = false;
             } else if(dt == -1) {
@@ -98,7 +98,7 @@ namespace ahr {
             }
 
             // DEBUG
-            std::cout << "dt: " << dt << std::endl;
+            out << "dt: " << dt << std::endl;
 
             // store results of nonlinear operators, as well as results of predictor step
             Buf3D_K GM_K_Star{KX, KY, M}, GM_Nonlinear_K{KX, KY, M};
@@ -261,7 +261,7 @@ namespace ahr {
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
 
-                std::cout << "relative_error:" << relative_error << std::endl;
+                out << "relative_error:" << relative_error << std::endl;
                 // TODO(OPT) bail if relative error is large
 
                 DerivateNewMoment(A_PAR);
@@ -351,11 +351,11 @@ namespace ahr {
                 DerivateNewMoment(LAST);
 
                 if (relative_error <= epsilon){
-                    std::cout << "relative error small:" << relative_error << std::endl;
+                    out << "relative error small:" << relative_error << std::endl;
                     break;
                 }
                 if (p != 0 and relative_error / old_error > 1.0) {
-                    std::cout << "diverging!" << std::endl;
+                    out << "diverging!" << std::endl;
                     divergent = true;
                     divergentCount++;
                     dt = low * dt;
@@ -363,7 +363,7 @@ namespace ahr {
                 }
                 if (p == MaxP) {
                     // did not converge well enough
-                    std::cout << "repeating!" << std::endl;
+                    out << "repeating!" << std::endl;
                     repeat = true;
                     repeatCount++;
                     dt = low * dt;
@@ -386,7 +386,7 @@ namespace ahr {
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             t++;
-            std::cout << "Moving on to next timestep: " << t << std::endl;
+            out << "Moving on to next timestep: " << t << std::endl;
             noInc = false;
             saved = false;
 
@@ -397,10 +397,10 @@ namespace ahr {
 
             // Must be after swap for now, it looks at current, not new values
             auto [magnetic, kinetic] = calculateEnergies();
-            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
+            out << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
         }
 
-        std::cout << "repeat count: " << repeatCount << std::endl <<
+        out << "repeat count: " << repeatCount << std::endl <<
                   "divergent count: " << divergentCount << std::endl;
         exportTimestep(N);
     }
