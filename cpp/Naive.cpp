@@ -402,7 +402,11 @@ namespace ahr {
 
         out << "repeat count: " << repeatCount << std::endl <<
                   "divergent count: " << divergentCount << std::endl;
-        exportTimestep(N);
+
+        // TODO need a way to only export the final timestep
+        if (saveInterval != 0) {
+            exportTimestep(N);
+        }
     }
 
     void Naive::exportTimestep(Dim t) {

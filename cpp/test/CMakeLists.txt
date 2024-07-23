@@ -10,7 +10,7 @@ FetchContent_MakeAvailable(googletest)
 function(add_viriato_test_impl NAME)
     add_executable(${NAME} ${ARGN})
     target_link_libraries(${NAME} src-lib GTest::gmock_main)
-    add_test(${NAME} ${NAME})
+    add_test(NAME ${NAME} COMMAND ${NAME} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endfunction()
 
 function(add_viriato_test FILE)
@@ -19,3 +19,4 @@ function(add_viriato_test FILE)
 endfunction()
 
 add_viriato_test(naive-energies.cpp)
+add_viriato_test(naive-moments.cpp)
