@@ -7,7 +7,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(unit-tests naive.cpp)
-target_link_libraries(unit-tests src-lib GTest::gmock_main)
+function(add_viriato_test_impl NAME)
+    add_executable(${NAME} ${ARGN})
+    target_link_libraries(${NAME} src-lib GTest::gmock_main)
+    add_test(${NAME} ${NAME})
+endfunction()
 
-add_test(UnitTests unit-tests)
+function(add_viriato_test FILE)
+    string(REGEX REPLACE ".cpp$" "" NAME ${FILE})
+    add_viriato_test_impl(${NAME} ${FILE} ${ARGN})
+endfunction()
+
+add_viriato_test(naive-energies.cpp)
