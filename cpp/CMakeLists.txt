@@ -52,11 +52,7 @@ endif ()
 add_executable(adaptive_hermite_refinement test-triangle.cpp)
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)
 
-add_executable(bench-fft bench-fft.cpp)
-target_link_libraries(bench-fft argparse fftw-cpp)
-
-add_executable(bench-fft-multi bench-fft-multi.cpp)
-target_link_libraries(bench-fft-multi argparse fftw-cpp)
-
 add_executable(naive driver.cpp Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)
 target_link_libraries(naive argparse fftw-cpp cnpy)
+
+add_subdirectory(bench)
