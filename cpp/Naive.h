@@ -237,8 +237,16 @@ namespace ahr {
                            ky_(KY / 2 + 1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
 
             Real dx = lx / Real(X), dy = ly / Real(Y);
-            Real CFLFlow = std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
-                                     std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
+
+            Real CFLFlow;
+            if (M > 2) {
+                CFLFlow =
+                    std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
+                              std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
+            } else {
+                CFLFlow =
+                    std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw, dx / bxMax, dy / byMax});
+            }
 
             // DEBUG
             out << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;

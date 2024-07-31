@@ -82,6 +82,26 @@ TEST_F(NaiveEnergy, GaussNoDiffusion) {
     EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, 1e-5));
 }
 
+// TODO make more flexible so that everything can be run with two moments
+TEST_F(NaiveEnergy, GaussNoDiffusion2Moments) {
+    // turn off diffusion
+    ahr::nu = 0;
+    ahr::res = 0;
+
+    ahr::Naive naive{out, 2, 16, 16};
+    naive.init("gauss");
+    auto [mag_init, kin_init] = naive.calculateEnergies();
+
+    naive.run(10, 0); // no saving
+    auto [mag_final, kin_final] = naive.calculateEnergies();
+    EXPECT_THAT(mag_final, LeTolerant(mag_init, 1e-7));
+    EXPECT_THAT(mag_final + kin_final, LeTolerant(mag_init + kin_init, 1e-7));
+
+    EXPECT_THAT(mag_final, AllClose(mag_init, 1e-5));
+    EXPECT_THAT(kin_final, AllClose(0.0, 1e-7, 1e-6));
+    EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, 1e-5));
+}
+
 TEST_F(NaiveEnergy, GaussMagDiffusion) {
     // turn off kinetic diffusion
     ahr::nu = 0;
