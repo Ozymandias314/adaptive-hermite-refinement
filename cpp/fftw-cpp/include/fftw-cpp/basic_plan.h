@@ -89,7 +89,12 @@ concept appropriate_layout = true;
         requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
         static auto dft(ViewIn in, ViewOut out, Direction direction, Flags flags) -> basic_plan;
 
-    private:
+        template <typename BufferIn, typename BufferOut>
+            requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+        static auto dft_many(BufferIn &in, BufferOut &out, std::array<bool, D> many_dims,
+                             Direction direction, Flags flags) -> basic_plan;
+
+      private:
         detail::fftw_plan_t<Real> plan{nullptr};
     };
 
@@ -162,11 +167,42 @@ concept appropriate_layout = true;
             return fftw_plan_guru_dft(D, dims, 0, nullptr, unwrap<false, Real, Complex>(in),
                                       unwrap<false, Real, Complex>(out), direction, flags);
         }
-    }
 
-    template<size_t D, class Real, class Complex>
-    template<typename BufferIn, typename BufferOut>
-    requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+        template <size_t D, class Real, class Complex>
+            requires std::same_as<Real, double>
+        auto plan_many_dft(auto &in, auto &out, std::array<bool, D> many_dims, Direction direction,
+                           Flags flags) {
+            fftw_iodim dims[D];
+            fftw_iodim dims_many[D];
+            size_t i_dim = 0;
+            for (size_t i = 0; i < D; ++i) {
+                if (in.extent(i) != out.extent(i)) {
+                    throw std::invalid_argument("mismatched extents");
+                }
+                if (many_dims[i]) {
+                    size_t i_dim_many = i - i_dim;
+                    dims_many[i_dim_many].n = in.extent(i);
+                    dims_many[i_dim_many].is = in.stride(i);
+                    dims_many[i_dim_many].os = out.stride(i);
+                } else {
+                    dims[i_dim].n = in.extent(i);
+                    dims[i_dim].is = in.stride(i);
+                    dims[i_dim].os = out.stride(i);
+                    i_dim++;
+                }
+            }
+
+            size_t i_dim_many = D - i_dim;
+
+            return fftw_plan_guru_dft(i_dim, dims, i_dim_many, dims_many,
+                                      unwrap<false, Real, Complex>(in),
+                                      unwrap<false, Real, Complex>(out), direction, flags);
+        }
+        } // namespace detail
+
+        template <size_t D, class Real, class Complex>
+        template <typename BufferIn, typename BufferOut>
+            requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
     void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) const {
         fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
@@ -203,6 +239,23 @@ concept appropriate_layout = true;
 
         basic_plan plan1;
         plan1.plan = detail::template plan_dft<D, Real, Complex>(in, out, direction, flags);
+        return plan1;
+    }
+
+    template <size_t D, class Real, class Complex>
+    template <typename BufferIn, typename BufferOut>
+        requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+    auto basic_plan<D, Real, Complex>::dft_many(BufferIn &in, BufferOut &out,
+                                                std::array<bool, D> many_dims, Direction direction,
+                                                Flags flags) -> basic_plan {
+        if (in.size() != out.size()) { throw std::invalid_argument("mismatched buffer sizes"); }
+        if (direction != FORWARD and direction != BACKWARD) {
+            throw std::invalid_argument("invalid direction");
+        }
+
+        basic_plan plan1;
+        plan1.plan =
+            detail::template plan_many_dft<D, Real, Complex>(in, out, many_dims, direction, flags);
         return plan1;
     }
 
