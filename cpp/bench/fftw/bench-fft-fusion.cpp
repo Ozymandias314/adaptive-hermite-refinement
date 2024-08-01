@@ -1,6 +1,5 @@
 #include "fftw-cpp/fftw-cpp.h"
 
-#include "cilk.h"
 #include "timing.h"
 
 #include <argparse/argparse.hpp>

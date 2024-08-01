@@ -45,6 +45,7 @@ endif ()
 option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
 if (CILK_STUB)
     add_compile_definitions(CILK_STUB)
+    # TODO this is very temporary, cilk/cilk_stub.h won't be found without the right compiler
 else ()
     add_compile_options("-fopencilk")
     add_link_options("-fopencilk")
