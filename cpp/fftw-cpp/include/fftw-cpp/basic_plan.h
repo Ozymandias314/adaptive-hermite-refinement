@@ -8,10 +8,9 @@ namespace fftw {
     /// This concept checks that the layout is appropriate for this type of plan.
     /// By default, it is false
     template<typename Layout>
-    concept appropriate_layout = std::same_as<MDSPAN::layout_right, Layout>;
-    // TODO support for other layouts
+concept appropriate_layout = true;
 
-    /// This boolean checks that the buffer is appropriate for this type of plan.
+/// This boolean checks that the buffer is appropriate for this type of plan.
     /// By default, it is false
     template<size_t D, class Real, class Complex, typename T>
     constexpr inline bool appropriate_buffer = false;
@@ -147,20 +146,21 @@ namespace fftw {
             return reinterpret_cast<underlying_element_type<IsReal, Real, Complex> *>(view.data_handle());
         }
 
-        template<size_t D, class Real, class Complex> requires (D == 1u) &&std::same_as<Real, double>
-
+        template <size_t D, class Real, class Complex>
+            requires std::same_as<Real, double>
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            return fftw_plan_dft_1d(in.size(), unwrap<false, Real, Complex>(in), unwrap<false, Real, Complex>(out),
-                                    direction, flags);
-        }
+            fftw_iodim dims[D];
+            for (size_t i = 0; i < D; ++i) {
+                if (in.extent(i) != out.extent(i)) {
+                    throw std::invalid_argument("mismatched extents");
+                }
+                dims[i].n = in.extent(i);
+                dims[i].is = in.stride(i);
+                dims[i].os = out.stride(i);
+            }
 
-        template<size_t D, class Real, class Complex> requires (D == 2u) &&std::same_as<Real, double>
-
-        auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            // TODO for layout left this is different
-            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<false, Real, Complex>(in),
-                                    unwrap<false, Real, Complex>(out),
-                                    direction, flags);
+            return fftw_plan_guru_dft(D, dims, 0, nullptr, unwrap<false, Real, Complex>(in),
+                                      unwrap<false, Real, Complex>(out), direction, flags);
         }
     }
 
