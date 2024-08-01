@@ -189,8 +189,4 @@ int main(int argc, const char *argv[]) {
             }
         }
     }
-
-    for (unsigned i = 0; i < N_TRIALS; i++) {
-        wsp_dump(wsp[i], "fft");
-    }
 }

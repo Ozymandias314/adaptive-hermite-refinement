@@ -16,7 +16,7 @@ concept appropriate_layout = true;
     constexpr inline bool appropriate_buffer = false;
 
     // We allow basic_buffer for 1D transforms
-    template<class Real, class Complex = std::complex<Real>>
+    template<class Real, class Complex>
     constexpr inline bool appropriate_buffer<1u, Real, Complex, basic_buffer<Real, Complex>> = true;
 
     // We always allow a multi-d buffer for the same number of dimensions
@@ -27,7 +27,7 @@ concept appropriate_layout = true;
     D;
 
 
-    template<size_t D, class Real, class Complex = std::complex<Real>, typename T, typename T2>
+    template<size_t D, class Real, class Complex, typename T, typename T2>
     concept appropriate_buffers = appropriate_buffer<D, Real, Complex, T> &&
                                   appropriate_buffer<D, Real, Complex, T2>;
 
@@ -44,7 +44,7 @@ concept appropriate_layout = true;
     > = sizeof...(I) ==
     D;
 
-    template<size_t D, class Real, class Complex = std::complex<Real>, typename T, typename T2>
+    template<size_t D, class Real, class Complex, typename T, typename T2>
     concept appropriate_views = appropriate_view<D, Real, Complex, T> &&
                                 appropriate_view<D, Real, Complex, T2>;
 
