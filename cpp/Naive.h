@@ -47,7 +47,11 @@ namespace ahr {
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
         Dim N{};
-        fftw::plan_r2c<2u> fft{};
+
+        void hlFilter(CViewXY& complexArray);
+        void fft(ViewXY in, CViewXY out); ///< FFT with Hou-Li Filter
+
+        fftw::plan_r2c<2u> fft_base{};
         fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};
 
