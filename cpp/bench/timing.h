@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iostream>
 
-#ifndef CILK_STUB
+#ifdef CILK_ENABLED
 #include <cilk/cilkscale.h>
 #else
 using wsp_t = int;
