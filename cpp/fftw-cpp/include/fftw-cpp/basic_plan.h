@@ -154,18 +154,30 @@ concept appropriate_layout = true;
         template <size_t D, class Real, class Complex>
             requires std::same_as<Real, double>
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            fftw_iodim dims[D];
-            for (size_t i = 0; i < D; ++i) {
-                if (in.extent(i) != out.extent(i)) {
+            // handle fftw::buffer here
+            using c2c_buf = fftw::basic_buffer<Real, Complex, false>;
+            if constexpr (D == 1 and (std::is_same_v<std::decay_t<decltype(in)>, c2c_buf> or
+                                      std::is_same_v<std::decay_t<decltype(out)>, c2c_buf>)) {
+                if (in.size() != out.size()) {
                     throw std::invalid_argument("mismatched extents");
                 }
-                dims[i].n = in.extent(i);
-                dims[i].is = in.stride(i);
-                dims[i].os = out.stride(i);
-            }
 
-            return fftw_plan_guru_dft(D, dims, 0, nullptr, unwrap<false, Real, Complex>(in),
-                                      unwrap<false, Real, Complex>(out), direction, flags);
+                return fftw_plan_dft_1d(in.size(), unwrap<false, Real, Complex>(in),
+                                        unwrap<false, Real, Complex>(out), direction, flags);
+            } else {
+                fftw_iodim dims[D];
+                for (size_t i = 0; i < D; ++i) {
+                    if (in.extent(i) != out.extent(i)) {
+                        throw std::invalid_argument("mismatched extents");
+                    }
+                    dims[i].n = in.extent(i);
+                    dims[i].is = in.stride(i);
+                    dims[i].os = out.stride(i);
+                }
+
+                return fftw_plan_guru_dft(D, dims, 0, nullptr, unwrap<false, Real, Complex>(in),
+                                          unwrap<false, Real, Complex>(out), direction, flags);
+            }
         }
 
         template <size_t D, class Real, class Complex>
@@ -174,16 +186,16 @@ concept appropriate_layout = true;
                            Flags flags) {
             fftw_iodim dims[D];
             fftw_iodim dims_many[D];
-            size_t i_dim = 0;
-            for (size_t i = 0; i < D; ++i) {
+            size_t i_dim = 0, i_dim_many = 0;
+            for (size_t i = i_dim + i_dim_many; i < D; i = i_dim + i_dim_many) {
                 if (in.extent(i) != out.extent(i)) {
                     throw std::invalid_argument("mismatched extents");
                 }
                 if (many_dims[i]) {
-                    size_t i_dim_many = i - i_dim;
                     dims_many[i_dim_many].n = in.extent(i);
                     dims_many[i_dim_many].is = in.stride(i);
                     dims_many[i_dim_many].os = out.stride(i);
+                    i_dim_many++;
                 } else {
                     dims[i_dim].n = in.extent(i);
                     dims[i_dim].is = in.stride(i);
@@ -191,8 +203,6 @@ concept appropriate_layout = true;
                     i_dim++;
                 }
             }
-
-            size_t i_dim_many = D - i_dim;
 
             return fftw_plan_guru_dft(i_dim, dims, i_dim_many, dims_many,
                                       unwrap<false, Real, Complex>(in),
@@ -472,10 +482,8 @@ concept appropriate_layout = true;
             return r_extents;
         }
 
-
         template<size_t D, class Real, class Complex>
         requires std::same_as<Real, double>
-
         auto plan_dft_r2c(auto in, auto out, Flags flags) {
             return fftw_plan_dft_r2c(D, dims_r2c<D>(in, out).data(), unwrap<true, Real, Complex>(in),
                                      unwrap<false, Real, Complex>(out),
@@ -484,7 +492,6 @@ concept appropriate_layout = true;
 
         template<size_t D, class Real, class Complex>
         requires std::same_as<Real, double>
-
         auto plan_dft_c2r(auto in, auto out, Flags flags) {
             return fftw_plan_dft_c2r(D, dims_r2c<D>(out, in).data(), unwrap<false, Real, Complex>(in),
                                      unwrap<true, Real, Complex>(out),
