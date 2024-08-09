@@ -42,13 +42,11 @@ if (ENABLE_AVX512)
     add_compile_options("-mavx512f" "-march=native" "-ffast-math")
 endif ()
 
-option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
-if (CILK_STUB)
-    add_compile_definitions(CILK_STUB)
-    # TODO this is very temporary, cilk/cilk_stub.h won't be found without the right compiler
-else ()
+option(ENABLE_CILK "Enable Cilk parallelism" ON)
+if (ENABLE_CILK)
     add_compile_options("-fopencilk")
     add_link_options("-fopencilk")
+    add_compile_definitions(CILK_ENABLED)
 endif ()
 
 add_executable(adaptive_hermite_refinement test-triangle.cpp)
