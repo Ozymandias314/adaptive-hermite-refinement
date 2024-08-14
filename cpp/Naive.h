@@ -47,6 +47,7 @@ namespace ahr {
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
         Dim N{};
+        Real const XYNorm = 1 / Real(X) / Real(Y);
         fftw::plan_r2c<2u> fft{};
         fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};
@@ -144,8 +145,8 @@ namespace ahr {
         /// (after inverse FFT, values will be properly normalized)
         void prepareDXY_PH(CViewXY view_K, CViewXY viewDX_K, CViewXY viewDY_K) {
             for_each_kxky([&](Dim kx, Dim ky) {
-                viewDX_K(kx, ky) = kx_(kx) * 1i * view_K(kx, ky) / double(X) / double(Y);
-                viewDY_K(kx, ky) = ky_(ky) * 1i * view_K(kx, ky) / double(X) / double(Y);
+                viewDX_K(kx, ky) = kx_(kx) * 1i * view_K(kx, ky) * XYNorm;
+                viewDY_K(kx, ky) = ky_(ky) * 1i * view_K(kx, ky) * XYNorm;
             });
         }
 
