@@ -27,7 +27,7 @@ namespace ahr {
 
     void Naive::hlFilter(CViewXY& complexArray) {
         for_each_kxky([&](Dim kx, Dim ky){
-            complexArray(kx, ky) *= exp(-36 * pow(kx_(kx)/KX, 36)) * exp(-36 * pow(ky_(ky)/KX, 36));
+            complexArray(kx, ky) *= exp(-36.0 * pow(kx_(kx)/KX, 36.0)) * exp(-36.0 * pow(ky_(ky)/KY, 36.0));
 
         });
     }
