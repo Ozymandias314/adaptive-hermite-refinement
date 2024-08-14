@@ -8,16 +8,15 @@ namespace fftw {
     /// This concept checks that the layout is appropriate for this type of plan.
     /// By default, it is false
     template<typename Layout>
-    concept appropriate_layout = std::same_as<MDSPAN::layout_right, Layout>;
-    // TODO support for other layouts
+concept appropriate_layout = true;
 
-    /// This boolean checks that the buffer is appropriate for this type of plan.
+/// This boolean checks that the buffer is appropriate for this type of plan.
     /// By default, it is false
     template<size_t D, class Real, class Complex, typename T>
     constexpr inline bool appropriate_buffer = false;
 
     // We allow basic_buffer for 1D transforms
-    template<class Real, class Complex = std::complex<Real>>
+    template<class Real, class Complex>
     constexpr inline bool appropriate_buffer<1u, Real, Complex, basic_buffer<Real, Complex>> = true;
 
     // We always allow a multi-d buffer for the same number of dimensions
@@ -28,7 +27,7 @@ namespace fftw {
     D;
 
 
-    template<size_t D, class Real, class Complex = std::complex<Real>, typename T, typename T2>
+    template<size_t D, class Real, class Complex, typename T, typename T2>
     concept appropriate_buffers = appropriate_buffer<D, Real, Complex, T> &&
                                   appropriate_buffer<D, Real, Complex, T2>;
 
@@ -45,7 +44,7 @@ namespace fftw {
     > = sizeof...(I) ==
     D;
 
-    template<size_t D, class Real, class Complex = std::complex<Real>, typename T, typename T2>
+    template<size_t D, class Real, class Complex, typename T, typename T2>
     concept appropriate_views = appropriate_view<D, Real, Complex, T> &&
                                 appropriate_view<D, Real, Complex, T2>;
 
@@ -90,7 +89,12 @@ namespace fftw {
         requires appropriate_views<D, Real, Complex, ViewIn, ViewOut>
         static auto dft(ViewIn in, ViewOut out, Direction direction, Flags flags) -> basic_plan;
 
-    private:
+        template <typename BufferIn, typename BufferOut>
+            requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+        static auto dft_many(BufferIn &in, BufferOut &out, std::array<bool, D> many_dims,
+                             Direction direction, Flags flags) -> basic_plan;
+
+      private:
         detail::fftw_plan_t<Real> plan{nullptr};
     };
 
@@ -147,26 +151,68 @@ namespace fftw {
             return reinterpret_cast<underlying_element_type<IsReal, Real, Complex> *>(view.data_handle());
         }
 
-        template<size_t D, class Real, class Complex> requires (D == 1u) &&std::same_as<Real, double>
-
+        template <size_t D, class Real, class Complex>
+            requires std::same_as<Real, double>
         auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            return fftw_plan_dft_1d(in.size(), unwrap<false, Real, Complex>(in), unwrap<false, Real, Complex>(out),
-                                    direction, flags);
+            // handle fftw::buffer here
+            using c2c_buf = fftw::basic_buffer<Real, Complex, false>;
+            if constexpr (D == 1 and (std::is_same_v<std::decay_t<decltype(in)>, c2c_buf> or
+                                      std::is_same_v<std::decay_t<decltype(out)>, c2c_buf>)) {
+                if (in.size() != out.size()) {
+                    throw std::invalid_argument("mismatched extents");
+                }
+
+                return fftw_plan_dft_1d(in.size(), unwrap<false, Real, Complex>(in),
+                                        unwrap<false, Real, Complex>(out), direction, flags);
+            } else {
+                fftw_iodim dims[D];
+                for (size_t i = 0; i < D; ++i) {
+                    if (in.extent(i) != out.extent(i)) {
+                        throw std::invalid_argument("mismatched extents");
+                    }
+                    dims[i].n = in.extent(i);
+                    dims[i].is = in.stride(i);
+                    dims[i].os = out.stride(i);
+                }
+
+                return fftw_plan_guru_dft(D, dims, 0, nullptr, unwrap<false, Real, Complex>(in),
+                                          unwrap<false, Real, Complex>(out), direction, flags);
+            }
         }
 
-        template<size_t D, class Real, class Complex> requires (D == 2u) &&std::same_as<Real, double>
+        template <size_t D, class Real, class Complex>
+            requires std::same_as<Real, double>
+        auto plan_many_dft(auto &in, auto &out, std::array<bool, D> many_dims, Direction direction,
+                           Flags flags) {
+            fftw_iodim dims[D];
+            fftw_iodim dims_many[D];
+            size_t i_dim = 0, i_dim_many = 0;
+            for (size_t i = i_dim + i_dim_many; i < D; i = i_dim + i_dim_many) {
+                if (in.extent(i) != out.extent(i)) {
+                    throw std::invalid_argument("mismatched extents");
+                }
+                if (many_dims[i]) {
+                    dims_many[i_dim_many].n = in.extent(i);
+                    dims_many[i_dim_many].is = in.stride(i);
+                    dims_many[i_dim_many].os = out.stride(i);
+                    i_dim_many++;
+                } else {
+                    dims[i_dim].n = in.extent(i);
+                    dims[i_dim].is = in.stride(i);
+                    dims[i_dim].os = out.stride(i);
+                    i_dim++;
+                }
+            }
 
-        auto plan_dft(auto &in, auto &out, Direction direction, Flags flags) {
-            // TODO for layout left this is different
-            return fftw_plan_dft_2d(in.extent(0), in.extent(1), unwrap<false, Real, Complex>(in),
-                                    unwrap<false, Real, Complex>(out),
-                                    direction, flags);
+            return fftw_plan_guru_dft(i_dim, dims, i_dim_many, dims_many,
+                                      unwrap<false, Real, Complex>(in),
+                                      unwrap<false, Real, Complex>(out), direction, flags);
         }
-    }
+        } // namespace detail
 
-    template<size_t D, class Real, class Complex>
-    template<typename BufferIn, typename BufferOut>
-    requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+        template <size_t D, class Real, class Complex>
+        template <typename BufferIn, typename BufferOut>
+            requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
     void basic_plan<D, Real, Complex>::operator()(BufferIn &in, BufferOut &out) const {
         fftw_execute_dft(plan, detail::unwrap<false, Real, Complex>(in), detail::unwrap<false, Real, Complex>(out));
     }
@@ -203,6 +249,23 @@ namespace fftw {
 
         basic_plan plan1;
         plan1.plan = detail::template plan_dft<D, Real, Complex>(in, out, direction, flags);
+        return plan1;
+    }
+
+    template <size_t D, class Real, class Complex>
+    template <typename BufferIn, typename BufferOut>
+        requires appropriate_buffers<D, Real, Complex, BufferIn, BufferOut>
+    auto basic_plan<D, Real, Complex>::dft_many(BufferIn &in, BufferOut &out,
+                                                std::array<bool, D> many_dims, Direction direction,
+                                                Flags flags) -> basic_plan {
+        if (in.size() != out.size()) { throw std::invalid_argument("mismatched buffer sizes"); }
+        if (direction != FORWARD and direction != BACKWARD) {
+            throw std::invalid_argument("invalid direction");
+        }
+
+        basic_plan plan1;
+        plan1.plan =
+            detail::template plan_many_dft<D, Real, Complex>(in, out, many_dims, direction, flags);
         return plan1;
     }
 
@@ -419,10 +482,8 @@ namespace fftw {
             return r_extents;
         }
 
-
         template<size_t D, class Real, class Complex>
         requires std::same_as<Real, double>
-
         auto plan_dft_r2c(auto in, auto out, Flags flags) {
             return fftw_plan_dft_r2c(D, dims_r2c<D>(in, out).data(), unwrap<true, Real, Complex>(in),
                                      unwrap<false, Real, Complex>(out),
@@ -431,7 +492,6 @@ namespace fftw {
 
         template<size_t D, class Real, class Complex>
         requires std::same_as<Real, double>
-
         auto plan_dft_c2r(auto in, auto out, Flags flags) {
             return fftw_plan_dft_c2r(D, dims_r2c<D>(out, in).data(), unwrap<false, Real, Complex>(in),
                                      unwrap<true, Real, Complex>(out),
