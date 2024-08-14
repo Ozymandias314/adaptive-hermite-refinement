@@ -5,6 +5,7 @@
 #include "nonlinears.h"
 
 #include <fftw-cpp/fftw-cpp.h>
+#include <iomanip>
 #include <type_traits>
 
 #define _ln1(x) #x
@@ -265,7 +266,7 @@ namespace ahr {
             std::cout << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
-                    std::cout << view(x, y) << " ";
+                    std::cout << std::setprecision(16) << view(x, y) << " ";
                 }
                 std::cout << std::endl;
             }
