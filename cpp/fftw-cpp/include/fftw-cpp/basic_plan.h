@@ -8,9 +8,9 @@ namespace fftw {
     /// This concept checks that the layout is appropriate for this type of plan.
     /// By default, it is false
     template<typename Layout>
-concept appropriate_layout = true;
+    concept appropriate_layout = true;
 
-/// This boolean checks that the buffer is appropriate for this type of plan.
+    /// This boolean checks that the buffer is appropriate for this type of plan.
     /// By default, it is false
     template<size_t D, class Real, class Complex, typename T>
     constexpr inline bool appropriate_buffer = false;
