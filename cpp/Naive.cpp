@@ -129,7 +129,7 @@ namespace ahr {
             });
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
-            auto bracketPhiDeUEKPar_K = halfBracket(dPhi, dUEKPar);
+            auto bracketPhiDeUEKPar_K = halfBracket(dUEKPar,dPhi);
 
             // Compute G2
             auto bracketPhiG2_K = halfBracket(dPhi, sliceXY(dGM, G_MIN));
@@ -246,7 +246,7 @@ namespace ahr {
                 });
 
                 auto bracketAParPhiG2Ne_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dPhiNeG2_Loop);
-                auto bracketPhiDeUEKPar_K_Loop = halfBracket(dPhi_Loop, dUEKPar_Loop);
+                auto bracketPhiDeUEKPar_K_Loop = halfBracket(dUEKPar_Loop,dPhi_Loop);
 
                 /// f_pred from Viriato
                 Buf3D_K GM_Nonlinear_K_Loop{KX, KY, M};
