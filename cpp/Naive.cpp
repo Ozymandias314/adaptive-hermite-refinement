@@ -288,6 +288,10 @@ namespace ahr {
                 return;
 
                 DerivateNewMoment(A_PAR);
+                derivatives(ueKPar_K_New, dUEKPar_Loop);
+
+
+                
                 auto bracketPhiNE_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, N_E));
                 auto bracketAParUEKPar_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dUEKPar_Loop);
 
@@ -296,7 +300,7 @@ namespace ahr {
                                                                     bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
-                                                dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
                                                 GM_Nonlinear_K(kx, ky, N_E) +
                                                 dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, N_E);
 
