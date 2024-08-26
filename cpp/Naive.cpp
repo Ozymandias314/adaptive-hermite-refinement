@@ -320,7 +320,7 @@ namespace ahr {
                                                                        bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, G_MIN) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
-                                                  dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                  dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
                                                   GM_Nonlinear_K(kx, ky, G_MIN) +
                                                   dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, G_MIN);
                 });
