@@ -314,7 +314,7 @@ while t <= tmax
         # Get first and last g
         for i = 1:nkx
             for j = 1:nky
-                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
+                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
                 
                 gk_star[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
                     dti/2.0*(1.0+exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
@@ -457,7 +457,7 @@ while t <= tmax
             
             #get g2 p+1
             fgm_pred[:,:,gmin] = func_g2(value_gx[:,:,gmin],value_gy[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
-            value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],phik_new)
+            value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],bracket_akpar_uekpar)
             for i = 1:nkx
                 for j = 1:nky
                     gk_new[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] +
