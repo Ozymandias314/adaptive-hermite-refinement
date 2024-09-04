@@ -80,7 +80,7 @@ namespace ahr {
             auto M1 = double(M);
             return (rhoS * rhoS / de / de * M1) /
                    (M1 * nu_ei + std::pow(M1, 2 * hyper_morder) * hyper.nu_ei +
-                    nu * kPerp2 + hyper.nu_2 * std::pow(kPerp2, 2 * hyper_order));
+                    nu * kPerp2 + hyper.nu_2 * std::pow(kPerp2, hyper_order));
         }
     }
 }
