@@ -46,6 +46,7 @@ namespace ahr {
         using ViewXY = stdex::mdspan<Real, stdex::dextents<Dim, 2u>, stdex::layout_left>;
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
+        Real elapsedT; // total time elapsed
         fftw::plan_r2c<2u> fft{};
         fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};
@@ -282,6 +283,7 @@ namespace ahr {
         // Returns magnetic, kinetic energies
         std::pair<Real, Real> calculateEnergies() const;
 
+        Real elapsedTime() const { return elapsedT; }
     private:
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
 

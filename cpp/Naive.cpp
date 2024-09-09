@@ -426,11 +426,15 @@ namespace ahr {
                 continue;
             }
 
-            // Update timestep
+            // Next timestep
+            t++;
+            this->elapsedT += dt;
+
+            // Update dt
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
-            t++;
+
             out << "Moving on to next timestep: " << t << std::endl;
             noInc = false;
             saved = false;
