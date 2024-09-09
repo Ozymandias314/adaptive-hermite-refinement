@@ -69,7 +69,7 @@ namespace ahr {
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
 
-        debug2(aParEq);
+      
     }
 
     void Naive::run(Dim saveInterval) {
@@ -110,7 +110,7 @@ namespace ahr {
             }
 
             // DEBUG
-            //std::cout << "dt: " << dt << std::endl;
+
 
             // store results of nonlinear operators, as well as results of predictor step
             Buf3D_K GM_K_Star{KX, KY, M}, GM_Nonlinear_K{KX, KY, M};
@@ -223,7 +223,6 @@ namespace ahr {
                 semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kPerp2(kx, ky));
             });
 
-            debug2(guessAPar_K);
 
             semiImplicitOperator(0, 0) = 0;
 
@@ -275,17 +274,12 @@ namespace ahr {
                             semiImplicitOperator(kx, ky) / 4.0 * (momentsNew_K(kx, ky, A_PAR) - guessAPar_K(kx, ky))) /
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
-
-                
-                // debug2(sliceXY(momentsNew_K,A_PAR));
-                // debug2(guessAPar_K);
                 
                 
                 std::cout << "sumApar relative_error:" << sumAParRelError << std::endl;
                 std::cout << "relative_error:" << relative_error << std::endl;
                 // TODO(OPT) bail if relative error is large
 
-                return;
 
                 DerivateNewMoment(A_PAR);
                 derivatives(ueKPar_K_New, dUEKPar_Loop);
@@ -388,7 +382,7 @@ namespace ahr {
                     dt = low * dt;
                     break;
                 }
-                if (p == MaxP) {
+                if (relative_error > epsilon and p == MaxP) {
                     // did not converge well enough
                     //std::cout << "repeating!" << std::endl;
                     repeat = true;
@@ -489,13 +483,6 @@ namespace ahr {
         Buf2D_K br_K{KX, KY};
         bracket(derOp1, derOp2, br);
         fft(br.to_mdspan(), br_K.to_mdspan());
-
-        for_each_kxky([&](Dim kx, Dim ky) {
-            if (kx_(kx) > double(KX) * 2.0 / 3.0 or ky_(ky) > double(KY) * 2.0 / 3.0) {
-                br_K(kx, ky) = 0;
-            }
-        });
-
         br_K(0, 0) = 0;
         return br_K;
     }
