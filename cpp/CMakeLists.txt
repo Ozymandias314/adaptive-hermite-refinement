@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # ==========================
 # Library dependencies
+# TODO: find locally first if available
 # ==========================
 include(FetchContent)
 FetchContent_Declare(
