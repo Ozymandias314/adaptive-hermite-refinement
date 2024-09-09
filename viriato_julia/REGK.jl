@@ -1,4 +1,28 @@
-using LinearAlgebra, FFTW, Logging, JLD2
+using LinearAlgebra, FFTW, Logging, JLD2, Printf
+
+function print_cpp(arr::Matrix{ComplexF64})
+    for i in 1:size(arr, 1)
+        row_str = ""
+        for j in 1:size(arr, 2)
+            real_part = @sprintf("%.8f",real(arr[i, j]))
+            imag_part = @sprintf("%.8f",imag(arr[i, j]))
+            row_str *= "($(real_part), $(imag_part)) "
+        end
+        println(row_str)
+    end
+end
+
+function print_cpp(arr::Matrix{Float64})
+    for i in 1:size(arr, 1)
+        row_str = ""
+        for j in 1:size(arr, 2)
+            real_part = @sprintf("%.8f",arr[i, j])
+            row_str *= "$(real_part) "
+        end
+        println(row_str)
+    end
+end
+
 
 include("constants.jl")
 include("transforms.jl")
@@ -7,6 +31,7 @@ include("aux.jl")
 include("diag.jl")
 include("functions.jl")
 include("initialize.jl")
+include("diagnostics.jl") # Right now this just calculates energy
 # For now, ignore the stuff that has to do with turb, anjor, 3d, antenna
 
 # Define/Import Stuff, Allocate arrays here not sure if optimal?
@@ -90,7 +115,7 @@ phi = phi_eq
 file_string_apar = "apar_initial.jld2"
 file_string_ne = "ne_initial.jld2"
 # Save Apar, ne in real space
-save_object(file_string_apar,apar)
+#save_object(file_string_apar,apar)
 
 
 if debugging
@@ -169,6 +194,7 @@ bperp_max = maximum(bperp)
 omega_kaw = omegakaw(bperp_max) # Function omega_kaw--its value is public in the function def
 
 # Calculate CFL fraction/timestep
+# TODO Viriato has terms with dz here, which I'm not sure are actually zero. Make sure!
 if g_inc
     CFL_flow= min(dx/vxmax,dy/vymax,2.0/omega_kaw,
     (1.0/rhos_de)*1.0/sqrt(ngtot*1.0)*min(dx/bxmax,dy/bymax)) # The other lines have to do with prop in z direction
@@ -257,7 +283,8 @@ while t <= tmax
             
             #\mathcal{N}
             fne_old, bracket_akpar_uekpar = func_ne(dxphi,dyphi,dxne,dyne,dxapar,dyapar,dxuepar,dyuepar)
-            
+            # "old" values are calculated from the previous timestep. These values, dxphi,dyphi, etc are only updated after succesful timestep
+
             if g_inc
                 # \mathcal{A}
                 fApar_old = func_Akpar(dxapar,dyapar,dxphi,dyphi,dxne,dyne,dxuepar,dyuepar,dxg[:,:,gmin],dyg[:,:,gmin])
@@ -289,14 +316,14 @@ while t <= tmax
 
     # Get SI operator necessary for corrector step loop
     semi_implicit_operator = func_semi_implicit_operator(dti,bperp_max,aa0)
-    # Start Predictor ("star") step
+    # Start Predictor ("star") step. Star values are the update from the predictor step, calculated based on the previous timestep. 
 
     if debugging
         print("Starting predictor step \n")
     end
 
     guess = deepcopy(akpar)
-    
+
     for i = 1:nkx
         for j = 1:nky
             nek_star[i,j] = exp_nu(i,j,ν2,dti)*nek[i,j]+ dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fne_old[i,j]
@@ -307,12 +334,11 @@ while t <= tmax
             uekpar_star[i,j] = -kperp(i,j)^2*akpar_star[i,j]
         end
     end
-    
     if g_inc
         # Get first and last g
         for i = 1:nkx
             for j = 1:nky
-                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
+                gk_star[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] + dti/2.0*(1.0+exp_nu(i,j,ν2,dti))*fgm_old[i,j,gmin]
                 
                 gk_star[i,j,ngtot] = exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti)*gk[i,j,ngtot]+
                     dti/2.0*(1.0+exp_ng(ngtot,hyper_νei,dti)*exp_nu(i,j,ν_g,dti))*fglast_old[i,j]
@@ -363,7 +389,7 @@ while t <= tmax
     @debug "Starting corrector loop!!!!!!!!!"
 
     p_iter = 0
-    for p_iter = 0:1
+    for p_iter = 0:pmax
         #p_count +=1
         sum_apar_rel_error = 0.0
         rel_error_array .= 0.0 # array of zeros?
@@ -409,7 +435,7 @@ while t <= tmax
                 uekpar_new[i,j] = -kperp(i,j)^2*akpar_new[i,j]
                 
                 # Take difference between akpar t=n and akpar_new, ie at t=n+1. Note akpar is only updated after p_loop. So this is akpar, n+1,p+1 - akpar,n
-                sum_apar_rel_error = sum_apar_rel_error + (abs(akpar_new[i,j]-akpar[i,j]))^2 # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
+                sum_apar_rel_error = sum_apar_rel_error + abs2(akpar_new[i,j]-akpar[i,j]) # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
             end
         end
 
@@ -455,7 +481,7 @@ while t <= tmax
             
             #get g2 p+1
             fgm_pred[:,:,gmin] = func_g2(value_gx[:,:,gmin],value_gy[:,:,gmin],dxphi,dyphi,dxapar,dyapar,
-            value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],phik_new)
+            value_gx[:,:,gmin+1],value_gy[:,:,gmin+1],bracket_akpar_uekpar)
             for i = 1:nkx
                 for j = 1:nky
                     gk_new[i,j,gmin] = exp_nu(i,j,ν2,dti)*gk[i,j,gmin] +
@@ -520,7 +546,7 @@ while t <= tmax
             repeat= true
             break # exit p loop
         end
-        guess = deepcopy(akpar_new)
+        guess = deepcopy(akpar_new) # guess only updated if error is low enough from this iteration. 
     end # end of p loop
 
     if debugging
@@ -528,13 +554,11 @@ while t <= tmax
     end
 
     if divergent
-        t += 1
         continue # go to next time loop iteration with divergent = true
     end
     
     if repeat
         noinc = true # Tells the timestep update if the timestep is allowed to increase
-        t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
 
@@ -606,6 +630,11 @@ while t <= tmax
         print("Timestep ", t, "\n")
     end
 
+    println("")
+    println("dti is ",dti)
+    println("savetime is ", savetime)
+    println("")
+
 
     if debugging
         print("Final Data","\n")
@@ -613,18 +642,23 @@ while t <= tmax
     end
     #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
+    if t%save_energyfiles == 0
+        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+        println("Magnetic energy ",b_energy_tot)
+        println("Kinetic energy ",phine_energy_tot)
+    end
     if t%save_datafiles == 0
-    file_string_apar = "apar_"*string(t)*".jld2"
-    #file_string_ne = "ne_"*string(t)*".jld2"
-    # Save Apar, ne in real space
-    apar = FFT2d_inv(akpar)
-    #ne = FFT2d_inv(nek)
-    save_object(file_string_apar,apar)
-    #save_object(file_string_ne,ne)
-    println("Saved data for timestep = ",t, " savetime= ",savetime)
-    # println("relative_error ", relative_error) 
-    # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
-    # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
+        file_string_apar = "apar_"*string(t)*".jld2"
+        #file_string_ne = "ne_"*string(t)*".jld2"
+        # Save Apar, ne in real space
+        apar = FFT2d_inv(akpar)
+        #ne = FFT2d_inv(nek)
+        save_object(file_string_apar,apar)
+        #save_object(file_string_ne,ne)
+        println("Saved data for timestep = ",t, " savetime= ",savetime)
+        # println("relative_error ", relative_error) 
+        # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
+        # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
     end
 
 

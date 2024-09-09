@@ -44,7 +44,7 @@ namespace ahr {
         [[nodiscard]] inline Complex semiImplicitOp(Real dt, Real bPerpMax, Real aa0, Real kPerp2) {
             if (rhoI <= smallRhoI) {
                 return aa0 * aa0 * (1 + kPerp2 * (3.0 / 4.0 * rhoI * rhoI + rhoS * rhoS)) *
-                       std::pow(kPerp2 * bPerpMax * dt, 2) / (1 + kPerp2 * de * de);
+                       kPerp2 * std::pow( bPerpMax * dt, 2) / (1 + kPerp2 * de * de);
             } else {
                 return aa0 * aa0 * (3.0 * rhoS * rhoS - rhoI * rhoI / (Gamma0(0.5 * kPerp2 * rhoI * rhoI) - 1)) *
                        std::pow(kPerp2 * bPerpMax * dt, 2) / (1 + kPerp2 * de * de);

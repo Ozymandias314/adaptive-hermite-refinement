@@ -25,6 +25,19 @@ namespace {
 namespace ahr {
     Naive::Naive(std::ostream &out, Dim M, Dim X, Dim Y) : HermiteRunner(out), M(M), X(X), Y(Y) {}
 
+    void Naive::hlFilter(CViewXY& complexArray) {
+        for_each_kxky([&](Dim kx, Dim ky){
+            complexArray(kx, ky) *= exp(-36.0 * pow(kx_(kx)/KX, 36.0)) * exp(-36.0 * pow(ky_(ky)/KY, 36.0));
+
+        });
+    }
+
+    void Naive::fft(ViewXY in, CViewXY out){
+        fft_base(in,out);
+        hlFilter(out);
+    }
+    
+
     void Naive::init(Dim N_) {
         N = N_;
 
@@ -33,11 +46,11 @@ namespace ahr {
         Buf2D temp{X, Y};
 
         // Plan FFTs both ways
-        fft = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
+        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
         fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
 
         // Initialize equilibrium values
-        auto [aParEq, phi] = equilibriumOT01(X, Y);
+        auto [aParEq, phi] = equilibriumGauss(X, Y);
 
         fft(phi.to_mdspan(), phi_K.to_mdspan());
         fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());
@@ -56,6 +69,7 @@ namespace ahr {
             ueKPar_K(kx, ky) = -kPerp2(kx, ky) * moments_K(kx, ky, A_PAR);
         });
 
+      
     }
 
     void Naive::run(Dim saveInterval) {
@@ -87,7 +101,7 @@ namespace ahr {
             }
 
             if (repeat or divergent) {
-                std::cout << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
+                //std::cout << std::boolalpha << "repeat: " << repeat << ", divergent:" << divergent << std::endl;
                 repeat = false;
                 divergent = false;
             } else if(dt == -1) {
@@ -96,7 +110,7 @@ namespace ahr {
             }
 
             // DEBUG
-            std::cout << "dt: " << dt << std::endl;
+
 
             // store results of nonlinear operators, as well as results of predictor step
             Buf3D_K GM_K_Star{KX, KY, M}, GM_Nonlinear_K{KX, KY, M};
@@ -115,7 +129,7 @@ namespace ahr {
             });
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
-            auto bracketPhiDeUEKPar_K = halfBracket(dPhi, dUEKPar);
+            auto bracketUEParPhi_K = halfBracket(dUEKPar,dPhi);
 
             // Compute G2
             auto bracketPhiG2_K = halfBracket(dPhi, sliceXY(dGM, G_MIN));
@@ -140,7 +154,7 @@ namespace ahr {
                                          dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(kx, ky, N_E);
 
                 GM_Nonlinear_K(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K(kx, ky),
-                                                             bracketPhiDeUEKPar_K(kx, ky), kPerp2(kx, ky));
+                                                             bracketUEParPhi_K(kx, ky), kPerp2(kx, ky));
                 GM_K_Star(kx, ky, A_PAR) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(kx, ky, A_PAR) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
                                            GM_Nonlinear_K(kx, ky, A_PAR) +
@@ -208,6 +222,8 @@ namespace ahr {
                 guessAPar_K(kx, ky) = moments_K(kx, ky, A_PAR);
                 semiImplicitOperator(kx, ky) = nonlinear::semiImplicitOp(dt, bPerpMax, aa0, kPerp2(kx, ky));
             });
+
+
             semiImplicitOperator(0, 0) = 0;
 
             Real old_error = 0, relative_error = 0;
@@ -229,14 +245,15 @@ namespace ahr {
                 });
 
                 auto bracketAParPhiG2Ne_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dPhiNeG2_Loop);
-                auto bracketPhiDeUEKPar_K_Loop = halfBracket(dPhi_Loop, dUEKPar_Loop);
+                auto bracketUEParPhi_K_Loop = halfBracket(dUEKPar_Loop,dPhi_Loop);
+
 
                 /// f_pred from Viriato
                 Buf3D_K GM_Nonlinear_K_Loop{KX, KY, M};
                 Real sumAParRelError = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
                     GM_Nonlinear_K_Loop(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
-                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky),
+                                                                      bracketUEParPhi_K_Loop(kx, ky),
                                                                       kPerp2(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, A_PAR) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *
@@ -258,11 +275,18 @@ namespace ahr {
                             semiImplicitOperator(kx, ky) / 4.0 * (momentsNew_K(kx, ky, A_PAR) - guessAPar_K(kx, ky))) /
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
-
+                
+                
+                std::cout << "sumApar relative_error:" << sumAParRelError << std::endl;
                 std::cout << "relative_error:" << relative_error << std::endl;
                 // TODO(OPT) bail if relative error is large
 
+
                 DerivateNewMoment(A_PAR);
+                derivatives(ueKPar_K_New, dUEKPar_Loop);
+
+
+                
                 auto bracketPhiNE_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, N_E));
                 auto bracketAParUEKPar_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dUEKPar_Loop);
 
@@ -271,7 +295,7 @@ namespace ahr {
                                                                     bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
-                                                dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
                                                 GM_Nonlinear_K(kx, ky, N_E) +
                                                 dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, N_E);
 
@@ -291,7 +315,7 @@ namespace ahr {
                                                                        bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, G_MIN) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
-                                                  dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                  dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
                                                   GM_Nonlinear_K(kx, ky, G_MIN) +
                                                   dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, G_MIN);
                 });
@@ -359,9 +383,9 @@ namespace ahr {
                     dt = low * dt;
                     break;
                 }
-                if (p == MaxP) {
+                if (relative_error > epsilon and p == MaxP) {
                     // did not converge well enough
-                    std::cout << "repeating!" << std::endl;
+                    //std::cout << "repeating!" << std::endl;
                     repeat = true;
                     repeatCount++;
                     dt = low * dt;
@@ -396,6 +420,8 @@ namespace ahr {
             std::swap(phi_K, phi_K_New);
             std::swap(ueKPar_K, ueKPar_K_New);
         }
+        
+        std::cout << "dt actual: " << dt << std::endl;
 
         std::cout << "repeat count: " << repeatCount << std::endl <<
                   "divergent count: " << divergentCount << std::endl;
@@ -458,13 +484,6 @@ namespace ahr {
         Buf2D_K br_K{KX, KY};
         bracket(derOp1, derOp2, br);
         fft(br.to_mdspan(), br_K.to_mdspan());
-
-        for_each_kxky([&](Dim kx, Dim ky) {
-            if (kx_(kx) > double(KX) * 2.0 / 3.0 or ky_(ky) > double(KY) * 2.0 / 3.0) {
-                br_K(kx, ky) = 0;
-            }
-        });
-
         br_K(0, 0) = 0;
         return br_K;
     }
