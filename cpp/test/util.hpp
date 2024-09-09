@@ -37,6 +37,22 @@ auto LeTolerant(V &&val, R &&rel_tol) {
     return LeTolerant(std::forward<V>(val), std::forward<R>(rel_tol), 0.0);
 }
 
+MATCHER_P3(GeTolerant, val, rel_tol, abs_tol,
+           "greater or equal than " + PrintToString(val) + " ±" + PrintToString(abs_tol) + " (±" +
+           PrintToString(double(rel_tol) * std::abs(val)) + ")") {
+    auto diff = double(arg) - double(val);
+    double tolerance_diff = double(diff) + double(abs_tol) + double(rel_tol) * std::abs(val);
+
+    return tolerance_diff >= 0;
+}
+
+
+// abs is zero by default
+template<typename V, typename R>
+auto GeTolerant(V &&val, R &&rel_tol) {
+    return GeTolerant(std::forward<V>(val), std::forward<R>(rel_tol), 0.0);
+}
+
 namespace stdex = std::experimental;
 template <class T> static constexpr bool is_mdspan_v = false;
 
