@@ -280,10 +280,13 @@ namespace ahr {
             print(name, view.to_mdspan());
         }
     public:
-        // Returns magnetic, kinetic energies
-        std::pair<Real, Real> calculateEnergies() const;
+      struct Energies {
+        Real magnetic{0.0}, kinetic{0.0};
+      };
 
-        Real elapsedTime() const { return elapsedT; }
+      Energies calculateEnergies() const;
+
+      Real elapsedTime() const { return elapsedT; }
     private:
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
 

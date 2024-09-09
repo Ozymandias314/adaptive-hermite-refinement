@@ -8,6 +8,14 @@ using ahr::Real;
 
 // Make this into a class if utilities need to be added
 using NaiveEnergy = NaiveTester;
+using Energies = ahr::Naive::Energies;
+
+Energies expectedEnergies(Real t, Energies e_init) {
+  return {.magnetic = std::exp(-t * ahr::res * 2) * e_init.magnetic,
+          .kinetic = std::exp(-t * ahr::nu * 2) * e_init.kinetic};
+}
+
+#define CHECK_ENERGIES()
 
 TEST_P(NaiveEnergy, Diffusion) {
   ahr::nu = 0.1;
@@ -16,19 +24,19 @@ TEST_P(NaiveEnergy, Diffusion) {
 
   ahr::Naive naive{out, p.M, p.X, p.X};
   naive.init(p.eq);
-  auto [mag_init, kin_init] = naive.calculateEnergies();
+  auto const e_init = naive.calculateEnergies();
 
   if (p.eq == "gauss") {
     // Kinetic energy should be zero (absolute tolerance hence needed)
-    EXPECT_THAT(kin_init, AllClose(0.0, 1e-7, 1e-6));
+    EXPECT_THAT(e_init.kinetic, AllClose(0.0, 1e-7, 1e-6));
   }
 
   naive.run(p.N, 0); // no saving
-  auto [mag_final, kin_final] = naive.calculateEnergies();
-  EXPECT_THAT(mag_final, LeTolerant(mag_init, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(kin_init, 1e-7, 1e-5));
+  auto const [mag_final, kin_final] = naive.calculateEnergies();
+  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
   EXPECT_THAT(mag_final + kin_final,
-              LeTolerant(mag_init + kin_init, 1e-7, 1e-5));
+              LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 
   // TODO find a good lower bound for energies here
 }
@@ -42,25 +50,26 @@ TEST_P(NaiveEnergy, NoDiffusion) {
 
   ahr::Naive naive{out, p.M, p.X, p.X};
   naive.init(p.eq);
-  auto [mag_init, kin_init] = naive.calculateEnergies();
+  auto const e_init = naive.calculateEnergies();
 
   if (p.eq == "gauss") {
     // Kinetic energy should be zero (absolute tolerance hence needed)
-    EXPECT_THAT(kin_init, AllClose(0.0, 1e-7, 1e-6));
+    EXPECT_THAT(e_init.kinetic, AllClose(0.0, 1e-7, 1e-6));
   }
 
   naive.run(p.N, 0); // no saving
-  auto [mag_final, kin_final] = naive.calculateEnergies();
-  EXPECT_THAT(mag_final, LeTolerant(mag_init, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(kin_init, 1e-7, 1e-5));
+  auto const [mag_final, kin_final] = naive.calculateEnergies();
+  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
   EXPECT_THAT(mag_final + kin_final,
-              LeTolerant(mag_init + kin_init, 1e-7, 1e-5));
+              LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 
   // The energy numerical error is roughly proportional to the # of timesteps
   auto rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, AllClose(mag_init, rtol, 1e-5));
-  EXPECT_THAT(kin_final, AllClose(kin_init, rtol, 1e-5));
-  EXPECT_THAT(mag_final + kin_final, AllClose(mag_init + kin_init, rtol, 1e-5));
+  EXPECT_THAT(mag_final, AllClose(e_init.magnetic, rtol, 1e-5));
+  EXPECT_THAT(kin_final, AllClose(e_init.kinetic, rtol, 1e-5));
+  EXPECT_THAT(mag_final + kin_final,
+              AllClose(e_init.magnetic + e_init.kinetic, rtol, 1e-5));
 }
 
 TEST_P(NaiveEnergy, MagDiffusion) {
@@ -71,21 +80,21 @@ TEST_P(NaiveEnergy, MagDiffusion) {
 
   ahr::Naive naive{out, p.M, p.X, p.X};
   naive.init(p.eq);
-  auto [mag_init, kin_init] = naive.calculateEnergies();
+  auto const e_init = naive.calculateEnergies();
   if (p.eq == "gauss") {
     // Kinetic energy should be zero (absolute tolerance hence needed)
-    EXPECT_THAT(kin_init, AllClose(0.0, 1e-7, 1e-5));
+    EXPECT_THAT(e_init.kinetic, AllClose(0.0, 1e-7, 1e-5));
   }
 
   naive.run(p.N, 0); // no saving
-  auto [mag_final, kin_final] = naive.calculateEnergies();
+  auto const [mag_final, kin_final] = naive.calculateEnergies();
 
   // The energy numerical error is roughly proportional to the # of timesteps
-  auto rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, LeTolerant(mag_init, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, AllClose(kin_init, rtol, 1e-5));
+  auto const rtol = 1e-6 * Real(p.N);
+  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(kin_final, AllClose(e_init.kinetic, rtol, 1e-5));
   EXPECT_THAT(mag_final + kin_final,
-              LeTolerant(mag_init + kin_init, 1e-7, 1e-5));
+              LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 }
 
 TEST_P(NaiveEnergy, KinDiffusion) {
@@ -96,10 +105,10 @@ TEST_P(NaiveEnergy, KinDiffusion) {
 
   ahr::Naive naive{out, p.M, p.X, p.X};
   naive.init(p.eq);
-  auto [mag_init, kin_init] = naive.calculateEnergies();
+  auto const e_init = naive.calculateEnergies();
   if (p.eq == "gauss") {
     // Kinetic energy should be zero (absolute tolerance hence needed)
-    EXPECT_THAT(kin_init, AllClose(0.0, 1e-7, 1e-5));
+    EXPECT_THAT(e_init.kinetic, AllClose(0.0, 1e-7, 1e-5));
   }
 
   naive.run(p.N, 0); // no saving
@@ -107,10 +116,10 @@ TEST_P(NaiveEnergy, KinDiffusion) {
 
   // The energy numerical error is roughly proportional to the # of timesteps
   auto rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, AllClose(mag_init, rtol, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(kin_init, 1e-7, 1e-5));
+  EXPECT_THAT(mag_final, AllClose(e_init.magnetic, rtol, 1e-5));
+  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
   EXPECT_THAT(mag_final + kin_final,
-              LeTolerant(mag_init + kin_init, 1e-7, 1e-5));
+              LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 }
 
 using namespace testing;

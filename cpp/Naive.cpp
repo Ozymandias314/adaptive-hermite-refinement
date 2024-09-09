@@ -552,18 +552,18 @@ namespace ahr {
 
     }
 
-    std::pair<Real, Real> Naive::calculateEnergies() const {
-        Real magnetic = 0, kinetic = 0;
+    Naive::Energies Naive::calculateEnergies() const {
+        Energies e;
         for_each_kxky([&](Dim kx, Dim ky) {
-            magnetic += kPerp2(kx, ky) * std::norm(moments_K(kx, ky, A_PAR));
+            e.magnetic += kPerp2(kx, ky) * std::norm(moments_K(kx, ky, A_PAR));
             if (rhoI < smallRhoI) {
-                kinetic += kPerp2(kx, ky) * std::norm(phi_K(kx, ky));
+                e.kinetic += kPerp2(kx, ky) * std::norm(phi_K(kx, ky));
             } else {
-                kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
+                e.kinetic -= 1.0 / (rhoI * rhoI) * (Gamma0(kPerp2(kx, ky) * rhoI * rhoI / 2.0) - 1) *
                            std::norm(phi_K(kx, ky));
             }
         });
 
-        return {magnetic, kinetic};
+        return e;
     }
 }
