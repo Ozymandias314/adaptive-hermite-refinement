@@ -129,7 +129,7 @@ namespace ahr {
             });
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
-            auto bracketPhiDeUEKPar_K = halfBracket(dUEKPar,dPhi);
+            auto bracketUEParPhi_K = halfBracket(dUEKPar,dPhi);
 
             // Compute G2
             auto bracketPhiG2_K = halfBracket(dPhi, sliceXY(dGM, G_MIN));
@@ -154,7 +154,7 @@ namespace ahr {
                                          dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(kx, ky, N_E);
 
                 GM_Nonlinear_K(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K(kx, ky),
-                                                             bracketPhiDeUEKPar_K(kx, ky), kPerp2(kx, ky));
+                                                             bracketUEParPhi_K(kx, ky), kPerp2(kx, ky));
                 GM_K_Star(kx, ky, A_PAR) = exp_eta(kx, ky, hyper.eta2, dt) * moments_K(kx, ky, A_PAR) +
                                            dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
                                            GM_Nonlinear_K(kx, ky, A_PAR) +
@@ -245,14 +245,15 @@ namespace ahr {
                 });
 
                 auto bracketAParPhiG2Ne_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dPhiNeG2_Loop);
-                auto bracketPhiDeUEKPar_K_Loop = halfBracket(dUEKPar_Loop,dPhi_Loop);
+                auto bracketUEParPhi_K_Loop = halfBracket(dUEKPar_Loop,dPhi_Loop);
+
 
                 /// f_pred from Viriato
                 Buf3D_K GM_Nonlinear_K_Loop{KX, KY, M};
                 Real sumAParRelError = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
                     GM_Nonlinear_K_Loop(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
-                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky),
+                                                                      bracketUEParPhi_K_Loop(kx, ky),
                                                                       kPerp2(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, A_PAR) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *

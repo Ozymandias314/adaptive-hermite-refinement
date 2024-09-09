@@ -389,7 +389,7 @@ while t <= tmax
     @debug "Starting corrector loop!!!!!!!!!"
 
     p_iter = 0
-    for p_iter = 0:1
+    for p_iter = 0:pmax
         #p_count +=1
         sum_apar_rel_error = 0.0
         rel_error_array .= 0.0 # array of zeros?
@@ -554,13 +554,11 @@ while t <= tmax
     end
 
     if divergent
-        #t += 1
         continue # go to next time loop iteration with divergent = true
     end
     
     if repeat
         noinc = true # Tells the timestep update if the timestep is allowed to increase
-        #t += 1
         continue # go to next time loop iteraton with repeat and noinc true
     end 
 
