@@ -55,6 +55,7 @@ namespace ahr {
         fft(phi.to_mdspan(), phi_K.to_mdspan());
         fft(aParEq.to_mdspan(), aParEq_K.to_mdspan());
 
+
         // Transform moments into phase space
         for (int m = G_MIN; m < M; ++m) {
             for_each_kxky([&](Dim kx, Dim ky) {
@@ -97,7 +98,14 @@ namespace ahr {
             derivatives(phi_K, dPhi);
             derivatives(ueKPar_K, dUEKPar);
             for (int m = 0; m < M; ++m) {
-                derivatives(sliceXY(moments_K, m), sliceXY(dGM, m));
+                derivatives(sliceXY(moments_K, m), sliceXY(dGM, m)); // only necessary if first time, otherwise can just update dGM with dGM_loop
+            }
+            
+            if (repeat == false) {
+                // std::cout << "Apar at beginning of timestep : " << t << std::endl;
+                // debug2(sliceXY(moments_K,A_PAR)); 
+                // debug2(sliceXY(moments_K,N_E));
+                // debug2(ueKPar_K);
             }
 
             if (repeat or divergent) {
@@ -130,7 +138,7 @@ namespace ahr {
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
             auto bracketUEParPhi_K = halfBracket(dUEKPar,dPhi);
-
+                    
             // Compute G2
             auto bracketPhiG2_K = halfBracket(dPhi, sliceXY(dGM, G_MIN));
             auto bracketAParG3_K = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, G_MIN + 1));
@@ -194,6 +202,8 @@ namespace ahr {
                 });
             }
 
+            // debug2(sliceXY(GM_K_Star,G_MIN));
+
             // corrector step
 
             // Phi, Nabla, and other prep for A bracket
@@ -213,6 +223,8 @@ namespace ahr {
                 derivatives(sliceXY(GM_K_Star, m), sliceXY(dGM_Loop, m));
             }
 
+            // debug2(sliceXY(dGM_Loop.DX,G_MIN));
+
             // Corrector loop
             // TODO confirm that only m derivatives are needed at a time
             //  (if not, can always store one in a temporary buffer)
@@ -228,8 +240,15 @@ namespace ahr {
 
             Real old_error = 0, relative_error = 0;
 
+
+            //debug2(guessAPar_K);
+            //debug2(sliceXY(moments_K,A_PAR));
+            //debug2(sliceXY(GM_Nonlinear_K,A_PAR));
+            //debug2(sliceXY(moments_K,G_MIN));
+
+
             for (int p = 0; p <= MaxP; ++p) {
-                auto DerivateNewMoment = [&](Dim m) {
+                auto DerivateNewMoment = [&](Dim m) { // this just defines function
                     derivatives(sliceXY(momentsNew_K, m), sliceXY(dGM_Loop, m));
                 };
 
@@ -275,10 +294,11 @@ namespace ahr {
                             semiImplicitOperator(kx, ky) / 4.0 * (momentsNew_K(kx, ky, A_PAR) - guessAPar_K(kx, ky))) /
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
-                
+
                 
                 std::cout << "sumApar relative_error:" << sumAParRelError << std::endl;
                 std::cout << "relative_error:" << relative_error << std::endl;
+                std::cout << "--------------------" << std::endl;
                 // TODO(OPT) bail if relative error is large
 
 
@@ -336,7 +356,7 @@ namespace ahr {
                     for_each_kxky([&](Dim kx, Dim ky) {
                         GM_Nonlinear_K_Loop(kx, ky, m) = nonlinear::GM(m, bracketPhiGM_K_Loop(kx, ky),
                                                                        bracketAParGMMinusPlus_K_Loop(kx, ky));
-                        // TODO(OPT) reuse star
+                        // TODO(OPT) reuse star1
                         momentsNew_K(kx, ky, m) =
                                 exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(kx, ky, m) +
                                 dt / 2.0 * exp_gm(m, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) *
@@ -373,7 +393,7 @@ namespace ahr {
                 DerivateNewMoment(LAST);
 
                 if (relative_error <= epsilon){
-                    std::cout << "relative error small:" << relative_error << std::endl;
+                    //std::cout << "relative error small:" << relative_error << std::endl;
                     break;
                 }
                 if (p != 0 and relative_error / old_error > 1.0) {
@@ -403,15 +423,23 @@ namespace ahr {
                 continue;
             }
 
+
             auto [magnetic, kinetic] = calculateEnergies();
-            std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
+            //std::cout << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
 
             // Update timestep
             Real tempDt = getTimestep(dPhi_Loop, sliceXY(dGM_Loop, N_E), sliceXY(dGM_Loop, A_PAR));
             dt = updateTimestep(dt, tempDt, noInc, relative_error);
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             t++;
+            std::cout << "--------------------------- " << std::endl;
             std::cout << "Moving on to next timestep: " << t << std::endl;
+            std::cout << "dt actual: " << dt << std::endl;
+
+            std::cout << "repeat count: " << repeatCount << std::endl <<
+                  "divergent count: " << divergentCount << std::endl;
+            std::cout << "--------------------------- " << std::endl;
+
             noInc = false;
             saved = false;
 
@@ -419,6 +447,9 @@ namespace ahr {
             std::swap(moments_K, momentsNew_K);
             std::swap(phi_K, phi_K_New);
             std::swap(ueKPar_K, ueKPar_K_New);
+
+            repeatCount = 0;
+            divergentCount = 0;
         }
         
         std::cout << "dt actual: " << dt << std::endl;

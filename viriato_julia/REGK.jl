@@ -204,6 +204,12 @@ end
 
 dti = CFL_frac*CFL_flow # TIMESTEP!
 
+# println("Initial dt calc ", dti)
+# println("vxmax: ",vxmax,"vymax: ",vymax)
+# println("bxmax: ",bxmax,"bymax: ",bymax)
+# println("bperpmax: ",bperp_max,"omega_kaw: ",omega_kaw)
+# println("cflflow: ", CFL_flow)
+
 # Hypercoefficients!
 if hyper_fixed 
     ν_g = hyper_ν_g
@@ -278,6 +284,10 @@ while t <= tmax
                 first = false
             end
             
+            # println("Ne at beginning of timestep ", t)
+            # println(nek)
+            # println("uekpar")
+            # println(uekpar)
 
             # Get the nonlinear operator values
             
@@ -360,6 +370,7 @@ while t <= tmax
     end 
     
 
+
     phik_star = phi_pot(nek_star)
     dxphi_star,dyphi_star = convol(phik_star) 
     dxne_star, dyne_star = convol(nek_star)
@@ -387,6 +398,17 @@ while t <= tmax
     end
 
     @debug "Starting corrector loop!!!!!!!!!"
+
+    # println("guess")
+    # print_cpp(guess)
+    # println("akpar")
+    # print_cpp(akpar)
+    # println("fapar_old")
+    # print_cpp(fApar_old)
+    # println("dx gmin star")
+    # println("dxg_star 3")
+    # print_cpp(dxg_star[:,:,gmin+1])
+    
 
     p_iter = 0
     for p_iter = 0:pmax
@@ -423,6 +445,9 @@ while t <= tmax
             end
         end
 
+
+
+
         relative_error = 0.0 # reset value of relative error
         for i = 1:nkx
             for j = 1:nky
@@ -438,6 +463,9 @@ while t <= tmax
                 sum_apar_rel_error = sum_apar_rel_error + abs2(akpar_new[i,j]-akpar[i,j]) # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
             end
         end
+
+    
+
 
         dxapar,dyapar = convol(akpar_new)
         dxuepar,dyuepar = convol(uekpar_new)
@@ -460,6 +488,16 @@ while t <= tmax
         # Get relative error for this p loop. Should definitely also put loop break statements here--no need to recalc g if we are only doing one p step!
         # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
         relative_error = maximum(abs.(rel_error_array))
+        
+        
+    
+        println("sum_apar_rel_error is ", sum_apar_rel_error)
+        println("Relative Error is ", relative_error)
+        println("-------------------------")
+        
+        # println("akparNew")
+        # print_cpp(akpar_new)
+        
 
         if debugging
             println("relative error in p loop")
@@ -475,7 +513,6 @@ while t <= tmax
         dxphi, dyphi = convol(phik_new)
         dxne,dyne = convol(nek_new)
 
-        
         # now get next mathcal gs 
         if g_inc
             
@@ -524,7 +561,7 @@ while t <= tmax
             dxg[:,:,ngtot],dyg[:,:,ngtot] = convol(gk_new[:,:,ngtot])
             
         end    
-            
+        
         # Now have all necessary values at p=1
 
         # Test for convergence
@@ -568,6 +605,7 @@ while t <= tmax
         print("Data at new timestep","\n")
         print(phik_new[32,32],nek_new[32,32],akpar_new[32,32],'\n')
     end
+ 
 
     nek = deepcopy(nek_new)
     akpar = deepcopy(akpar_new)
@@ -630,11 +668,17 @@ while t <= tmax
         print("Timestep ", t, "\n")
     end
 
-    println("")
+    
+    
+    println("----------")
+    println("Moving on to next timestep, ", t+1)
     println("dti is ",dti)
-    println("savetime is ", savetime)
-    println("")
-
+    #println("savetime is ", savetime)
+    println("num repeats is ", count_repeats)
+    println("Divergent counts ",count_divergent)
+    println("----------")
+    count_repeats=0
+    count_divergent=0
 
     if debugging
         print("Final Data","\n")
@@ -642,24 +686,24 @@ while t <= tmax
     end
     #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
-    if t%save_energyfiles == 0
-        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
-        println("Magnetic energy ",b_energy_tot)
-        println("Kinetic energy ",phine_energy_tot)
-    end
-    if t%save_datafiles == 0
-        file_string_apar = "apar_"*string(t)*".jld2"
-        #file_string_ne = "ne_"*string(t)*".jld2"
-        # Save Apar, ne in real space
-        apar = FFT2d_inv(akpar)
-        #ne = FFT2d_inv(nek)
-        save_object(file_string_apar,apar)
-        #save_object(file_string_ne,ne)
-        println("Saved data for timestep = ",t, " savetime= ",savetime)
-        # println("relative_error ", relative_error) 
-        # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
-        # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
-    end
+    # if t%save_energyfiles == 0
+    #     b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+    #     println("Magnetic energy ",b_energy_tot)
+    #     println("Kinetic energy ",phine_energy_tot)
+    # end
+    # if t%save_datafiles == 0
+    #     file_string_apar = "apar_"*string(t)*".jld2"
+    #     #file_string_ne = "ne_"*string(t)*".jld2"
+    #     # Save Apar, ne in real space
+    #     apar = FFT2d_inv(akpar)
+    #     #ne = FFT2d_inv(nek)
+    #     save_object(file_string_apar,apar)
+    #     #save_object(file_string_ne,ne)
+    #     println("Saved data for timestep = ",t, " savetime= ",savetime)
+    #     # println("relative_error ", relative_error) 
+    #     # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
+    #     # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
+    # end
 
 
     t += 1
