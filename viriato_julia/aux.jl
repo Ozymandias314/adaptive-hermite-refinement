@@ -52,8 +52,9 @@ function func_semi_implicit_operator(dti::Real, bperp_max::Real, aa0::Real)
     if rhoi < small_rhoi
         for i in 1:nkx
             for j in 1:nky
-                SI_oper[i,j] = aa0^2*(1+kperp(i,j)^2*(3.0/4.0*rhoi^2+rhos^2))*kperp(i,j)^2*bperp_max^2*
-                    dti^2/(1.0+kperp(i,j)^2*de^2) 
+                kperp2 = kperp(i,j)^2
+                SI_oper[i,j] = aa0^2*(1+kperp2*(3.0/4.0*rhoi^2+rhos^2))*kperp2*bperp_max^2*
+                    dti^2/(1.0+kperp2*de^2) 
             end
         end
     else

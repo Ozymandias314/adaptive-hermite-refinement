@@ -6,7 +6,7 @@ using LinearAlgebra,FFTW
 array = Array{Float64}(undef,nlx,nly)
 array_k = Array{ComplexF64}(undef,nkx,nky) # 
 rcfft_plan = plan_rfft(array)
-irfft_plan = plan_irfft(array_k,nlx) # Supply the first dimension of the real space array that was shrunk
+brfft_plan = plan_brfft(array_k,nlx) # Supply the first dimension of the real space array that was shrunk
 
 # 2D FFT
 function FFT2d_direct(array::Array{Float64})
@@ -38,5 +38,5 @@ end
 
 # 2D IFFT
 function FFT2d_inv(array_k::Array{ComplexF64})
-    array = irfft_plan*array_k
+    array = brfft_plan*array_k
 end

@@ -1,4 +1,28 @@
-using LinearAlgebra, FFTW, Logging, JLD2
+using LinearAlgebra, FFTW, Logging, JLD2, Printf
+
+function print_cpp(arr::Matrix{ComplexF64})
+    for i in 1:size(arr, 1)
+        row_str = ""
+        for j in 1:size(arr, 2)
+            real_part = @sprintf("%.8f",real(arr[i, j]))
+            imag_part = @sprintf("%.8f",imag(arr[i, j]))
+            row_str *= "($(real_part), $(imag_part)) "
+        end
+        println(row_str)
+    end
+end
+
+function print_cpp(arr::Matrix{Float64})
+    for i in 1:size(arr, 1)
+        row_str = ""
+        for j in 1:size(arr, 2)
+            real_part = @sprintf("%.8f",arr[i, j])
+            row_str *= "$(real_part) "
+        end
+        println(row_str)
+    end
+end
+
 
 include("constants.jl")
 include("transforms.jl")
@@ -411,7 +435,7 @@ while t <= tmax
                 uekpar_new[i,j] = -kperp(i,j)^2*akpar_new[i,j]
                 
                 # Take difference between akpar t=n and akpar_new, ie at t=n+1. Note akpar is only updated after p_loop. So this is akpar, n+1,p+1 - akpar,n
-                sum_apar_rel_error = sum_apar_rel_error + (abs(akpar_new[i,j]-akpar[i,j]))^2 # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
+                sum_apar_rel_error = sum_apar_rel_error + abs2(akpar_new[i,j]-akpar[i,j]) # Add up the change in Apar at every index. Will later divide by nkx*nky to get avg     
             end
         end
 
