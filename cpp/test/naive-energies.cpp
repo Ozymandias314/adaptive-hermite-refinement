@@ -32,10 +32,10 @@ TEST_P(NaiveEnergy, Diffusion) {
   }
 
   naive.run(p.N, 0); // no saving
-  auto const [mag_final, kin_final] = naive.calculateEnergies();
-  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
-  EXPECT_THAT(mag_final + kin_final,
+  auto const e_final = naive.calculateEnergies();
+  EXPECT_THAT(e_final.magnetic, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.kinetic, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.magnetic + e_final.kinetic,
               LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 
   // TODO find a good lower bound for energies here
@@ -58,17 +58,17 @@ TEST_P(NaiveEnergy, NoDiffusion) {
   }
 
   naive.run(p.N, 0); // no saving
-  auto const [mag_final, kin_final] = naive.calculateEnergies();
-  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
-  EXPECT_THAT(mag_final + kin_final,
+  auto const e_final = naive.calculateEnergies();
+  EXPECT_THAT(e_final.magnetic, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.kinetic, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.magnetic + e_final.kinetic,
               LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 
   // The energy numerical error is roughly proportional to the # of timesteps
   auto rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, AllClose(e_init.magnetic, rtol, 1e-5));
-  EXPECT_THAT(kin_final, AllClose(e_init.kinetic, rtol, 1e-5));
-  EXPECT_THAT(mag_final + kin_final,
+  EXPECT_THAT(e_final.magnetic, AllClose(e_init.magnetic, rtol, 1e-5));
+  EXPECT_THAT(e_final.kinetic, AllClose(e_init.kinetic, rtol, 1e-5));
+  EXPECT_THAT(e_final.magnetic + e_final.kinetic,
               AllClose(e_init.magnetic + e_init.kinetic, rtol, 1e-5));
 }
 
@@ -87,13 +87,13 @@ TEST_P(NaiveEnergy, MagDiffusion) {
   }
 
   naive.run(p.N, 0); // no saving
-  auto const [mag_final, kin_final] = naive.calculateEnergies();
+  auto const e_final = naive.calculateEnergies();
 
   // The energy numerical error is roughly proportional to the # of timesteps
   auto const rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
-  EXPECT_THAT(kin_final, AllClose(e_init.kinetic, rtol, 1e-5));
-  EXPECT_THAT(mag_final + kin_final,
+  EXPECT_THAT(e_final.magnetic, LeTolerant(e_init.magnetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.kinetic, AllClose(e_init.kinetic, rtol, 1e-5));
+  EXPECT_THAT(e_final.magnetic + e_final.kinetic,
               LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 }
 
@@ -112,13 +112,13 @@ TEST_P(NaiveEnergy, KinDiffusion) {
   }
 
   naive.run(p.N, 0); // no saving
-  auto [mag_final, kin_final] = naive.calculateEnergies();
+  auto e_final = naive.calculateEnergies();
 
   // The energy numerical error is roughly proportional to the # of timesteps
   auto rtol = 1e-6 * Real(p.N);
-  EXPECT_THAT(mag_final, AllClose(e_init.magnetic, rtol, 1e-5));
-  EXPECT_THAT(kin_final, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
-  EXPECT_THAT(mag_final + kin_final,
+  EXPECT_THAT(e_final.magnetic, AllClose(e_init.magnetic, rtol, 1e-5));
+  EXPECT_THAT(e_final.kinetic, LeTolerant(e_init.kinetic, 1e-7, 1e-5));
+  EXPECT_THAT(e_final.magnetic + e_final.kinetic,
               LeTolerant(e_init.magnetic + e_init.kinetic, 1e-7, 1e-5));
 }
 
