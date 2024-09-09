@@ -8,7 +8,7 @@
         "nlx": 8,
         "nly": 8,
         "nlz": 1,
-        "g_inc": false,
+        "g_inc": true,
         "ngtot": 10,
         "npe": 16,
         "npez": 16,
@@ -52,7 +52,7 @@
         "phi0": 0.0,
         "leq": 0.0,
         "perturb_amp": 1.0e-5,
-        "equilib_type": "OT01",
+        "equilib_type": "gaus",
         "perturb_type": "none"
     },
         "data_sav": {
