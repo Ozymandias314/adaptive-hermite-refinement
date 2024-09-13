@@ -287,6 +287,8 @@ namespace ahr {
     public:
       struct Energies {
         Real magnetic{0.0}, kinetic{0.0};
+
+        Real total() const { return magnetic + kinetic; }
       };
 
       Energies calculateEnergies() const;

@@ -565,7 +565,7 @@ namespace ahr {
     }
 
     Naive::Energies Naive::calculateEnergies() const {
-        Energies e;
+        Energies e{};
         for_each_kxky([&](Dim kx, Dim ky) {
             e.magnetic += kPerp2(kx, ky) * std::norm(moments_K(kx, ky, A_PAR));
             if (rhoI < smallRhoI) {
