@@ -38,7 +38,7 @@ target_link_libraries(fftw-cpp INTERFACE mdspan)
 
 option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off for the sake of Valgrind)" ON)
 if (ENABLE_AVX512)
-    add_compile_options("-mavx512f" "-march=native" "-ffast-math")
+    add_compile_options("-mavx512f" "-march=native")
 endif ()
 
 option(ENABLE_CILK "Enable Cilk parallelism" ON)
