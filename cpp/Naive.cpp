@@ -30,13 +30,26 @@ namespace ahr {
         assert((Y & (Y - 1)) == 0);
     }
 
+    void Naive::hlFilter(CViewXY& complexArray) {
+        for_each_kxky([&](Dim kx, Dim ky){
+            complexArray(kx, ky) *= exp(-36.0 * pow(kx_(kx)/KX, 36.0)) * exp(-36.0 * pow(ky_(ky)/KY, 36.0));
+
+        });
+    }
+
+    void Naive::fft(ViewXY in, CViewXY out){
+        fft_base(in,out);
+        hlFilter(out);
+    }
+
+
     void Naive::init(std::string_view equilibriumName) {
         // Currently assuming X==Y for simplicity, but the code is written generally for the most part.
         assert(X == Y);
         Buf2D temp{X, Y};
 
         // Plan FFTs both ways
-        fft = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
+        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
         fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
 
         // Initialize equilibrium values
@@ -129,7 +142,7 @@ namespace ahr {
             }
 
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
-            auto bracketPhiDeUEKPar_K = halfBracket(dPhi, dUEKPar);
+            auto bracketUEParPhi_K = halfBracket(dUEKPar,dPhi);
 
             DxDy<Buf2D> dBrLast{X, Y};
             auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
@@ -142,7 +155,7 @@ namespace ahr {
                     dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) * GM_Nonlinear_K(kx, ky, N_E);
 
                 GM_Nonlinear_K(kx, ky, A_PAR) = nonlinear::A(
-                    bracketAParPhiG2Ne_K(kx, ky), bracketPhiDeUEKPar_K(kx, ky), kPerp2(kx, ky));
+                    bracketAParPhiG2Ne_K(kx, ky), bracketUEParPhi_K(kx, ky), kPerp2(kx, ky));
                 GM_K_Star(kx, ky, A_PAR) =
                     exp_eta(kx, ky, hyper.eta2, dt) * moments_K(kx, ky, A_PAR) +
                     dt / 2.0 * (1 + exp_eta(kx, ky, hyper.eta2, dt)) *
@@ -210,6 +223,7 @@ namespace ahr {
                     });
                 }
             }
+
             // corrector step
 
             // Phi, Nabla, and other prep for A bracket
@@ -266,14 +280,15 @@ namespace ahr {
                 });
 
                 auto bracketAParPhiG2Ne_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dPhiNeG2_Loop);
-                auto bracketPhiDeUEKPar_K_Loop = halfBracket(dPhi_Loop, dUEKPar_Loop);
+                auto bracketUEParPhi_K_Loop = halfBracket(dUEKPar_Loop, dPhi_Loop);
+
 
                 /// f_pred from Viriato
                 Buf3D_K GM_Nonlinear_K_Loop{KX, KY, M};
                 Real sumAParRelError = 0;
                 for_each_kxky([&](Dim kx, Dim ky) {
                     GM_Nonlinear_K_Loop(kx, ky, A_PAR) = nonlinear::A(bracketAParPhiG2Ne_K_Loop(kx, ky),
-                                                                      bracketPhiDeUEKPar_K_Loop(kx, ky),
+                                                                      bracketUEParPhi_K_Loop(kx, ky),
                                                                       kPerp2(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, A_PAR) = 1.0 / (1.0 + semiImplicitOperator(kx, ky) / 4.0) *
@@ -296,10 +311,13 @@ namespace ahr {
                                                               std::sqrt(sumAParRelError / (Real(KX) * Real(KY))));
                 });
 
+                out << "sumApar relative_error:" << sumAParRelError << std::endl;
                 out << "relative_error:" << relative_error << std::endl;
                 // TODO(OPT) bail if relative error is large
 
                 DerivateNewMoment(A_PAR);
+                derivatives(ueKPar_K_New, dUEKPar_Loop);
+
                 auto bracketPhiNE_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, N_E));
                 auto bracketAParUEKPar_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), dUEKPar_Loop);
 
@@ -308,7 +326,7 @@ namespace ahr {
                                                                     bracketAParUEKPar_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, N_E) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, N_E) +
-                                                dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
+                                                dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
                                                 GM_Nonlinear_K(kx, ky, N_E) +
                                                 dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, N_E);
 
@@ -324,15 +342,14 @@ namespace ahr {
                         halfBracket(sliceXY(dGM_Loop, A_PAR), sliceXY(dGM_Loop, G_MIN + 1));
 
                     for_each_kxky([&](Dim kx, Dim ky) {
-                        GM_Nonlinear_K_Loop(kx, ky, G_MIN) =
-                            nonlinear::G2(bracketPhiG2_K_Loop(kx, ky), bracketAParG3_K_Loop(kx, ky),
-                                          bracketAParUEKPar_K_Loop(kx, ky));
+                        GM_Nonlinear_K_Loop(kx, ky, G_MIN) = nonlinear::G2(bracketPhiG2_K_Loop(kx, ky),
+                                                                           bracketAParG3_K_Loop(kx, ky),
+                                                                           bracketAParUEKPar_K_Loop(kx, ky));
                         // TODO(OPT) reuse star
-                        momentsNew_K(kx, ky, G_MIN) =
-                            exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
-                            dt / 2.0 * (1 + exp_nu(kx, ky, hyper.nu_2, dt)) *
-                                GM_Nonlinear_K(kx, ky, G_MIN) +
-                            dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, G_MIN);
+                        momentsNew_K(kx, ky, G_MIN) = exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, G_MIN) +
+                                                      dt / 2.0 * exp_nu(kx, ky, hyper.nu_2, dt) *
+                                                      GM_Nonlinear_K(kx, ky, G_MIN) +
+                                                      dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, G_MIN);
                     });
                     DerivateNewMoment(G_MIN);
 
@@ -406,7 +423,7 @@ namespace ahr {
                     dt = low * dt;
                     break;
                 }
-                if (p == MaxP) {
+                if (relative_error > epsilon and p == MaxP) {
                     // did not converge well enough
                     out << "repeating!" << std::endl;
                     repeat = true;
@@ -449,8 +466,9 @@ namespace ahr {
             out << "magnetic energy: " << magnetic << ", kinetic energy: " << kinetic << std::endl;
         }
 
+        out << "dt actual: " << dt << std::endl;
         out << "repeat count: " << repeatCount << std::endl <<
-                  "divergent count: " << divergentCount << std::endl;
+            "divergent count: " << divergentCount << std::endl;
 
         // TODO need a way to only export the final timestep
         if (saveInterval != 0) {
@@ -514,13 +532,6 @@ namespace ahr {
         Buf2D_K br_K{KX, KY};
         bracket(derOp1, derOp2, br);
         fft(br.to_mdspan(), br_K.to_mdspan());
-
-        for_each_kxky([&](Dim kx, Dim ky) {
-            if (kx_(kx) > double(KX) * 2.0 / 3.0 or ky_(ky) > double(KY) * 2.0 / 3.0) {
-                br_K(kx, ky) = 0;
-            }
-        });
-
         br_K(0, 0) = 0;
         return br_K;
     }

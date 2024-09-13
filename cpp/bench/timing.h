@@ -5,7 +5,13 @@
 #include <numeric>
 #include <algorithm>
 #include <iostream>
+
+#ifdef CILK_ENABLED
 #include <cilk/cilkscale.h>
+#else
+using wsp_t = int;
+int wsp_getworkspan() { return 0; }
+#endif
 
 using fms = std::chrono::duration<float, std::milli>;
 constexpr unsigned N_TRIALS = 10;

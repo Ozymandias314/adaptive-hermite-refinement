@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.21)
-set(CMAKE_SYSTEM_PROCESSOR arm64-apple-darwin) # TODO: not for everything
 project(adaptive_hermite_refinement)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -42,26 +41,22 @@ option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off fo
 if (ENABLE_AVX512)
     add_compile_options("-mavx512f" "-march=native" "-ffast-math")
 endif ()
-add_compile_options("-fopencilk")
-add_link_options("-fopencilk")
 
-option(CILK_STUB "Use stubs instead of Cilk constructs" OFF)
-if (CILK_STUB)
-    add_compile_definitions(CILK_STUB)
+option(ENABLE_CILK "Enable Cilk parallelism" ON)
+if (ENABLE_CILK)
+    add_compile_options("-fopencilk")
+    add_link_options("-fopencilk")
+    add_compile_definitions(CILK_ENABLED)
 endif ()
 
 add_executable(adaptive_hermite_refinement test-triangle.cpp)
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)
 
-add_executable(bench-fft bench-fft.cpp)
-target_link_libraries(bench-fft argparse fftw-cpp)
-
-add_executable(bench-fft-multi bench-fft-multi.cpp)
-target_link_libraries(bench-fft-multi argparse fftw-cpp)
-
 add_library(src-lib OBJECT Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)
 target_include_directories(src-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(src-lib mdspan fftw-cpp cnpy)
+
+add_subdirectory(bench)
 
 add_executable(naive driver.cpp)
 target_link_libraries(naive argparse src-lib)

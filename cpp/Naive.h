@@ -5,6 +5,7 @@
 #include "nonlinears.h"
 
 #include <fftw-cpp/fftw-cpp.h>
+#include <iomanip>
 #include <type_traits>
 
 #define _ln1(x) #x
@@ -47,7 +48,11 @@ namespace ahr {
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
         Real elapsedT; // total time elapsed
-        fftw::plan_r2c<2u> fft{};
+
+        void hlFilter(CViewXY& complexArray);
+        void fft(ViewXY in, CViewXY out); ///< FFT with Hou-Li Filter
+
+        fftw::plan_r2c<2u> fft_base{};
         fftw::plan_c2r<2u> fftInv{};
         Real bPerpMax{0};
 
@@ -267,7 +272,7 @@ namespace ahr {
             out << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
-                    out << view(x, y) << " ";
+                    out << std::setprecision(16) << view(x, y) << " ";
                 }
                 out << std::endl;
             }
