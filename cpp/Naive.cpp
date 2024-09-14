@@ -46,8 +46,8 @@ namespace ahr {
         Buf2D temp{X, Y};
 
         // Plan FFTs both ways
-        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
-        fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
+        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::ESTIMATE);
+        fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::ESTIMATE);
 
         // Initialize equilibrium values
         auto [aParEq, phi] = equilibriumGauss(X, Y);
