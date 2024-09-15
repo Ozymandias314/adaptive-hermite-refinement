@@ -365,8 +365,8 @@ namespace ahr {
                                                                          bracketTotalGLast_K_Loop(kx, ky));
                     // TODO(OPT) reuse star
                     momentsNew_K(kx, ky, LAST) =
-                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) * moments_K(kx, ky, LAST) +
-                            dt / 2.0 * exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) *
+                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) * moments_K(kx, ky, LAST) +
+                            dt / 2.0 * exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) *
                             GM_Nonlinear_K(kx, ky, LAST) +
                             dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, LAST);
                 });
