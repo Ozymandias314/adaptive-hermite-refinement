@@ -348,11 +348,11 @@ namespace ahr {
                 }
 
                 // Compute G_{M-1}
-                auto bracketPhiGLast_K_Loop = halfBracket(dPhi, sliceXY(dGM, LAST));
-                auto bracketAParGLast_K_Loop = halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
+                auto bracketPhiGLast_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, LAST));
+                auto bracketAParGLast_K_Loop = halfBracket(sliceXY(dGM_Loop, A_PAR), sliceXY(dGM_Loop, LAST));
                 for_each_kxky([&](Dim kx, Dim ky) {
                     bracketAParGLast_K_Loop(kx, ky) *= nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
-                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(M) * momentsNew_K(kx, ky, LAST - 1);
+                    bracketAParGLast_K_Loop(kx, ky) += rhoS / de * std::sqrt(LAST) * momentsNew_K(kx, ky, LAST - 1);
                     // Note: Viriato adds this after derivative, but can be distributed
                 });
 
