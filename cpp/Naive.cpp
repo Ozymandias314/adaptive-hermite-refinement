@@ -144,9 +144,6 @@ namespace ahr {
             auto bracketAParPhiG2Ne_K = halfBracket(sliceXY(dGM, A_PAR), dPhiNeG2);
             auto bracketUEParPhi_K = halfBracket(dUEKPar,dPhi);
 
-            DxDy<Buf2D> dBrLast{X, Y};
-            auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
-
             for_each_kxky([&](Dim kx, Dim ky) {
                 GM_Nonlinear_K(kx, ky, N_E) =
                     nonlinear::N(bracketPhiNE_K(kx, ky), bracketAParUEKPar_K(kx, ky));
@@ -178,7 +175,10 @@ namespace ahr {
                         rhoS / de * std::sqrt(LAST) * moments_K(kx, ky, LAST - 1);
                     // TODO Viriato adds this after the derivative
                 });
+
+                DxDy<Buf2D> dBrLast{X, Y};
                 derivatives(bracketAParGLast_K, dBrLast);
+                auto bracketTotalGLast_K = halfBracket(sliceXY(dGM, A_PAR), dBrLast);
 
                 for_each_kxky([&](Dim kx, Dim ky) {
                     GM_Nonlinear_K(kx, ky, G_MIN) =
