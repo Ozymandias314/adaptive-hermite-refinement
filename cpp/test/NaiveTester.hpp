@@ -42,4 +42,20 @@ class NaiveTester : public TesterWithOutput,
                     public ::testing::WithParamInterface<TesterParam::Tuple> {};
 class NaiveTester2 : public TesterWithOutput,
                      public ::testing::WithParamInterface<TesterParam2::Tuple> {
+public:
+  class Printer {
+    static std::string d_to_str(double d) {
+      auto r = std::to_string(d);
+      std::ranges::replace(r, '.', '_');
+      return r;
+    }
+  public:
+    std::string operator()(
+        const ::testing::TestParamInfo<TesterParam2::Tuple> &info) const {
+      auto const &p = TesterParam2{info.param};
+      return std::to_string(p.M) + "__" + std::to_string(p.X) + "__" +
+             std::to_string(p.N) + "__" + d_to_str(p.nu) + "__" +
+             d_to_str(p.res);
+    }
+  };
 };

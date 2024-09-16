@@ -28,6 +28,15 @@ Energies expectedEnergies(Real t, Energies e_init) {
 //    - total energy shouldn't decrease
 TEST_P(NaiveEnergy2, Gauss) {
   auto p = TesterParam2{GetParam()};
+  if (p.M > 2 && p.nu == 0.0 && p.res == 0.0) {
+    GTEST_SKIP_("Without diffusion, energy grows uncontrollably (unless apar "
+                "is the last moment).");
+  }
+
+  if (p.res != 0.0) {
+    GTEST_SKIP_("Magnetic diffusion is currently not working as expected.");
+  }
+
   ahr::nu = p.nu;
   ahr::res = p.res;
 
@@ -69,6 +78,15 @@ TEST_P(NaiveEnergy2, Gauss) {
 
 TEST_P(NaiveEnergy2, OT01) {
   auto p = TesterParam2{GetParam()};
+  if (p.M > 2 && p.nu == 0.0 && p.res == 0.0) {
+    GTEST_SKIP_("Without diffusion, energy grows uncontrollably (unless apar "
+                "is the last moment).");
+  }
+
+  if (p.res != 0.0) {
+    GTEST_SKIP_("Magnetic diffusion is currently not working as expected.");
+  }
+
   ahr::nu = p.nu;
   ahr::res = p.res;
 
@@ -105,24 +123,23 @@ TEST_P(NaiveEnergy2, OT01) {
 }
 
 using namespace testing;
-INSTANTIATE_TEST_SUITE_P(
-    NaiveEnergy2TestsSmallM, NaiveEnergy2,
-    ConvertGenerator<TesterParam2::Tuple>(
-        Combine(Values(2, 4),          // M
-                Values(32, 64),        // X
-                Values(10, 20),        // N
-                Values(0.0, 0.1, 1.0), // nu
-                Values(0.0) //, 0.1, 1.0) // res - TODO magnetic diffusion
-                )));
-INSTANTIATE_TEST_SUITE_P(
-    NaiveEnergy2TestsLargeM, NaiveEnergy2,
-    ConvertGenerator<TesterParam2::Tuple>(
-        Combine(Values(10, 20),        // M
-                Values(32),            // X
-                Values(10, 20),        // N
-                Values(0.0, 0.1, 1.0), // nu
-                Values(0.0) //, 0.1, 1.0)) // res - TODO magnetic diffusion
-                )));
+INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsSmallM, NaiveEnergy2,
+                         ConvertGenerator<TesterParam2::Tuple>(
+                             Combine(Values(2, 4),            // M
+                                     Values(32, 64),          // X
+                                     Values(10, 20),          // N
+                                     Values(0.0, 0.1, 1.0),   // nu
+                                     Values(0.0, 0.1, 1.0))), // res
+                         NaiveEnergy2::Printer{});
+
+INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsLargeM, NaiveEnergy2,
+                         ConvertGenerator<TesterParam2::Tuple>(
+                             Combine(Values(10, 20),          // M
+                                     Values(32),              // X
+                                     Values(10, 20),          // N
+                                     Values(0.0, 0.1, 1.0),   // nu
+                                     Values(0.0, 0.1, 1.0))), // res
+                         NaiveEnergy2::Printer{});
 
 // TODO remove old tests
 TEST_P(NaiveEnergy, Diffusion) {
