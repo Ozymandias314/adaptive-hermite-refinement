@@ -412,6 +412,7 @@ namespace ahr {
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
             t++;
             std::cout << "Moving on to next timestep: " << t << std::endl;
+            std::cout << "dti is: " << dt << std::endl;
             noInc = false;
             saved = false;
 
