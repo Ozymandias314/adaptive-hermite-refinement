@@ -192,8 +192,8 @@ namespace ahr {
             return std::sqrt(kPerp2(kx, ky));
         }
 
-        [[nodiscard]] Real exp_nu(Dim kx, Dim ky, Real niu2, Real dt) const {
-            return std::exp(-(nu * kPerp2(kx, ky) + niu2 * std::pow(kPerp2(kx, ky), hyper_order)) * dt);
+        [[nodiscard]] Real exp_nu(Dim kx, Dim ky, Real nu2, Real dt) const {
+            return std::exp(-(nu * kPerp2(kx, ky) + nu2 * std::pow(kPerp2(kx, ky), hyper_order)) * dt);
         }
 
         [[nodiscard]] Real exp_gm(Dim m, Real hyper_nuei, Real dt) const {

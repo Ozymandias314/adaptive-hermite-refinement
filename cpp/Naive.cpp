@@ -49,8 +49,8 @@ namespace ahr {
         Buf2D temp{X, Y};
 
         // Plan FFTs both ways
-        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::MEASURE);
-        fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::MEASURE);
+        fft_base = fftw::plan_r2c<2u>::dft(temp.to_mdspan(), phi_K.to_mdspan(), fftw::ESTIMATE);
+        fftInv = fftw::plan_c2r<2u>::dft(phi_K.to_mdspan(), temp.to_mdspan(), fftw::ESTIMATE);
 
         // Initialize equilibrium values
         auto [aParEq, phi] = equilibrium(equilibriumName, X, Y);
@@ -383,14 +383,14 @@ namespace ahr {
                     }
 
                     // Compute G_{M-1}
-                    auto bracketPhiGLast_K_Loop = halfBracket(dPhi, sliceXY(dGM, LAST));
+                    auto bracketPhiGLast_K_Loop = halfBracket(dPhi_Loop, sliceXY(dGM_Loop, LAST));
                     auto bracketAParGLast_K_Loop =
-                        halfBracket(sliceXY(dGM, A_PAR), sliceXY(dGM, LAST));
+                        halfBracket(sliceXY(dGM_Loop, A_PAR), sliceXY(dGM_Loop, LAST));
                     for_each_kxky([&](Dim kx, Dim ky) {
                         bracketAParGLast_K_Loop(kx, ky) *=
                             nonlinear::GLastBracketFactor(M, kPerp2(kx, ky), hyper);
                         bracketAParGLast_K_Loop(kx, ky) +=
-                            rhoS / de * std::sqrt(M) * momentsNew_K(kx, ky, LAST - 1);
+                            rhoS / de * std::sqrt(LAST) * momentsNew_K(kx, ky, LAST - 1);
                         // Note: Viriato adds this after derivative, but can be distributed
                     });
 
@@ -404,10 +404,10 @@ namespace ahr {
                             bracketPhiGLast_K_Loop(kx, ky), bracketTotalGLast_K_Loop(kx, ky));
                         // TODO(OPT) reuse star
                         momentsNew_K(kx, ky, LAST) =
-                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_2, dt) *
+                            exp_gm(LAST, hyper.nu_ei, dt) * exp_nu(kx, ky, hyper.nu_g, dt) *
                                 moments_K(kx, ky, LAST) +
                             dt / 2.0 * exp_gm(LAST, hyper.nu_ei, dt) *
-                                exp_nu(kx, ky, hyper.nu_2, dt) * GM_Nonlinear_K(kx, ky, LAST) +
+                                exp_nu(kx, ky, hyper.nu_g, dt) * GM_Nonlinear_K(kx, ky, LAST) +
                             dt / 2.0 * GM_Nonlinear_K_Loop(kx, ky, LAST);
                     });
                     DerivateNewMoment(LAST);
@@ -453,6 +453,7 @@ namespace ahr {
             hyper = HyperCoefficients::calculate(dt, KX, KY, M);
 
             out << "Moving on to next timestep: " << t << std::endl;
+            out << "dti is: " << dt << std::endl;
             noInc = false;
             saved = false;
 

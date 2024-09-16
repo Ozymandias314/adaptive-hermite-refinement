@@ -4,8 +4,8 @@ function print_cpp(arr::Matrix{ComplexF64})
     for i in 1:size(arr, 1)
         row_str = ""
         for j in 1:size(arr, 2)
-            real_part = @sprintf("%.8f",real(arr[i, j]))
-            imag_part = @sprintf("%.8f",imag(arr[i, j]))
+            real_part = real(arr[i, j])
+            imag_part = imag(arr[i, j])
             row_str *= "($(real_part), $(imag_part)) "
         end
         println(row_str)
@@ -16,8 +16,7 @@ function print_cpp(arr::Matrix{Float64})
     for i in 1:size(arr, 1)
         row_str = ""
         for j in 1:size(arr, 2)
-            real_part = @sprintf("%.8f",arr[i, j])
-            row_str *= "$(real_part) "
+            row_str *= "$(arr[i, j]) "
         end
         println(row_str)
     end
@@ -461,13 +460,11 @@ while t <= tmax
         # If more than 1 p step, then would need to keep track of new g values over multiple p iterations...
         relative_error = maximum(abs.(rel_error_array))
 
-        if debugging
-            println("relative error in p loop")
-            println(relative_error)
-            println("dti in ploop")
-            println(dti)
-            println()
-        end
+#         if debugging
+
+        println("sumApar relative_error: $sum_apar_rel_error")
+        println("relative_error: $relative_error")
+#         end
 
         phik_new = phi_pot(nek_new)
 
@@ -628,13 +625,20 @@ while t <= tmax
     if debugging
         print("End of timeloop, moving to next iteration \n")
         print("Timestep ", t, "\n")
+    b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+    println("magnetic energy: $b_energy_tot, kinetic energy: $phine_energy_tot")
+
     end
 
-    println("")
+    println("----------")
+    println("Moving on to next timestep, ", t+1)
     println("dti is ",dti)
-    println("savetime is ", savetime)
-    println("")
-
+    #println("savetime is ", savetime)
+    println("num repeats is ", count_repeats)
+    println("Divergent counts ",count_divergent)
+    println("----------")
+    count_repeats=0
+    count_divergent=0
 
     if debugging
         print("Final Data","\n")
@@ -642,12 +646,7 @@ while t <= tmax
     end
     #print("At end of tloop, t = ",t)
     # DIAGNOSTICS GO HERE
-    if t%save_energyfiles == 0
-        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
-        println("Magnetic energy ",b_energy_tot)
-        println("Kinetic energy ",phine_energy_tot)
-    end
-    if t%save_datafiles == 0
+    if save_datafiles != 0 && t%save_datafiles == 0
         file_string_apar = "apar_"*string(t)*".jld2"
         #file_string_ne = "ne_"*string(t)*".jld2"
         # Save Apar, ne in real space
