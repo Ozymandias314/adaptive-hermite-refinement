@@ -19,13 +19,6 @@ Energies expectedEnergies(Real t, Energies e_init) {
 
 #define CHECK_ENERGIES()
 
-// TODO
-// - gauss:
-//    - start at 32, kinetic 0, magnetic decreases with diffusion
-// - OT01:
-//    - only look at sum
-//    - check that sum diffusion is roughly the sum of the expected diffusions
-//    - total energy shouldn't decrease
 TEST_P(NaiveEnergy2, Gauss) {
   auto p = TesterParam2{GetParam()};
   if (p.M > 2 && p.nu == 0.0 && p.res == 0.0) {
@@ -126,15 +119,15 @@ using namespace testing;
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsSmallM, NaiveEnergy2,
                          ConvertGenerator<TesterParam2::Tuple>(
                              Combine(Values(2, 4),            // M
-                                     Values(32, 64),          // X
-                                     Values(10, 20),          // N
+                                     Values(32, 64, 128),     // X
+                                     Values(10, 20, 30),      // N
                                      Values(0.0, 0.1, 1.0),   // nu
                                      Values(0.0, 0.1, 1.0))), // res
                          NaiveEnergy2::Printer{});
 
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsLargeM, NaiveEnergy2,
                          ConvertGenerator<TesterParam2::Tuple>(
-                             Combine(Values(10, 20),          // M
+                             Combine(Values(10, 20, 45),      // M
                                      Values(32),              // X
                                      Values(10, 20),          // N
                                      Values(0.0, 0.1, 1.0),   // nu
