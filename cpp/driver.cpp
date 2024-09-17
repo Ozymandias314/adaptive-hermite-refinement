@@ -39,7 +39,9 @@ int main(int argc, const char *argv[]) {
 
     try {
         arguments.parse_args(argc, argv);
-        if (arguments.get<Dim>("M") < 4) throw std::invalid_argument("At least 4 moments required");
+        if (auto const M = arguments.get<Dim>("M"); M < 4 and M != 2) {
+            throw std::invalid_argument("At least 4 moments required");
+        }
     }
     catch (const std::runtime_error &err) {
         std::cerr << err.what() << std::endl;
