@@ -622,13 +622,8 @@ while t <= tmax
         hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
     end
 
-    if debugging
-        print("End of timeloop, moving to next iteration \n")
-        print("Timestep ", t, "\n")
     b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
     println("magnetic energy: $b_energy_tot, kinetic energy: $phine_energy_tot")
-
-    end
 
     println("----------")
     println("Moving on to next timestep, ", t+1)
