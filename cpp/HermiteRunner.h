@@ -12,14 +12,14 @@ namespace ahr {
 
     class HermiteRunner {
     public:
+      virtual ~HermiteRunner() = default;
 
-        explicit HermiteRunner(std::ostream &out);
+      explicit HermiteRunner(std::ostream &out);
 
         /**
          * init prepares the hermite simulation.
          */
-        virtual void
-        init(std::string_view equilibriumName) = 0;
+        virtual void init(std::string_view equilibriumName) = 0;
 
         /**
          * run() will simulate Hermite moments for N timesteps.
