@@ -57,7 +57,7 @@ int main(int argc, const char *argv[]) {
     Naive naive{std::cout, M, X, X};
     HermiteRunner &runner = naive;
 
-    runner.init("gauss");
+    runner.init("OT01");
     runner.run(nr, saveInterval);
     auto aPar = runner.getFinalAPar();
 
