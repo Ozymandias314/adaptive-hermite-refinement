@@ -131,7 +131,7 @@ namespace ahr {
 
         /// Returns a 2D mdspan of values in the XY space for a specified m.
         template<class Buf>
-        requires std::same_as<Buf, Buf3D> or std::same_as<Buf, Buf3D_K>
+        requires std::same_as<std::decay_t<Buf>, Buf3D> or std::same_as<std::decay_t<Buf>, Buf3D_K>
         static auto sliceXY(Buf &moments, Dim m) {
             return stdex::submdspan(moments.to_mdspan(), stdex::full_extent, stdex::full_extent, m);
         }
@@ -294,14 +294,23 @@ namespace ahr {
       Energies calculateEnergies() const;
 
       Real elapsedTime() const { return elapsedT; }
+
+      // Returns a const CViewXY
+      auto getMoment_K(Dim m) const { return sliceXY(moments_K, m); }
+
+      Buf2D getMoment(Dim m) const;
+
     private:
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
 
+    public:
+        // TODO(luka) separate exporting utility
         void exportToNpy(std::string path, ViewXY view) const;
 
         // Will also normalize and inverseFFT
         void exportToNpy(std::string path, CViewXY view) const;
 
+    private:
         // If view = viewOut, then we're normalizing in place.
         void normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const;
 

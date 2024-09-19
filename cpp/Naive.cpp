@@ -513,6 +513,19 @@ namespace ahr {
         return result;
     }
 
+    Naive::Buf2D Naive::getMoment(Dim m) const {
+        // Make a copy first
+        Buf2D_K tmp{KX, KY};
+        for_each_kxky([&](Dim kx, Dim ky) {
+            tmp(kx, ky) = moments_K(kx, ky, m);
+        });
+
+        Buf2D out{X, Y};
+        fftInv(tmp.to_mdspan(), out.to_mdspan());
+
+        return out;
+    }
+
     [[nodiscard]] Naive::Buf2D_K Naive::fullBracket(Naive::CViewXY op1, Naive::CViewXY op2) {
         DxDy<Buf2D> derOp1{X, Y}, derOp2{X, Y};
         derivatives(op1, derOp1);

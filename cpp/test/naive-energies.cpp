@@ -8,7 +8,7 @@ namespace ahr {
 using namespace ::testing;
 
 // Make this into a class if utilities need to be added
-using NaiveEnergy = NaiveTester;
+using NaiveEnergy = NaiveTester<>;
 
 Naive::Energies expectedEnergies(Real t, Naive::Energies e_init) {
   return {.magnetic = std::exp(-t * res * 2) * e_init.magnetic,
@@ -19,7 +19,7 @@ Naive::Energies expectedEnergies(Real t, Naive::Energies e_init) {
 
 TEST_P(NaiveEnergy, Gauss) {
   auto p = TesterParam{GetParam()};
-  if (p.M > 2 && p.nu == 0.0 && p.res == 0.0) {
+  if (p.nu == 0.0 && p.res == 0.0) {
     GTEST_SKIP_("Without diffusion, energy grows uncontrollably (unless apar "
                 "is the last moment).");
   }

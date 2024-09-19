@@ -2,6 +2,26 @@
 
 #include <fftw-cpp/fftw-cpp.h>
 #include <gmock/gmock.h>
+#include <tuple>
+
+// Function to slice the tuple
+template<std::size_t Start, std::size_t End, typename Tuple, std::size_t... Indices>
+auto slice_impl(const Tuple& t, std::index_sequence<Indices...>) {
+    return std::make_tuple(std::get<Start + Indices>(t)...);
+}
+
+template<std::size_t Start, std::size_t End, typename Tuple>
+auto slice(const Tuple& t) {
+    static_assert(Start <= End, "Start index must be less than or equal to End index");
+    static_assert(End <= std::tuple_size<Tuple>::value, "End index out of bounds");
+    return slice_impl<Start, End>(t, std::make_index_sequence<End - Start>{});
+}
+
+template<std::size_t Start, typename ...Args>
+auto slice(const std::tuple<Args...>& t) {
+    return slice<Start, sizeof...(Args)>(t);
+}
+
 
 using ::testing::PrintToString;
 MATCHER_P3(AllClose, val, rel_tol, abs_tol,
