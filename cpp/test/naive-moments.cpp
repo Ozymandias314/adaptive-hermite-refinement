@@ -103,4 +103,62 @@ INSTANTIATE_TEST_SUITE_P(NaiveMomentsLargeM, NaiveMoments,
                              )),
                          NaiveMoments::Printer{});
 
+using MomentParamHyper = WithEquilibrium<WithHyperDiffusion<NaiveParam>>;
+using NaiveMomentsHyper = NaiveMomentsBase<MomentParamHyper>;
+
+TEST_P(NaiveMomentsHyper, CheckMoments) {
+  auto const f0 = getFilename(0);
+  // When updating values, comment this line
+  // ASSERT_TRUE(fs::exists(f0)) << "File " << f0 << " does not exist!";
+
+  auto const p = GetParam();
+
+  hyper_coef = p.hyper_coef;
+  hyper_coef_g = p.hyper_coef_g;
+  hyperm_coef = p.hyperm_coef;
+
+  Naive naive{out, p.M, p.X, p.X};
+
+  naive.init(p.equilibrium);
+  naive.run(p.N + 1, 0); // no saving
+
+  for (Dim m = 0; m < p.M; m++) {
+    // To update values, uncomment these 2 lines
+    std::cout << "WARNING!: Overwriting " << getFilename(m) << std::endl;
+    naive.exportToNpy(getFilename(m), naive.getMoment(m));
+
+    auto npy = readMoment(m);
+    ASSERT_TRUE(npy.valid());
+
+    EXPECT_THAT(naive.getMoment(m).to_mdspan(),
+                MdspanElementsAllClose(npy.view(), 1e-14, 1e-15))
+        << "Moment " << m << " mismatch!";
+  }
+}
+
+// TODO hyper coefficients
+INSTANTIATE_TEST_SUITE_P(NaiveMomentsHyperSmallM, NaiveMomentsHyper,
+                         ConvertGenerator<MomentParamHyper::Tuple>(
+                             Combine(Values(2, 4),           // M
+                                     Values(32, 64, 128),    // X
+                                     Values(20),             // N
+                                     Values(0.1, 1.0),       // hyper_coef_g
+                                     Values(0.1, 1.0),       // hyper_coef
+                                     Values(0.1, 1.0),       // hyperm_coef
+                                     Values("OT01", "gauss") // equilibrium
+                                     )),
+                         NaiveMomentsHyper::Printer{});
+
+INSTANTIATE_TEST_SUITE_P(NaiveMomentsHyperLargeM, NaiveMomentsHyper,
+                         ConvertGenerator<MomentParamHyper::Tuple>(
+                             Combine(Values(10, 20),         // M
+                                     Values(32, 64),         // X
+                                     Values(20),             // N
+                                     Values(0.1, 1.0),       // hyper_coef_g
+                                     Values(0.1, 1.0),       // hyper_coef
+                                     Values(0.1, 1.0),       // hyperm_coef
+                                     Values("OT01", "gauss") // equilibrium
+                                     )),
+                         NaiveMomentsHyper::Printer{});
+
 }; // namespace ahr
