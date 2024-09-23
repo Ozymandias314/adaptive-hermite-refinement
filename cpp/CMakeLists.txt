@@ -36,7 +36,7 @@ enable_testing()
 add_subdirectory(fftw-cpp)
 target_link_libraries(fftw-cpp INTERFACE mdspan)
 
-option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off for the sake of Valgrind)" ON)
+option(ENABLE_AVX512 "Enable AVX512 instructions (e.g. might want to turn off for the sake of Valgrind)" OFF)
 if (ENABLE_AVX512)
     add_compile_options("-mavx512f" "-march=native")
 endif ()
