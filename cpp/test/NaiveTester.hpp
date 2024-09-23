@@ -118,7 +118,7 @@ protected:
 
   void TearDown() override {
     if (HasFailure()) {
-      std::cout << "Full output:" << out.str() << std::endl;
+      std::cout << "============\nFull output:\n" << out.str() << std::endl;
     }
   }
 };

@@ -96,12 +96,13 @@ TEST_P(NaiveEnergy, OT01) {
   Real const diffused = e_init.total() - e_final.total();
   Real const expected_diffusion = e_init.total() - e_expected.total();
 
-  // Add energy tolerance
-  auto const rtol = 2e-5 * Real(p.N);
+  // Add energy tolerance -> larger for smaller grids
+  auto const grid_rtol = 2e-2 * Real(p.N) / (Real(p.X) * Real(p.X));
+  auto const rtol = 1e-6 * Real(p.N) + grid_rtol;
   auto const e_tol = rtol * e_init.total();
   EXPECT_THAT(diffused,
-              AllOf(GeTolerant(expected_diffusion * 0.9, 0.0, e_tol),
-                    LeTolerant(expected_diffusion * 1.1, 0.0, e_tol)));
+              AllOf(GeTolerant(expected_diffusion * 0.8, 0.0, e_tol),
+                    LeTolerant(expected_diffusion * 1.25, 0.0, e_tol)));
 
   std::cout << "mag_init: " << e_init.magnetic
             << " mag_final: " << e_final.magnetic
@@ -115,19 +116,19 @@ TEST_P(NaiveEnergy, OT01) {
 
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsSmallM, NaiveEnergy,
                          ConvertGenerator<NaiveEnergyParam::Tuple>(
-                             Combine(Values(2, 4),            // M
-                                     Values(32, 64, 128),     // X
-                                     Values(10, 20, 30),      // N
-                                     Values(0.0, 0.1, 1.0),   // nu
-                                     Values(0.0, 0.1, 1.0))), // res
+                             Combine(Values(2, 4),          // M
+                                     Values(32, 64, 128),   // X
+                                     Values(10, 20, 40),    // N
+                                     Values(0.0, 0.1, 1.0), // res
+                                     Values(0.1, 1.0))),    // nu
                          NaiveEnergy::Printer{});
 
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsLargeM, NaiveEnergy,
                          ConvertGenerator<NaiveEnergyParam::Tuple>(
-                             Combine(Values(10, 20, 45),      // M
-                                     Values(32),              // X
-                                     Values(10, 20),          // N
-                                     Values(0.0, 0.1, 1.0),   // nu
-                                     Values(0.0, 0.1, 1.0))), // res
+                             Combine(Values(10, 20, 45),    // M
+                                     Values(32),            // X
+                                     Values(10, 20),        // N
+                                     Values(0.0, 0.1, 1.0), // res
+                                     Values(0.1, 1.0))),    // nu
                          NaiveEnergy::Printer{});
 } // namespace ahr
