@@ -7,18 +7,18 @@
 namespace ahr {
 using namespace ::testing;
 
-// Make this into a class if utilities need to be added
-using NaiveEnergy = NaiveTester<>;
+using NaiveEnergyParam = WithDiffusion<NaiveParam>;
 
-Naive::Energies expectedEnergies(Real t, Naive::Energies e_init) {
-  return {.magnetic = std::exp(-t * res * 2) * e_init.magnetic,
-          .kinetic = std::exp(-t * nu * 2) * e_init.kinetic};
-}
-
-#define CHECK_ENERGIES()
+class NaiveEnergy : public NaiveTester<NaiveEnergyParam> {
+protected:
+  Naive::Energies expectedEnergies(Real t, Naive::Energies e_init) {
+    return {.magnetic = std::exp(-t * res * 2) * e_init.magnetic,
+            .kinetic = std::exp(-t * nu * 2) * e_init.kinetic};
+  };
+};
 
 TEST_P(NaiveEnergy, Gauss) {
-  auto p = TesterParam{GetParam()};
+  auto const p = GetParam();
   if (p.nu == 0.0 && p.res == 0.0) {
     GTEST_SKIP_("Without diffusion, energy grows uncontrollably (unless apar "
                 "is the last moment).");
@@ -68,7 +68,7 @@ TEST_P(NaiveEnergy, Gauss) {
 }
 
 TEST_P(NaiveEnergy, OT01) {
-  auto p = TesterParam{GetParam()};
+  auto const p = GetParam();
   if (p.M > 2 && p.nu == 0.0 && p.res == 0.0) {
     GTEST_SKIP_("Without diffusion, energy grows uncontrollably (unless apar "
                 "is the last moment).");
@@ -113,21 +113,21 @@ TEST_P(NaiveEnergy, OT01) {
             << " expected_diffusion: " << expected_diffusion << std::endl;
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    NaiveEnergy2TestsSmallM, NaiveEnergy,
-    ConvertGenerator<TesterParam::Tuple>(Combine(Values(2, 4),            // M
-                                                 Values(32, 64, 128),     // X
-                                                 Values(10, 20, 30),      // N
-                                                 Values(0.0, 0.1, 1.0),   // nu
-                                                 Values(0.0, 0.1, 1.0))), // res
-    NaiveEnergy::Printer{});
+INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsSmallM, NaiveEnergy,
+                         ConvertGenerator<NaiveEnergyParam::Tuple>(
+                             Combine(Values(2, 4),            // M
+                                     Values(32, 64, 128),     // X
+                                     Values(10, 20, 30),      // N
+                                     Values(0.0, 0.1, 1.0),   // nu
+                                     Values(0.0, 0.1, 1.0))), // res
+                         NaiveEnergy::Printer{});
 
-INSTANTIATE_TEST_SUITE_P(
-    NaiveEnergy2TestsLargeM, NaiveEnergy,
-    ConvertGenerator<TesterParam::Tuple>(Combine(Values(10, 20, 45),      // M
-                                                 Values(32),              // X
-                                                 Values(10, 20),          // N
-                                                 Values(0.0, 0.1, 1.0),   // nu
-                                                 Values(0.0, 0.1, 1.0))), // res
-    NaiveEnergy::Printer{});
+INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsLargeM, NaiveEnergy,
+                         ConvertGenerator<NaiveEnergyParam::Tuple>(
+                             Combine(Values(10, 20, 45),      // M
+                                     Values(32),              // X
+                                     Values(10, 20),          // N
+                                     Values(0.0, 0.1, 1.0),   // nu
+                                     Values(0.0, 0.1, 1.0))), // res
+                         NaiveEnergy::Printer{});
 } // namespace ahr

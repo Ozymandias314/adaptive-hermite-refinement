@@ -6,36 +6,21 @@
 
 #include <filesystem>
 #include <gtest/gtest.h>
+#include <utility>
+
+namespace fs = std::filesystem;
 
 namespace ahr {
 
-// TODO WithEquilibrium
-struct MomentParam : TesterParam {
-  std::string equilibrium;
-
-  /// eq, M, X, N, nu, res
-  using Tuple = std::tuple<std::string, Dim, Dim, Dim, Real, Real>;
-
-  explicit MomentParam(Tuple t)
-      : equilibrium(std::get<0>(t)), TesterParam{slice<1>(t)} {}
-
-  std::string to_param_str() const {
-    return equilibrium + "_" + TesterParam::to_param_str();
-  }
-};
-
-class NaiveMoments : public NaiveTester<MomentParam> {
+template <param_like Param> class NaiveMomentsBase : public NaiveTester<Param> {
 protected:
+  using Base = NaiveTester<Param>;
   std::string getFilename(Dim m) {
-    std::ostringstream oss;
-    auto const p = GetParam();
+    auto const p = Base::GetParam();
 
     // Tests are run from inside the `test` directory
-    oss << "./_test_data/" << p.equilibrium << "_M" << p.M << "_x" << p.X
-        << "_n" << p.N << "_res" << p.res_str() << "_nu" << p.nu_str() << "_m"
-        << m << ".npy";
-
-    return oss.str();
+    auto const filename = p.to_param_str() + "_m" + std::to_string(m) + ".npy";
+    return fs::current_path() / "_test_data" / filename;
   }
 
   // Owning holder of a npy array with convenience to see it as an mdspan.
@@ -44,11 +29,11 @@ protected:
     cnpy::NpyArray array_;
 
   public:
-    explicit NpyMdspan(const cnpy::NpyArray &array) : array_(array) {}
+    explicit NpyMdspan(cnpy::NpyArray array) : array_(std::move(array)) {}
 
     // TODO(luka) const view
     Naive::ViewXY view() {
-      std::span<size_t, 2> extents{array_.shape.data(), 2};
+      std::span<size_t, 2> const extents{array_.shape.data(), 2};
       return Naive::ViewXY{array_.data<Real>(), extents};
     }
 
@@ -63,7 +48,14 @@ protected:
   }
 };
 
+using MomentParam = WithEquilibrium<WithDiffusion<NaiveParam>>;
+using NaiveMoments = NaiveMomentsBase<MomentParam>;
+
 TEST_P(NaiveMoments, CheckMoments) {
+  auto const f0 = getFilename(0);
+  // When updating values, comment this line
+  ASSERT_TRUE(fs::exists(f0)) << "File " << f0 << " does not exist!";
+
   auto const p = GetParam();
 
   nu = p.nu;
@@ -91,23 +83,23 @@ TEST_P(NaiveMoments, CheckMoments) {
 using namespace testing;
 INSTANTIATE_TEST_SUITE_P(NaiveMomentsSmallM, NaiveMoments,
                          ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values("OT01", "gauss"), // equilibrium
-                             Values(2, 4),            // M
-                             Values(32, 64, 128),     // X
-                             Values(20),              // N
-                             Values(0.1, 1.0),     // nu - if 0, energy blows up
-                             Values(0.0, 0.1, 1.0) // res
+                             Values(2, 4),          // M
+                             Values(32, 64, 128),   // X
+                             Values(20),            // N
+                             Values(0.0, 0.1, 1.0), // res
+                             Values(0.1, 1.0), // nu - if 0, energy blows up
+                             Values("OT01", "gauss") // equilibrium
                              )),
                          NaiveMoments::Printer{});
 
 INSTANTIATE_TEST_SUITE_P(NaiveMomentsLargeM, NaiveMoments,
                          ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values("OT01", "gauss"), // equilibrium
-                             Values(10, 20),          // M
-                             Values(32, 64),          // X
-                             Values(20),              // N
+                             Values(10, 20),   // M
+                             Values(32, 64),   // X
+                             Values(20),       // N
+                             Values(0.1, 1.0), // res
                              Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values(0.1, 1.0)  // res
+                             Values("OT01", "gauss") // equilibrium
                              )),
                          NaiveMoments::Printer{});
 

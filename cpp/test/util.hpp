@@ -29,8 +29,6 @@ MATCHER_P3(AllClose, val, rel_tol, abs_tol,
            ")") {
     auto diff = std::max(arg, val) - std::min(arg, val);
     double tolerance_diff = double(diff) - double(abs_tol) - double(rel_tol) * std::abs(val);
-
-
     return tolerance_diff <= 0;
 }
 
@@ -103,7 +101,7 @@ MATCHER_P3(MdspanElementsAllClose, vals, rel_tol, abs_tol,
             bool close = ::testing::ExplainMatchResult(AllClose(val, rel_tol, abs_tol), arg_val,
                                                        result_listener);
             if (!close) {
-                *result_listener << " at index " << PrintToString(indices);
+                *result_listener << val << " vs " << arg_val << " at index " << PrintToString(indices);
                 return false;
             }
         } else {
