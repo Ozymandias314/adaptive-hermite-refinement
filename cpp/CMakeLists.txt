@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # ==========================
 # Library dependencies
+# TODO: find locally first if available
 # ==========================
 include(FetchContent)
 FetchContent_Declare(
@@ -51,7 +52,17 @@ endif ()
 add_executable(adaptive_hermite_refinement test-triangle.cpp)
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)
 
-add_executable(naive driver.cpp Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)
-target_link_libraries(naive argparse fftw-cpp cnpy)
+add_library(src-lib OBJECT Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)
+target_include_directories(src-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(src-lib mdspan fftw-cpp cnpy)
 
 add_subdirectory(bench)
+
+add_executable(naive driver.cpp)
+target_link_libraries(naive argparse src-lib)
+
+option(AHR_TEST "Enable AHR tests" ON)
+if (AHR_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif ()

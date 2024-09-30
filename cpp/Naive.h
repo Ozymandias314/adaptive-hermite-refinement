@@ -28,9 +28,9 @@ namespace ahr {
          */
         Naive(std::ostream &out, Dim M, Dim X, Dim Y);
 
-        void init(Dim N_) override;
+        void init(std::string_view equilibriumName) override;
 
-        void run(Dim saveInterval) override;
+        void run(Dim N, Dim saveInterval) override;
 
         mdarray<Real, dextents<Dim, 2u>> getFinalAPar() override;
 
@@ -47,7 +47,7 @@ namespace ahr {
         using ViewXY = stdex::mdspan<Real, stdex::dextents<Dim, 2u>, stdex::layout_left>;
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
-        Dim N{};
+        Real elapsedT{0.0}; // total time elapsed
 
         void hlFilter(CViewXY& complexArray);
         void fft(ViewXY in, CViewXY out); ///< FFT with Hou-Li Filter
@@ -80,8 +80,6 @@ namespace ahr {
                 return {U(DX), U(DY)};
             }
         };
-
-
 
         /// \defgroup Buffers for all the physical quantities used.
         /// Names ending in K mean the values are in phase space.
@@ -133,7 +131,7 @@ namespace ahr {
 
         /// Returns a 2D mdspan of values in the XY space for a specified m.
         template<class Buf>
-        requires std::same_as<Buf, Buf3D> or std::same_as<Buf, Buf3D_K>
+        requires std::same_as<std::decay_t<Buf>, Buf3D> or std::same_as<std::decay_t<Buf>, Buf3D_K>
         static auto sliceXY(Buf &moments, Dim m) {
             return stdex::submdspan(moments.to_mdspan(), stdex::full_extent, stdex::full_extent, m);
         }
@@ -245,16 +243,24 @@ namespace ahr {
                            ky_(KY / 2 + 1) * bPerpMax / std::sqrt(1.0 + kperpDum2 * de * de);
 
             Real dx = lx / Real(X), dy = ly / Real(Y);
-            Real CFLFlow = std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
-                                     std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
+
+            Real CFLFlow;
+            if (M > 2) {
+                CFLFlow =
+                    std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw,
+                              std::min(dx / bxMax, dy / byMax) / (rhoS / de) / std::sqrt(LAST)});
+            } else {
+                CFLFlow =
+                    std::min({dx / vxMax, dy / vyMax, 2.0 / omegaKaw, dx / bxMax, dy / byMax});
+            }
 
             // DEBUG
-            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
-            std::cout << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
-            std::cout << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
-            std::cout << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
-            std::cout << "CFLFlow: " << CFLFlow << std::endl;
-            std::cout << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
+            out << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            out << "vxmax: " << vxMax << " vymax: " << vyMax << std::endl;
+            out << "bxmax: " << bxMax << " bymax: " << byMax << std::endl;
+            out << "bperp_max: " << bPerpMax << " omegakaw: " << omegaKaw << std::endl;
+            out << "CFLFlow: " << CFLFlow << std::endl;
+            out << "calculated dt: " << CFLFlow * CFLFrac << std::endl;
 
             return CFLFrac * CFLFlow;
         }
@@ -263,14 +269,14 @@ namespace ahr {
         template<typename View> requires (not std::same_as<View, Buf2D>) and (not std::same_as<View, Buf2D_K>)
 
         void print(std::string_view name, View view) const {
-            std::cout << name << ":\n";
+            out << name << ":\n";
             for (int x = 0; x < view.extent(0); ++x) {
                 for (int y = 0; y < view.extent(1); ++y) {
-                    std::cout << std::setprecision(16) << view(x, y) << " ";
+                    out << std::setprecision(16) << view(x, y) << " ";
                 }
-                std::cout << std::endl;
+                out << std::endl;
             }
-            std::cout << "===========================================" << std::endl;
+            out << "===========================================" << std::endl;
         }
 
         template<typename Buf>
@@ -278,17 +284,33 @@ namespace ahr {
         [[maybe_unused]] void print(std::string_view name, Buf &view) const {
             print(name, view.to_mdspan());
         }
+    public:
+      struct Energies {
+        Real magnetic{0.0}, kinetic{0.0};
 
-        // Returns magnetic, kinetic energies
-        std::pair<Real, Real> calculateEnergies() const;
+        Real total() const { return magnetic + kinetic; }
+      };
 
+      Energies calculateEnergies() const;
+
+      Real elapsedTime() const { return elapsedT; }
+
+      // Returns a const CViewXY
+      auto getMoment_K(Dim m) const { return sliceXY(moments_K, m); }
+
+      Buf2D getMoment(Dim m) const;
+
+    private:
         Real updateTimestep(Real dt, Real tempDt, bool noInc, Real relative_error) const;
 
+    public:
+        // TODO(luka) separate exporting utility
         void exportToNpy(std::string path, ViewXY view) const;
 
         // Will also normalize and inverseFFT
         void exportToNpy(std::string path, CViewXY view) const;
 
+    private:
         // If view = viewOut, then we're normalizing in place.
         void normalize(Naive::ViewXY view, Naive::ViewXY viewOut) const;
 

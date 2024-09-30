@@ -45,4 +45,14 @@ namespace ahr {
         }
         return std::make_pair(std::move(aParEq), std::move(phiEq));
     }
+
+    auto equilibrium(std::string_view name, Dim X, Dim Y) {
+        if (name == "gauss") {
+            return equilibriumGauss(X, Y);
+        } else if (name == "OT01") {
+            return equilibriumOT01(X, Y);
+        } else {
+            throw std::invalid_argument("name must be one of gauss or OT01");
+        }
+    }
 }

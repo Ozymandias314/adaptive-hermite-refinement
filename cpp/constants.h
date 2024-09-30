@@ -8,47 +8,46 @@ namespace ahr {
     constexpr Real lx = 1.0 * 2 * pi;
     constexpr Real ly = 1.0 * 2 * pi;
 
+    // TODO organize these into struct instead of global
+
     /// Time parameters
-    constexpr Real InitAA0Fac = 0.1;
-    constexpr Real CFLFrac = 0.2;
-    constexpr Real epsilon = 1e-10;
+    inline Real InitAA0Fac = 0.1;
+    inline Real CFLFrac = 0.2;
+    inline Real epsilon = 1e-10;
 
     // This actually means MaxP+1 is the last computed value
-    constexpr Dim MaxP = 1;
+    inline Dim MaxP = 1;
 
-    constexpr Real aa0 = InitAA0Fac; /// TODO not const
-    constexpr Real low = 0.92;
+    inline Real aa0 = InitAA0Fac; /// TODO not const
+    inline Real low = 0.92;
 
     /// FLR
-    constexpr Real rhoI = 1.0e-7;
-    constexpr Real rhoS = 1.0e-7;
-    constexpr Real de = 1.0e-7;
+    inline Real rhoI = 1.0e-7;
+    inline Real rhoS = 1.0e-7;
+    inline Real de = 1.0e-7;
 
     /// MHD
-    constexpr Real smallRhoI = 1.0e-6;
+    inline Real smallRhoI = 1.0e-6;
 
     /// Diffusion
-    constexpr Real nu_ei = 0.0001;
-    constexpr Real res = 0.1;
-    constexpr Real nu = 0.1; // This is niu in Viriato
-    constexpr Real hyper_coef_g = 0.0;
-    constexpr Real hyper_coef = 0.0;
-    constexpr Real hyperm_coef = 0.0;
+    inline Real nu_ei = 0.0001;
+    inline Real res = 0.1;
+    inline Real nu = 0.1; // This is niu in Viriato
+    inline Real hyper_coef_g = 0.0;
+    inline Real hyper_coef = 0.0;
+    inline Real hyperm_coef = 0.0;
 
-    constexpr Dim hyper_order = 3;
-    constexpr Dim hyper_order_g = 3;
-    constexpr Dim hyper_morder = 3;
-
-    /// Hyper-coefficients
-//    constexpr Real hyper_nuei = 0.2;
+    inline Dim hyper_order = 3;
+    inline Dim hyper_order_g = 3;
+    inline Dim hyper_morder = 3;
 
     /// equil
-    constexpr Real a0 = 1.0;
+    inline Real a0 = 1.0;
 
     struct HyperCoefficients {
         Real nu_g, nu_2, eta2, nu_ei;
 
-        static constexpr HyperCoefficients calculate(Real dt, Dim KX, Dim KY, Dim M) {
+        static HyperCoefficients calculate(Real dt, Dim KX, Dim KY, Dim M) {
             Real kPerpMax2 = std::pow(KX, 2) + std::pow(Real(KY) / 2, 2);
 
             HyperCoefficients ret{};
