@@ -580,9 +580,7 @@ namespace ahr {
     Naive::Energies Naive::calculateEnergies() const {
         Energies e{};
         for_each_kxky([&](Dim kx, Dim ky) {
-
-            Real const factor = kx == 0? 0.5:1.0;
-
+            Real const factor = kx == 0 ? 0.5 : 1.0;
             e.magnetic += factor * kPerp2(kx, ky) * std::norm(moments_K(kx, ky, A_PAR));
             if (rhoI < smallRhoI) {
                 e.kinetic += factor * kPerp2(kx, ky) * std::norm(phi_K(kx, ky));
@@ -591,6 +589,10 @@ namespace ahr {
                            std::norm(phi_K(kx, ky));
             }
         });
+        
+        // Normalize the energies
+        e.magnetic /= Real(X) * Real(Y);
+        e.kinetic /= Real(X) * Real(Y);
 
         return e;
     }
