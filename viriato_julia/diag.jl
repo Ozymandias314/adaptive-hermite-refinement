@@ -3,29 +3,6 @@ include("grid.jl")
 using FFTW
 
 
-function print_cpp(arr::Matrix{ComplexF64})
-    for i in 1:size(arr, 1)
-        row_str = ""
-        for j in 1:size(arr, 2)
-            real_part = round(real(arr[i, j]), digits=6)
-            imag_part = round(imag(arr[i, j]), digits=6)
-            row_str *= "($(real_part), $(imag_part)) "
-        end
-        println(row_str)
-    end
-end
-
-function print_cpp(arr::Matrix{Float64})
-    for i in 1:size(arr, 1)
-        row_str = ""
-        for j in 1:size(arr, 2)
-            real_part = sprintf1("%.5e",arr[i, j])
-            row_str *= "$(real_part) "
-        end
-        println(row_str)
-    end
-end
-
 
 function convol(Fk)
     #print(Fk[32,32],"\n")
