@@ -47,7 +47,8 @@ namespace ahr {
         using ViewXY = stdex::mdspan<Real, stdex::dextents<Dim, 2u>, stdex::layout_left>;
     private:
         Dim const M, X, Y, KX{X / 2 + 1}, KY{Y};
-        Real elapsedT{0.0}; // total time elapsed
+        Real dt{-1}; ///< timestep
+        Real elapsedT{0.0}; ///< total time elapsed
 
         void hlFilter(CViewXY& complexArray);
         void fft(ViewXY in, CViewXY out); ///< FFT with Hou-Li Filter

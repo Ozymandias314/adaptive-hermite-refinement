@@ -83,7 +83,6 @@ namespace ahr {
 
         bool divergent = false, repeat = false, noInc = false;
         int divergentCount = 0, repeatCount = 0;
-        Real dt{-1};
         HyperCoefficients hyper{};
 
         bool saved = false;
