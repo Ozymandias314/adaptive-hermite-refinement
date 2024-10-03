@@ -24,3 +24,7 @@ target_link_libraries(bench-naive src-lib benchmark::benchmark_main)
 
 add_executable(bench-fftw-cilk fftw-cilk.cpp)
 target_link_libraries(bench-fftw-cilk fftw-cpp benchmark::benchmark fftw3_threads)
+
+add_executable(bench-fftw-pthread fftw-cilk.cpp)
+target_compile_definitions(bench-fftw-pthread PUBLIC FFTW_PTHREADS)
+target_link_libraries(bench-fftw-pthread fftw-cpp benchmark::benchmark fftw3_threads)

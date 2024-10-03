@@ -4,6 +4,7 @@
 #include <cilk/cilk.h>
 #include <cstring>
 #include <iostream>
+#include <thread>
 
 static void copy(fftw::buffer const &in, fftw::buffer &out) {
   std::memcpy(out.data(), in.data(),
@@ -30,7 +31,6 @@ static void BM_FFTW_1D(benchmark::State &state) {
   fftw::buffer in{X};
   fftw::buffer out{X};
 
-  fftw_plan_with_nthreads(int(X));
   auto const plan = fftw::plan<>::dft(in, out, fftw::FORWARD, fftw::MEASURE);
 
   // warmup
@@ -63,8 +63,6 @@ static void BM_FFTW_2D(benchmark::State &state) {
   fftw::mdbuffer<2> in{X, Y};
   fftw::mdbuffer<2> out{X, Y};
 
-
-  fftw_plan_with_nthreads(int(X*Y));
   auto const plan = fftw::plan<2>::dft(in, out, fftw::FORWARD, fftw::MEASURE);
 
   // warmup
@@ -91,7 +89,7 @@ BENCHMARK(BM_FFTW_2D)
     ->Unit(benchmark::kMillisecond);
 
 // TODO pthreads, openmp, cilk -> compare all
-#ifndef PTHREADS
+#ifndef FFTW_PTHREADS
 void parallel_for(void *(*work)(char *), char *jobdata, size_t elsize,
                   int njobs, void *data) {
   // std::cout << "parallel_for: " << njobs << std::endl;
@@ -101,11 +99,20 @@ void parallel_for(void *(*work)(char *), char *jobdata, size_t elsize,
 
 int main(int argc, char **argv) {
   fftw_init_threads();
+  std::cout << "Number of threads: " << std::thread::hardware_concurrency()
+            << std::endl;
+
+#ifdef FFTW_PTHREADS
+#define cilk_scope_
+  fftw_plan_with_nthreads(std::thread::hardware_concurrency() / 2);
+#else
+#define cilk_scope_ cilk_scope
   fftw_plan_with_nthreads(K);
   fftw_threads_set_callback(parallel_for, nullptr);
+#endif
 
   // make sure cilk isn't initialized and deinitialized for each benchmark
-  cilk_scope {
+  cilk_scope_ {
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();
   }
