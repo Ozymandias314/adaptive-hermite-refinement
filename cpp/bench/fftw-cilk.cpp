@@ -76,9 +76,15 @@ static void BM_FFTW_2D(benchmark::State &state) {
 auto constexpr K = 1024;
 auto constexpr M = K * K;
 
-BENCHMARK(BM_copy_1D)->Range(16 * M, 128 * M)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_copy_1D)
+    ->RangeMultiplier(2)
+    ->Range(16 * M, 64 * M)
+    ->Unit(benchmark::kMillisecond);
 
-BENCHMARK(BM_FFTW_1D)->Range(16 * M, 128 * M)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_FFTW_1D)
+    ->RangeMultiplier(2)
+    ->Range(16 * M, 64 * M)
+    ->Unit(benchmark::kMillisecond);
 
 BENCHMARK(BM_copy_2D)
     ->ArgsProduct({{4 * K, 8 * K, 16 * K}, {4 * K, 8 * K, 16 * K}})
@@ -99,17 +105,21 @@ void parallel_for(void *(*work)(char *), char *jobdata, size_t elsize,
 
 int main(int argc, char **argv) {
   fftw_init_threads();
-  std::cout << "Number of threads: " << std::thread::hardware_concurrency()
-            << std::endl;
+  int njobs = int(std::thread::hardware_concurrency()) / 2;
 
 #ifdef FFTW_PTHREADS
 #define cilk_scope_
-  fftw_plan_with_nthreads(std::thread::hardware_concurrency() / 2);
 #else
 #define cilk_scope_ cilk_scope
-  fftw_plan_with_nthreads(K);
   fftw_threads_set_callback(parallel_for, nullptr);
 #endif
+
+  if (auto const n = std::getenv("BENCH_NJOBS"); n) {
+    njobs = std::stoi(n);
+  }
+
+  std::cout << "Using " << njobs << " jobs for FFTW" << std::endl;
+  fftw_plan_with_nthreads(njobs);
 
   // make sure cilk isn't initialized and deinitialized for each benchmark
   cilk_scope_ {
