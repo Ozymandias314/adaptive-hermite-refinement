@@ -4,7 +4,6 @@
 #include "timing.h"
 
 #include <argparse/argparse.hpp>
-#include <cilk/cilkscale.h>
 #include <iostream>
 #include <numbers>
 
