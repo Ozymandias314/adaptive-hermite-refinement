@@ -1,4 +1,4 @@
-using LinearAlgebra, FFTW, Logging, JLD2, Printf
+using LinearAlgebra, FFTW, Logging, JLD2, Printf, NPZ
 
 function print_cpp(arr::Matrix{ComplexF64})
     for i in 1:size(arr, 1)
@@ -622,8 +622,7 @@ while t <= tmax
         hyper_νei=hyperm_coef/dti/(ngtot+1)^(2*hyper_morder)
     end
 
-    b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
-    println("magnetic energy: $b_energy_tot, kinetic energy: $phine_energy_tot")
+
 
     println("----------")
     println("Moving on to next timestep, ", t+1)
@@ -653,6 +652,21 @@ while t <= tmax
         # println("relative_error ", relative_error) 
         # println("dti ",dti," temp dti ", dti_temp) # Factor of 2 small for dti_temp-->direct calc from flows . Factor of 5.7 small for actual timesteps --> why? Has to do w relative error as well, but relative error very similar
         # println("bxmax,bymax,bperpmax ",bxmax," ",bymax," ",bperp_max )
+    end
+
+    # Get energies
+    if t%save_energyfiles == 0
+        b_energy_tot,phine_energy_tot = energy_tot(akpar,phik)
+        println("magnetic energy: $b_energy_tot, kinetic energy: $phine_energy_tot")
+        
+        # Get energy spectra
+        kp_array, ek_b,ek_e,ek_u = k_energy(akpar,phik)
+        npzwrite("ek_$(savetime).npz", Dict("ek_b" => ek_b, "ek_e" => ek_e, "ek_u" => ek_u))
+        # Get hermite spectrum
+        if g_inc
+            gm_array, ek_gm = gm_spectrum(gk)
+            npzwrite("energy_gm_$(savetime).npz", Dict("ek_gm" => ek_gm))
+        end 
     end
 
 
