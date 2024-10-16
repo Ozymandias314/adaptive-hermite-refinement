@@ -2,6 +2,7 @@
 
 #include <benchmark/benchmark.h>
 #include <cilk/cilk.h>
+#include <cilk/cilkscale.h>
 #include <cstring>
 #include <iostream>
 #include <thread>
