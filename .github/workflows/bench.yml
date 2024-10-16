@@ -15,7 +15,7 @@ jobs:
         run: |
           sudo apt update 
           sudo apt install build-essential ninja-build cmake
-      - name: fftw-download
+      - name: fftw-download # TODO use fftw-cpp for download
         run: |
           wget https://www.fftw.org/fftw-3.3.10.tar.gz
           tar -xf fftw-3.3.10.tar.gz
@@ -34,18 +34,18 @@ jobs:
       - name: benchmark
         run: ./cmake-build-release/bench-naive --benchmark_format=json --benchmark_out=bench-naive.json
 
-      # main for comparison
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
-        with:
-          ref: main
-      - name: build-main
-        run: |
-          mkdir cmake-build-release-main
-          cd cmake-build-release-main 
-          cmake -G Ninja -D CMAKE_BUILD_TYPE=Release ../cpp
-          ninja
-      - name: benchmark-main
-        run: ./cmake-build-release-main/bench-naive --benchmark_format=json --benchmark_out=bench-naive-main.json
-
-      - name: compare
-        run: python3 cmake-build-release/_deps/google-benchmark-src/tools/compare.py bench-naive-main.json bench-naive.json
+#      # TODO main for comparison
+#      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+#        with:
+#          ref: main
+#      - name: build-main
+#        run: |
+#          mkdir cmake-build-release-main
+#          cd cmake-build-release-main
+#          cmake -G Ninja -D CMAKE_BUILD_TYPE=Release -D ENABLE_CILK=OFF
+#          ninja
+#      - name: benchmark-main
+#        run: ./cmake-build-release-main/bench-naive --benchmark_format=json --benchmark_out=bench-naive-main.json
+#
+#      - name: compare
+#        run: python3 cmake-build-release/_deps/google-benchmark-src/tools/compare.py bench-naive-main.json bench-naive.json
