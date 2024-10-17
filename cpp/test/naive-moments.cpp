@@ -9,8 +9,20 @@
 #include <utility>
 
 namespace fs = std::filesystem;
-
 namespace ahr {
+
+constexpr Real HIGH_PRECISION_RTOL = 1e-14;
+constexpr Real HIGH_PRECISION_ATOL = 1e-15;
+constexpr Real LOW_PRECISION_RTOL = 1e-10;
+constexpr Real LOW_PRECISION_ATOL = 1e-10;
+
+#ifdef TEST_MOMENTS_HIGH_PRECISION
+constexpr Real ATOL = HIGH_PRECISION_ATOL;
+constexpr Real RTOL = HIGH_PRECISION_RTOL;
+#else
+constexpr Real RTOL = LOW_PRECISION_RTOL;
+constexpr Real ATOL = LOW_PRECISION_ATOL;
+#endif
 
 template <param_like Param> class NaiveMomentsBase : public NaiveTester<Param> {
 protected:
@@ -72,7 +84,7 @@ TEST_P(NaiveMoments, CheckMoments) {
     auto npy = readMoment(m);
     ASSERT_TRUE(npy.valid());
 
-    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), 5e-14, 1e-13))
+    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), RTOL, ATOL))
         << "Moment " << m << " mismatch!";
   }
 }
@@ -123,9 +135,9 @@ TEST_P(NaiveMomentsMultiRun, RunMultipleTimes) {
 
   // Check that both produced the same results
   for (int m = 0; m < p.M; m++) {
-    auto const view = naive.getMoment(m).to_mdspan();
-    auto const view2 = naive2.getMoment(m).to_mdspan();
-    EXPECT_THAT(view, MdspanElementsAllClose(view2, 1e-14, 1e-15))
+    auto const moment = naive.getMoment(m).to_mdspan();
+    auto const moment2 = naive2.getMoment(m).to_mdspan();
+    EXPECT_THAT(moment, MdspanElementsAllClose(moment2, HIGH_PRECISION_RTOL, HIGH_PRECISION_ATOL))
         << "Moment " << m << " mismatch!";
   }
 }
@@ -141,4 +153,4 @@ INSTANTIATE_TEST_SUITE_P(
                                                  )),
     NaiveMomentsMultiRun::Printer{});
 
-}; // namespace ahr
+} // namespace ahr
