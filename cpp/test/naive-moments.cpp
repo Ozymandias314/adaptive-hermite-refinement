@@ -37,9 +37,7 @@ protected:
       return Naive::ViewXY{array_.data<Real>(), extents};
     }
 
-    [[nodiscard]] bool valid() const {
-      return array_.word_size == sizeof(Real);
-    }
+    [[nodiscard]] bool valid() const { return array_.word_size == sizeof(Real); }
   };
 
   NpyMdspan readMoment(Dim m) {
@@ -74,34 +72,33 @@ TEST_P(NaiveMoments, CheckMoments) {
     auto npy = readMoment(m);
     ASSERT_TRUE(npy.valid());
 
-    EXPECT_THAT(naive.getMoment(m).to_mdspan(),
-                MdspanElementsAllClose(npy.view(), 5e-14, 1e-13))
+    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), 5e-14, 1e-13))
         << "Moment " << m << " mismatch!";
   }
 }
 
 using namespace testing;
-INSTANTIATE_TEST_SUITE_P(NaiveMomentsSmallM, NaiveMoments,
-                         ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values(2, 4),          // M
-                             Values(32, 64, 128),   // X
-                             Values(20),            // N
-                             Values(0.0, 0.1, 1.0), // res
-                             Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values("OT01", "gauss") // equilibrium
-                             )),
-                         NaiveMoments::Printer{});
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsSmallM, NaiveMoments,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(2, 4),          // M
+                                                 Values(32, 64, 128),   // X
+                                                 Values(20),            // N
+                                                 Values(0.0, 0.1, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMoments::Printer{});
 
-INSTANTIATE_TEST_SUITE_P(NaiveMomentsLargeM, NaiveMoments,
-                         ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values(10, 20),   // M
-                             Values(32, 64),   // X
-                             Values(20),       // N
-                             Values(0.1, 1.0), // res
-                             Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values("OT01", "gauss") // equilibrium
-                             )),
-                         NaiveMoments::Printer{});
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsLargeM, NaiveMoments,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(10, 20),   // M
+                                                 Values(32, 64),   // X
+                                                 Values(20),       // N
+                                                 Values(0.1, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMoments::Printer{});
 
 using NaiveMomentsMultiRun = NaiveMomentsBase<MomentParam>;
 
@@ -133,15 +130,15 @@ TEST_P(NaiveMomentsMultiRun, RunMultipleTimes) {
   }
 }
 
-INSTANTIATE_TEST_SUITE_P(NaiveMomentsMultiRun, NaiveMomentsMultiRun,
-                         ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values(2, 5),    // M
-                             Values(128),  // X
-                             Values(2, 5),     // N
-                             Values(0.0, 1.0), // res
-                             Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values("OT01", "gauss") // equilibrium
-                             )),
-                         NaiveMomentsMultiRun::Printer{});
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsMultiRun, NaiveMomentsMultiRun,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(2, 5),     // M
+                                                 Values(128),      // X
+                                                 Values(2, 5),     // N
+                                                 Values(0.0, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMomentsMultiRun::Printer{});
 
 }; // namespace ahr

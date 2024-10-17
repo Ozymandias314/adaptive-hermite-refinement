@@ -24,9 +24,7 @@ TEST_P(NaiveEnergy, Gauss) {
                 "is the last moment).");
   }
 
-  if (p.res != 0.0) {
-    GTEST_SKIP_("Magnetic diffusion is currently not working as expected.");
-  }
+  if (p.res != 0.0) { GTEST_SKIP_("Magnetic diffusion is currently not working as expected."); }
 
   nu = p.nu;
   res = p.res;
@@ -56,15 +54,13 @@ TEST_P(NaiveEnergy, Gauss) {
   // Add energy tolerance
   auto const rtol = 2e-5 * Real(p.N);
   auto const e_tol = rtol * e_init.magnetic;
-  EXPECT_THAT(diffused,
-              AllOf(GeTolerant(expected_diffusion * 0.9, 0.0, e_tol),
-                    LeTolerant(expected_diffusion * 1.1, 0.0, e_tol)));
+  EXPECT_THAT(diffused, AllOf(GeTolerant(expected_diffusion * 0.9, 0.0, e_tol),
+                              LeTolerant(expected_diffusion * 1.1, 0.0, e_tol)));
 
-  std::cout << "mag_init: " << e_init.magnetic
-            << " mag_final: " << e_final.magnetic
+  std::cout << "mag_init: " << e_init.magnetic << " mag_final: " << e_final.magnetic
             << " mag_expected: " << e_expected.magnetic << std::endl;
-  std::cout << "diffused: " << diffused
-            << " expected_diffusion: " << expected_diffusion << std::endl;
+  std::cout << "diffused: " << diffused << " expected_diffusion: " << expected_diffusion
+            << std::endl;
 }
 
 TEST_P(NaiveEnergy, OT01) {
@@ -74,9 +70,7 @@ TEST_P(NaiveEnergy, OT01) {
                 "is the last moment).");
   }
 
-  if (p.res != 0.0) {
-    GTEST_SKIP_("Magnetic diffusion is currently not working as expected.");
-  }
+  if (p.res != 0.0) { GTEST_SKIP_("Magnetic diffusion is currently not working as expected."); }
 
   nu = p.nu;
   res = p.res;
@@ -100,35 +94,32 @@ TEST_P(NaiveEnergy, OT01) {
   auto const grid_rtol = 2e-2 * Real(p.N) / (Real(p.X) * Real(p.X));
   auto const rtol = 1e-6 * Real(p.N) + grid_rtol;
   auto const e_tol = rtol * e_init.total();
-  EXPECT_THAT(diffused,
-              AllOf(GeTolerant(expected_diffusion * 0.8, 0.0, e_tol),
-                    LeTolerant(expected_diffusion * 1.25, 0.0, e_tol)));
+  EXPECT_THAT(diffused, AllOf(GeTolerant(expected_diffusion * 0.8, 0.0, e_tol),
+                              LeTolerant(expected_diffusion * 1.25, 0.0, e_tol)));
 
-  std::cout << "mag_init: " << e_init.magnetic
-            << " mag_final: " << e_final.magnetic
+  std::cout << "mag_init: " << e_init.magnetic << " mag_final: " << e_final.magnetic
             << " mag_expected: " << e_expected.magnetic << std::endl;
-  std::cout << "kin_init: " << e_init.kinetic
-            << " kin_final: " << e_final.kinetic
+  std::cout << "kin_init: " << e_init.kinetic << " kin_final: " << e_final.kinetic
             << " kin_expected: " << e_expected.kinetic << std::endl;
-  std::cout << "diffused: " << diffused
-            << " expected_diffusion: " << expected_diffusion << std::endl;
+  std::cout << "diffused: " << diffused << " expected_diffusion: " << expected_diffusion
+            << std::endl;
 }
 
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsSmallM, NaiveEnergy,
-                         ConvertGenerator<NaiveEnergyParam::Tuple>(
-                             Combine(Values(2, 4),          // M
-                                     Values(32, 64, 128),   // X
-                                     Values(10, 20, 40),    // N
-                                     Values(0.0, 0.1, 1.0), // res
-                                     Values(0.1, 1.0))),    // nu
+                         ConvertGenerator<NaiveEnergyParam::Tuple>(Combine(Values(2, 4),        // M
+                                                                           Values(32, 64, 128), // X
+                                                                           Values(10, 20, 40),  // N
+                                                                           Values(0.0, 0.1,
+                                                                                  1.0), // res
+                                                                           Values(0.1, 1.0))), // nu
                          NaiveEnergy::Printer{});
 
 INSTANTIATE_TEST_SUITE_P(NaiveEnergy2TestsLargeM, NaiveEnergy,
-                         ConvertGenerator<NaiveEnergyParam::Tuple>(
-                             Combine(Values(10, 20, 45),    // M
-                                     Values(32),            // X
-                                     Values(10, 20),        // N
-                                     Values(0.0, 0.1, 1.0), // res
-                                     Values(0.1, 1.0))),    // nu
+                         ConvertGenerator<NaiveEnergyParam::Tuple>(Combine(Values(10, 20, 45), // M
+                                                                           Values(32),         // X
+                                                                           Values(10, 20),     // N
+                                                                           Values(0.0, 0.1,
+                                                                                  1.0), // res
+                                                                           Values(0.1, 1.0))), // nu
                          NaiveEnergy::Printer{});
 } // namespace ahr

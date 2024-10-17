@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace ahr;
-static void BM_Naive(benchmark::State& state) {
+static void BM_Naive(benchmark::State &state) {
   std::ostringstream oss;
 
   Dim const M = state.range(0);
