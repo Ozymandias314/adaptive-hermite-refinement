@@ -101,7 +101,9 @@ MATCHER_P3(MdspanElementsAllClose, vals, rel_tol, abs_tol,
             bool close = ::testing::ExplainMatchResult(AllClose(val, rel_tol, abs_tol), arg_val,
                                                        result_listener);
             if (!close) {
-                *result_listener << val << " vs " << arg_val << " at index " << PrintToString(indices);
+                *result_listener << std::setprecision(16) << val << " vs "
+                                 << arg_val << " at index "
+                                 << PrintToString(indices);
                 return false;
             }
         } else {
