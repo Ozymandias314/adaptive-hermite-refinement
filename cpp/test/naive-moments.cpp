@@ -103,4 +103,45 @@ INSTANTIATE_TEST_SUITE_P(NaiveMomentsLargeM, NaiveMoments,
                              )),
                          NaiveMoments::Printer{});
 
+using NaiveMomentsMultiRun = NaiveMomentsBase<MomentParam>;
+
+TEST_P(NaiveMomentsMultiRun, RunMultipleTimes) {
+  auto const p = GetParam();
+
+  nu = p.nu;
+  res = p.res;
+
+  Naive naive{out, p.M, p.X, p.X};
+  Naive naive2{out, p.M, p.X, p.X};
+
+  naive.init(p.equilibrium);
+  naive2.init(p.equilibrium);
+
+  // Run both for N timesteps
+  naive.run(p.N, 0);
+
+  // Split the run into two parts for naive2
+  naive2.run(1, 0);
+  naive2.run(p.N - 1, 0);
+
+  // Check that both produced the same results
+  for (int m = 0; m < p.M; m++) {
+    auto const view = naive.getMoment(m).to_mdspan();
+    auto const view2 = naive2.getMoment(m).to_mdspan();
+    EXPECT_THAT(view, MdspanElementsAllClose(view2, 1e-14, 1e-15))
+        << "Moment " << m << " mismatch!";
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(NaiveMomentsMultiRun, NaiveMomentsMultiRun,
+                         ConvertGenerator<MomentParam::Tuple>(Combine(
+                             Values(2, 5),    // M
+                             Values(128),  // X
+                             Values(2, 5),     // N
+                             Values(0.0, 1.0), // res
+                             Values(0.1, 1.0), // nu - if 0, energy blows up
+                             Values("OT01", "gauss") // equilibrium
+                             )),
+                         NaiveMomentsMultiRun::Printer{});
+
 }; // namespace ahr
