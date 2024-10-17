@@ -22,7 +22,7 @@ FetchContent_MakeAvailable(google-benchmark)
 add_executable(bench-naive naive.cpp)
 target_link_libraries(bench-naive src-lib benchmark::benchmark_main)
 
-if (CILK_ENABLED)
+if (ENABLE_CILK)
     add_executable(bench-fftw-cilk fftw-cilk.cpp)
     target_link_libraries(bench-fftw-cilk fftw-cpp benchmark::benchmark fftw3_threads)
 
