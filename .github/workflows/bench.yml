@@ -49,13 +49,17 @@ jobs:
           ninja
       - name: benchmark-main
         run: ./cmake-build-release-main/bench/bench-naive --benchmark_out_format=json --benchmark_out=../bench-naive-main.json
-      - name: compare
+      - name: compare-install
         run: |
           # Use cmake-build-release-main because cmake-build-release is gone after checkout
           pip3 install -r cmake-build-release-main/_deps/google-benchmark-src/tools/requirements.txt
+      - name: compare
+        run: |
+          echo "Times in milliseconds"
           python3 cmake-build-release-main/_deps/google-benchmark-src/tools/compare.py -d bench-naive-compared.json benchmarks ../bench-naive-main.json ../bench-naive.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: bench-naive-comparison
           path: bench-naive-compared.json
+          compression-level: '0' # Short file, no need to compress
