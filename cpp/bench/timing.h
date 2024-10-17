@@ -11,6 +11,7 @@
 #else
 using wsp_t = int;
 int wsp_getworkspan() { return 0; }
+static inline void wsp_dump(wsp_t wsp, const char *tag) { return; }
 #endif
 
 using fms = std::chrono::duration<float, std::milli>;

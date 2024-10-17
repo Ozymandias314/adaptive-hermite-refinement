@@ -1,70 +1,28 @@
 #include "typedefs.h"
 
-#include "cilk.h"
+#include "CliParams.hpp"
 #include "HermiteRunner.h"
 #include "Naive.h"
-#include <argparse/argparse.hpp>
-#include <experimental/mdspan>
 #include <iostream>
-#include <fstream>
-#include <optional>
 
 // TODO
 using namespace ahr;
 
 int main(int argc, const char *argv[]) {
-    std::cout << "Hello!" << std::endl;
-
-    argparse::ArgumentParser arguments("ahr");
-
-    arguments.add_argument("X")
-            .help("Size of X, Y for domain")
-            .scan<'i', Dim>()
-            .default_value(Dim{256});
-
-    arguments.add_argument("M")
-            .help("Total number of moments")
-            .scan<'i', Dim>()
-            .default_value(Dim{100});
-
-    arguments.add_argument("nr")
-            .help("Number of timesteps")
-            .scan<'i', Dim>()
-            .default_value(Dim{20});
-
-    arguments.add_argument("save-interval")
-            .help("How often the code should write out the results")
-            .scan<'i', Dim>()
-            .default_value(Dim{1000});
+    CliParams cliParams{"naive"};
 
     try {
-        arguments.parse_args(argc, argv);
-        if (auto const M = arguments.get<Dim>("M"); M < 4 and M != 2) {
-            throw std::invalid_argument("At least 4 moments required");
-        }
+        cliParams.parse(argc, argv);
     }
     catch (const std::runtime_error &err) {
         std::cerr << err.what() << std::endl;
-        std::cerr << arguments;
         return 1;
     }
 
-    auto X = arguments.get<Dim>("X"),
-            M = arguments.get<Dim>("M"),
-            nr = arguments.get<Dim>("nr"),
-            saveInterval = arguments.get<Dim>("save-interval");
-
-    Naive naive{std::cout, M, X, X};
+    auto const p = cliParams.get();
+    Naive naive{std::cout, p.M, p.X, p.X};
     HermiteRunner &runner = naive;
 
     runner.init("OT01");
-    runner.run(nr, saveInterval);
-    auto aPar = runner.getFinalAPar();
-
-    for (int x = 0; x < X; ++x) {
-        for (int y = 0; y < X; ++y) {
-            std::cout << aPar(x, y) << " ";
-        }
-        std::cout << std::endl;
-    }
+    runner.run(p.N, p.saveInterval);
 }
