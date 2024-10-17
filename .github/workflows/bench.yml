@@ -35,7 +35,7 @@ jobs:
           cmake ../cpp -G Ninja -D CMAKE_BUILD_TYPE=Release -D ENABLE_CILK=OFF
           ninja
       - name: benchmark
-        run: ./cmake-build-release/bench/bench-naive --benchmark_out_format=json --benchmark_out=bench-naive.json
+        run: ./cmake-build-release/bench/bench-naive --benchmark_out_format=json --benchmark_out=../bench-naive.json
 
       # Compare to baseline (main)
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
@@ -48,11 +48,12 @@ jobs:
           cmake ../cpp -G Ninja -D CMAKE_BUILD_TYPE=Release -D ENABLE_CILK=OFF
           ninja
       - name: benchmark-main
-        run: ./cmake-build-release-main/bench/bench-naive --benchmark_out_format=json --benchmark_out=bench-naive-main.json
+        run: ./cmake-build-release-main/bench/bench-naive --benchmark_out_format=json --benchmark_out=../bench-naive-main.json
       - name: compare
-        run: | 
-          pip3 install -r cmake-build-release/_deps/google-benchmark-src/tools/requirements.txt
-          python3 cmake-build-release/_deps/google-benchmark-src/tools/compare.py -d bench-naive-compared.json benchmarks bench-naive-main.json bench-naive.json
+        run: |
+          # Use cmake-build-release-main because cmake-build-release is gone after checkout
+          pip3 install -r cmake-build-release-main/_deps/google-benchmark-src/tools/requirements.txt
+          python3 cmake-build-release-main/_deps/google-benchmark-src/tools/compare.py -d bench-naive-compared.json benchmarks ../bench-naive-main.json ../bench-naive.json
 
       - uses: actions/upload-artifact@v4
         with:
