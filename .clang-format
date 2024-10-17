@@ -1,0 +1,20 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+UseTab: Never
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: Always
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Attach
+InsertBraces: true
+ColumnLimit: 100
+
+IncludeCategories:
+  - Regex: '^<'
+    Priority: 4
+  - Regex: '^<(gmock|gtest)/'
+    Priority: 3
+  - Regex: '^"fftw-cpp/'
+    Priority: 1
+  - Regex: '.*'
+    Priority: 2

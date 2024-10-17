@@ -2,6 +2,7 @@
 **/*.log
 *.jld2
 build
+cmake-build-*
 .vscode
 .DS_Store
 cachegrind.out.*

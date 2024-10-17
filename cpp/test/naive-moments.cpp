@@ -9,8 +9,20 @@
 #include <utility>
 
 namespace fs = std::filesystem;
-
 namespace ahr {
+
+constexpr Real HIGH_PRECISION_RTOL = 1e-14;
+constexpr Real HIGH_PRECISION_ATOL = 1e-15;
+constexpr Real LOW_PRECISION_RTOL = 1e-10;
+constexpr Real LOW_PRECISION_ATOL = 1e-10;
+
+#ifdef TEST_MOMENTS_HIGH_PRECISION
+constexpr Real ATOL = HIGH_PRECISION_ATOL;
+constexpr Real RTOL = HIGH_PRECISION_RTOL;
+#else
+constexpr Real RTOL = LOW_PRECISION_RTOL;
+constexpr Real ATOL = LOW_PRECISION_ATOL;
+#endif
 
 template <param_like Param> class NaiveMomentsBase : public NaiveTester<Param> {
 protected:
@@ -37,9 +49,7 @@ protected:
       return Naive::ViewXY{array_.data<Real>(), extents};
     }
 
-    [[nodiscard]] bool valid() const {
-      return array_.word_size == sizeof(Real);
-    }
+    [[nodiscard]] bool valid() const { return array_.word_size == sizeof(Real); }
   };
 
   NpyMdspan readMoment(Dim m) {
@@ -74,33 +84,73 @@ TEST_P(NaiveMoments, CheckMoments) {
     auto npy = readMoment(m);
     ASSERT_TRUE(npy.valid());
 
-    EXPECT_THAT(naive.getMoment(m).to_mdspan(),
-                MdspanElementsAllClose(npy.view(), 1e-14, 1e-15))
+    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), RTOL, ATOL))
         << "Moment " << m << " mismatch!";
   }
 }
 
 using namespace testing;
-INSTANTIATE_TEST_SUITE_P(NaiveMomentsSmallM, NaiveMoments,
-                         ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values(2, 4),          // M
-                             Values(32, 64, 128),   // X
-                             Values(20),            // N
-                             Values(0.0, 0.1, 1.0), // res
-                             Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values("OT01", "gauss") // equilibrium
-                             )),
-                         NaiveMoments::Printer{});
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsSmallM, NaiveMoments,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(2, 4),          // M
+                                                 Values(32, 64, 128),   // X
+                                                 Values(20),            // N
+                                                 Values(0.0, 0.1, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMoments::Printer{});
 
-INSTANTIATE_TEST_SUITE_P(NaiveMomentsLargeM, NaiveMoments,
-                         ConvertGenerator<MomentParam::Tuple>(Combine(
-                             Values(10, 20),   // M
-                             Values(32, 64),   // X
-                             Values(20),       // N
-                             Values(0.1, 1.0), // res
-                             Values(0.1, 1.0), // nu - if 0, energy blows up
-                             Values("OT01", "gauss") // equilibrium
-                             )),
-                         NaiveMoments::Printer{});
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsLargeM, NaiveMoments,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(10, 20),   // M
+                                                 Values(32, 64),   // X
+                                                 Values(20),       // N
+                                                 Values(0.1, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMoments::Printer{});
 
-}; // namespace ahr
+using NaiveMomentsMultiRun = NaiveMomentsBase<MomentParam>;
+
+TEST_P(NaiveMomentsMultiRun, RunMultipleTimes) {
+  auto const p = GetParam();
+
+  nu = p.nu;
+  res = p.res;
+
+  Naive naive{out, p.M, p.X, p.X};
+  Naive naive2{out, p.M, p.X, p.X};
+
+  naive.init(p.equilibrium);
+  naive2.init(p.equilibrium);
+
+  // Run both for N timesteps
+  naive.run(p.N, 0);
+
+  // Split the run into two parts for naive2
+  naive2.run(1, 0);
+  naive2.run(p.N - 1, 0);
+
+  // Check that both produced the same results
+  for (int m = 0; m < p.M; m++) {
+    auto const moment = naive.getMoment(m).to_mdspan();
+    auto const moment2 = naive2.getMoment(m).to_mdspan();
+    EXPECT_THAT(moment, MdspanElementsAllClose(moment2, HIGH_PRECISION_RTOL, HIGH_PRECISION_ATOL))
+        << "Moment " << m << " mismatch!";
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    NaiveMomentsMultiRun, NaiveMomentsMultiRun,
+    ConvertGenerator<MomentParam::Tuple>(Combine(Values(2, 5),     // M
+                                                 Values(128),      // X
+                                                 Values(2, 5),     // N
+                                                 Values(0.0, 1.0), // res
+                                                 Values(0.1, 1.0), // nu - if 0, energy blows up
+                                                 Values("OT01", "gauss") // equilibrium
+                                                 )),
+    NaiveMomentsMultiRun::Printer{});
+
+} // namespace ahr

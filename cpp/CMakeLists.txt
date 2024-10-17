@@ -49,7 +49,9 @@ if (ENABLE_CILK)
     add_compile_definitions(CILK_ENABLED)
 endif ()
 
-add_executable(adaptive_hermite_refinement test-triangle.cpp)
+# TODO: cleanup (currently just to test formatting)
+add_executable(adaptive_hermite_refinement lib/test-triangle.cpp)
+target_include_directories(adaptive_hermite_refinement PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(adaptive_hermite_refinement argparse mdspan)
 
 add_library(src-lib OBJECT Naive.cpp Naive.h HermiteRunner.cpp HermiteRunner.h)

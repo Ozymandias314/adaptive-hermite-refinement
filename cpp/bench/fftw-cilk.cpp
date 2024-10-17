@@ -8,8 +8,7 @@
 #include <thread>
 
 static void copy(fftw::buffer const &in, fftw::buffer &out) {
-  std::memcpy(out.data(), in.data(),
-              in.size() * sizeof(fftw::buffer::element_type));
+  std::memcpy(out.data(), in.data(), in.size() * sizeof(fftw::buffer::element_type));
 }
 
 static void BM_copy_1D(benchmark::State &state) {
@@ -77,15 +76,9 @@ static void BM_FFTW_2D(benchmark::State &state) {
 auto constexpr K = 1024;
 auto constexpr M = K * K;
 
-BENCHMARK(BM_copy_1D)
-    ->RangeMultiplier(2)
-    ->Range(16 * M, 64 * M)
-    ->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_copy_1D)->RangeMultiplier(2)->Range(16 * M, 64 * M)->Unit(benchmark::kMillisecond);
 
-BENCHMARK(BM_FFTW_1D)
-    ->RangeMultiplier(2)
-    ->Range(16 * M, 64 * M)
-    ->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_FFTW_1D)->RangeMultiplier(2)->Range(16 * M, 64 * M)->Unit(benchmark::kMillisecond);
 
 BENCHMARK(BM_copy_2D)
     ->ArgsProduct({{4 * K, 8 * K, 16 * K}, {4 * K, 8 * K, 16 * K}})
@@ -97,8 +90,7 @@ BENCHMARK(BM_FFTW_2D)
 
 // TODO pthreads, openmp, cilk -> compare all
 #ifndef FFTW_PTHREADS
-void parallel_for(void *(*work)(char *), char *jobdata, size_t elsize,
-                  int njobs, void *data) {
+void parallel_for(void *(*work)(char *), char *jobdata, size_t elsize, int njobs, void *data) {
   // std::cout << "parallel_for: " << njobs << std::endl;
   cilk_for(int i = 0; i < njobs; ++i) { work(jobdata + i * elsize); }
 }
@@ -115,9 +107,7 @@ int main(int argc, char **argv) {
   fftw_threads_set_callback(parallel_for, nullptr);
 #endif
 
-  if (auto const n = std::getenv("BENCH_NJOBS"); n) {
-    njobs = std::stoi(n);
-  }
+  if (auto const n = std::getenv("BENCH_NJOBS"); n) { njobs = std::stoi(n); }
 
   std::cout << "Using " << njobs << " jobs for FFTW" << std::endl;
   fftw_plan_with_nthreads(njobs);
