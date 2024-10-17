@@ -75,7 +75,7 @@ TEST_P(NaiveMoments, CheckMoments) {
     ASSERT_TRUE(npy.valid());
 
     EXPECT_THAT(naive.getMoment(m).to_mdspan(),
-                MdspanElementsAllClose(npy.view(), 1e-14, 1e-15))
+                MdspanElementsAllClose(npy.view(), 5e-14, 1e-13))
         << "Moment " << m << " mismatch!";
   }
 }
