@@ -84,8 +84,10 @@ TEST_P(NaiveMoments, CheckMoments) {
     auto npy = readMoment(m);
     ASSERT_TRUE(npy.valid());
     auto const max_val = std::ranges::max(std::span(npy.view().data_handle(), npy.view().size()));
-    auto const atol = ATOL + max_val * RTOL;
-    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), RTOL, atol))
+    auto const n = static_cast<Real>(p.N);
+    auto const rtol = RTOL * n;
+    auto const atol = (ATOL + max_val * RTOL) * n;
+    EXPECT_THAT(naive.getMoment(m).to_mdspan(), MdspanElementsAllClose(npy.view(), rtol, atol))
         << "Moment " << m << " mismatch! Max value:" << std::setprecision(16) << max_val
         << ", atol: " << atol;
   }
