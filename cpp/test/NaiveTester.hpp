@@ -14,8 +14,7 @@ auto tuple_append(std::tuple<Args...> tuple, ArgsCat &&...args) {
 }
 
 template <typename Tup, typename... Args>
-using tuple_append_t =
-    decltype(tuple_append(std::declval<Tup>(), std::declval<Args>()...));
+using tuple_append_t = decltype(tuple_append(std::declval<Tup>(), std::declval<Args>()...));
 
 /// Convert double to short string (2 decimal places)
 static std::string d_to_str(double d) {
@@ -29,10 +28,10 @@ static std::string d_to_str(double d) {
 
 template <typename T>
 concept param_like = requires(T t, typename T::Tuple tup) {
-  std::tuple_size_v<typename T::Tuple>;
-  { T{tup} } -> std::same_as<T>;
-  { t.to_param_str() } -> std::same_as<std::string>;
-};
+                       std::tuple_size_v<typename T::Tuple>;
+                       { T{tup} } -> std::same_as<T>;
+                       { t.to_param_str() } -> std::same_as<std::string>;
+                     };
 
 struct NaiveParam {
   Dim M, X, N;
@@ -40,8 +39,7 @@ struct NaiveParam {
   /// M, X, N
   using Tuple = std::tuple<Dim, Dim, Dim>;
 
-  explicit NaiveParam(Tuple t)
-      : M(std::get<0>(t)), X(std::get<1>(t)), N(std::get<2>(t)) {}
+  explicit NaiveParam(Tuple t) : M(std::get<0>(t)), X(std::get<1>(t)), N(std::get<2>(t)) {}
 
   std::string to_param_str() const {
     std::ostringstream oss;
@@ -80,16 +78,15 @@ template <param_like BaseParam> struct WithHyperDiffusion : BaseParam {
 
   explicit WithHyperDiffusion(Tuple t)
       : BaseParam(slice<0, BaseSize>(t)), hyper_coef_g(std::get<BaseSize>(t)),
-        hyper_coef(std::get<BaseSize + 1>(t)),
-        hyperm_coef(std::get<BaseSize + 2>(t)) {}
+        hyper_coef(std::get<BaseSize + 1>(t)), hyperm_coef(std::get<BaseSize + 2>(t)) {}
 
   std::string hyper_g_string() const { return utils::d_to_str(hyper_coef_g); }
   std::string hyper_string() const { return utils::d_to_str(hyper_coef); }
   std::string hyperm_string() const { return utils::d_to_str(hyperm_coef); }
 
   std::string to_param_str() const {
-    return BaseParam::to_param_str() + "_hg" + hyper_g_string() + "_h" +
-           hyper_string() + "_hm" + hyperm_string();
+    return BaseParam::to_param_str() + "_hg" + hyper_g_string() + "_h" + hyper_string() + "_hm" +
+           hyperm_string();
   }
 };
 
@@ -104,9 +101,7 @@ template <param_like BaseParam> struct WithEquilibrium : BaseParam {
   explicit WithEquilibrium(Tuple t)
       : BaseParam(slice<0, BaseSize>(t)), equilibrium(std::get<BaseSize>(t)) {}
 
-  std::string to_param_str() const {
-    return BaseParam::to_param_str() + "_" + equilibrium;
-  }
+  std::string to_param_str() const { return BaseParam::to_param_str() + "_" + equilibrium; }
 };
 
 // using TesterParam = WithDiffusion<NaiveParam>;
@@ -117,15 +112,12 @@ protected:
   std::ostringstream out{};
 
   void TearDown() override {
-    if (HasFailure()) {
-      std::cout << "============\nFull output:\n" << out.str() << std::endl;
-    }
+    if (HasFailure()) { std::cout << "============\nFull output:\n" << out.str() << std::endl; }
   }
 };
 
 template <class Param>
-class NaiveTester : public TesterWithOutput,
-                    public testing::WithParamInterface<Param> {
+class NaiveTester : public TesterWithOutput, public testing::WithParamInterface<Param> {
 public:
   class Printer {
   public:
